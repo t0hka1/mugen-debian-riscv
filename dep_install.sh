@@ -37,6 +37,12 @@ anolis_dep(){
     pip3 install paramiko -i https://pypi.tuna.tsinghua.edu.cn/simple
 }
 
+
+ubuntukylin_dep(){
+    apt install expect psmisc make python3-six python3-pip python3-paramiko lshw -y
+    pip3 install paramiko -i https://pypi.tuna.tsinghua.edu.cn/simple
+}
+
 qemu_dep(){
     echo "install qemu"
     yum install bridge-utils -y
@@ -108,6 +114,13 @@ main(){
         fi
     fi
 
+    uname -r | grep 'gen'
+    if [ $? -eq 0 ]; then
+        ubuntukylin_dep
+        if [ $? -ne 0 ]; then
+            return 1
+        fi
+    fi
 
     if [ $in_qemu -eq 1 ]; then
         qemu_dep
