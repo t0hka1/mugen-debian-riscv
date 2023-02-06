@@ -11,7 +11,7 @@ for root, dirs, files in os.walk(path,topdown=False):
 
 
 for file in all_files_path:
-    with open(file,"r") as f:
+    with open(file,errors='ignore') as f:
         content = f.read()
 
     new_content = re.sub(r"DNF_INSTALL (.*?)\n","uname -r | grep 'oe\|an' \n\
