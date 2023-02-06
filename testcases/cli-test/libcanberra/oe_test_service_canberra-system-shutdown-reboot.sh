@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libcanberra
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libcanberra 
+    else 
+        APT_INSTALL libcanberra 
+    fi
     file_isExist=0
     test -f /usr/share/sounds/freedesktop/stereo/system-shutdown.oga && file_isExist=1
     test ${file_isExist} -eq 0 && cp -raf /usr/share/sounds/freedesktop/stereo/bell.oga /usr/share/sounds/freedesktop/stereo/system-shutdown.oga
@@ -38,7 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     test ${file_isExist} -eq 0 && rm -rf /usr/share/sounds/freedesktop/stereo/system-shutdown.oga
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

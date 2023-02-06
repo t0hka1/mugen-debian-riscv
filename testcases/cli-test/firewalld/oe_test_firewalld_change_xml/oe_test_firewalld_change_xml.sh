@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL httpd 
+    else 
+        APT_INSTALL httpd 
+    fi
     sudo systemctl start httpd
     sudo systemctl start firewalld
     cp /etc/firewalld/zones/public.xml /etc/firewalld/zones/public.xml-bak
@@ -59,7 +64,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sudo systemctl stop httpd
-    DNF_REMOVE
+    APT_REMOVE
     mv /etc/firewalld/zones/public.xml-bak /etc/firewalld/zones/public.xml -f
     sudo firewall-cmd --reload
     sudo systemctl start firewalld

@@ -22,7 +22,12 @@ function pre_test() {
     cp /etc/sudoers /etc/sudoers-bak
     echo 'test' >/tmp/m_test && echo 'test ' >/tmp/sm_test && echo 'test test2' >/tmp/M_test
     touch /tmp/rm_test
-    DNF_INSTALL httpd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL httpd 
+    else 
+        APT_INSTALL httpd 
+    fi
     cp /etc/openEuler_security/usr-security.conf /etc/openEuler_security/usr-security.conf-bak
     systemctl stop httpd
     LOG_INFO "End of environmental preparation!"
@@ -57,7 +62,7 @@ function post_test() {
     mv /etc/openEuler_security/usr-security.conf-bak /etc/openEuler_security/usr-security.conf -f
     mv /etc/sudoers-bak /etc/sudoers -f
     rm -rf log /tmp/M_test /tmp/m_test /tmp/sm_test /tmp/touch_test
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

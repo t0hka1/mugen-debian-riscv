@@ -18,7 +18,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL byacc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL byacc 
+    else 
+        APT_INSTALL byacc 
+    fi
     test -d tmp || mkdir tmp
     LOG_INFO "End of environmental preparation!"
 }
@@ -52,7 +57,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./tmp
     LOG_INFO "Finish environment cleanup!"
 }

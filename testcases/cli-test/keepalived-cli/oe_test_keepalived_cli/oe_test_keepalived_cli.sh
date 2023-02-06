@@ -20,7 +20,12 @@ source ./common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL keepalived
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL keepalived 
+    else 
+        APT_INSTALL keepalived 
+    fi
     systemctl stop firewalld
     setenforce 0
     net_card=${NODE1_NIC}
@@ -117,7 +122,7 @@ function post_test() {
     sed -i "/master agentx/d" /etc/snmp/snmpd.conf
     kill -9 $(pgrep -f "keepalived -D")
     sed -i "/keepalived.log/d" >>/etc/rsyslog.conf
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/keepalived /var/log/keepalived* /tmp/keepalived
     ip addr del "${keepalived_ip}"/24 dev "${net_card}"
     SSH_CMD "

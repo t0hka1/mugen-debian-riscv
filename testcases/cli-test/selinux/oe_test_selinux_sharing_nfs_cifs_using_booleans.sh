@@ -22,7 +22,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "policycoreutils-python-utils"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "policycoreutils-python-utils" 
+    else 
+        APT_INSTALL "policycoreutils-python-utils" 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -49,7 +54,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     setsebool httpd_use_nfs off
     setsebool httpd_use_cifs off
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

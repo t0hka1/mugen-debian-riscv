@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "rpmdevtools gcc"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "rpmdevtools gcc" 
+    else 
+        APT_INSTALL "rpmdevtools gcc" 
+    fi
     useradd user_test
     su user_test -c "mkdir -p /home/user_test/rpmbuild/RPMS/${NODE1_FRAME}"
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
@@ -129,7 +134,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     userdel -rf user_test
     rm -rf /ALT *rpm record* ./tmp_dir
 

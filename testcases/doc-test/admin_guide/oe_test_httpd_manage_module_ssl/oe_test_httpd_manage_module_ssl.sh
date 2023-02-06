@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd" 
+    else 
+        APT_INSTALL "httpd" 
+    fi
     systemctl enable httpd
     systemctl start httpd
     SLEEP_WAIT 6
@@ -33,7 +38,12 @@ function run_test() {
     CHECK_RESULT $?
     httpd -M | grep asis
     CHECK_RESULT $?
-    DNF_INSTALL mod_ssl
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mod_ssl 
+    else 
+        APT_INSTALL mod_ssl 
+    fi
     systemctl restart httpd
     CHECK_RESULT $?
     httpd -M | grep ssl
@@ -44,7 +54,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s/LoadModule asis_module modules\/mod_asis.so/#LoadModule asis_module modules\/mod_asis.so/g" /etc/httpd/conf.modules.d/00-optional.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

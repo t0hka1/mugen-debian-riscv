@@ -25,7 +25,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "clevis tang firewalld"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clevis tang firewalld" 
+    else 
+        APT_INSTALL "clevis tang firewalld" 
+    fi
     systemctl start firewalld
     ls /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
     firewall-cmd --add-port=8009/tcp
@@ -74,7 +79,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop tangd.socket
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf secert.jwe adv.jws /etc/systemd/system/tangd.socket.d /var/db/tang
     firewall-cmd --remove-port=8009/tcp
     firewall-cmd --runtime-to-permanent

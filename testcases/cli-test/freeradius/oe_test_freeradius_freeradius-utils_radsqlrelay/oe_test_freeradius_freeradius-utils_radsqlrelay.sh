@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "freeradius freeradius-utils perl-DBD-MySQL mysql5 mysql5-server freeradius-mysql"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "freeradius freeradius-utils perl-DBD-MySQL mysql5 mysql5-server freeradius-mysql" 
+    else 
+        APT_INSTALL "freeradius freeradius-utils perl-DBD-MySQL mysql5 mysql5-server freeradius-mysql" 
+    fi
     systemctl start mysqld
     SLEEP_WAIT 2
     mysqladmin -uroot password Test123
@@ -85,7 +90,7 @@ function post_test() {
 
     systemctl stop mysqld
     SLEEP_WAIT 2
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/mysql
     rm -rf /etc/raddb
     rm -rf /var/log/radius

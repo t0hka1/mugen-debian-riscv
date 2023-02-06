@@ -29,7 +29,12 @@ function pre_test() {
     host_name=$(hostname)
     name_host=HadoopX
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host}2
-    DNF_INSTALL "hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn java-1.8.0-openjdk apache-zookeeper"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn java-1.8.0-openjdk apache-zookeeper" 
+    else 
+        APT_INSTALL "hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn java-1.8.0-openjdk apache-zookeeper" 
+    fi
     echo "export JAVA_HOME=/usr/lib/jvm/jre" >>/usr/libexec/hadoop-layout.sh
     sed -i "/Group=hadoop/a SuccessExitStatus=143" /usr/lib/systemd/system/hadoop-historyserver.service
     systemctl daemon-reload
@@ -105,7 +110,7 @@ function post_test() {
     sed -i "/export JAVA_HOME=\/usr\/lib\/jvm\/jre/d" /usr/libexec/hadoop-layout.sh
     sed -i "/SuccessExitStatus=143/d" /usr/lib/systemd/system/hadoop-historyserver.service
     systemctl daemon-reload
-    DNF_REMOVE
+    APT_REMOVE
     sed -i "/${name_host}/d" /etc/hosts
     hostname | grep -i ${host_name} || hostnamectl set-hostname ${host_name}
     which firewalld && systemctl start firewalld

@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd curl"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd curl" 
+    else 
+        APT_INSTALL "httpd curl" 
+    fi
     getenforce | grep Enforcing && setenforce 0
     LOG_INFO "End of environmental preparation!"
 }
@@ -41,7 +46,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop httpd
     rm -rf index.html
-    DNF_REMOVE
+    APT_REMOVE
     getenforce | grep Enforcing || setenforce 1
     LOG_INFO "Finish environment cleanup!"
 }

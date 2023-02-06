@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "php-cli php-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "php-cli php-devel" 
+    else 
+        APT_INSTALL "php-cli php-devel" 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -72,7 +77,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

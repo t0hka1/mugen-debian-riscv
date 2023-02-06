@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gssproxy
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL gssproxy 
+    else 
+        APT_INSTALL gssproxy 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\/usr/sbin/gssproxy -D --debug-level=1\/usr/sbin/gssproxy -D\g' /usr/lib/systemd/system/gssproxy.service
     systemctl daemon-reload
     systemctl reload gssproxy.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

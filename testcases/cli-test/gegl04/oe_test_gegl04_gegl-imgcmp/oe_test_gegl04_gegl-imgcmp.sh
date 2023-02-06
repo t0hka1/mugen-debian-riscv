@@ -19,7 +19,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "gegl04"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "gegl04" 
+    else 
+        APT_INSTALL "gegl04" 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -32,7 +37,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

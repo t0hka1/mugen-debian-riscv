@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "mksh"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mksh" 
+    else 
+        APT_INSTALL "mksh" 
+    fi
     echo 'echo $-' > ./test1.sh
     echo 'cd /' > ./test2.sh
     LOG_INFO "End to prepare the test environment."
@@ -64,7 +69,7 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./test1.sh ./test2.sh
     LOG_INFO "End to restore the test environment."
 }

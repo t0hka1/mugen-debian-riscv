@@ -22,7 +22,12 @@ source "common/common_dnf.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL tree
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tree 
+    else 
+        APT_INSTALL tree 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -48,7 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End of restore the test environment."
 }
 

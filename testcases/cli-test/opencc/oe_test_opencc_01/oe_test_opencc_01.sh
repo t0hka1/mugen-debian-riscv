@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL opencc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL opencc 
+    else 
+        APT_INSTALL opencc 
+    fi
     result="sim_chinese55.txt not found or not accessible."
     LOG_INFO "End to prepare the test environment."
 }
@@ -60,7 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./sim_*
     LOG_INFO "End to restore the test environment."
 }

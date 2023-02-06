@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libvirt-daemon-driver-interface
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libvirt-daemon-driver-interface 
+    else 
+        APT_INSTALL libvirt-daemon-driver-interface 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload virtinterfaced.service
     systemctl stop virtinterfaced.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

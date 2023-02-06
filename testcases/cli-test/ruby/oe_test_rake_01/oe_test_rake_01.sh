@@ -21,7 +21,12 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rubygem-rake
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rubygem-rake 
+    else 
+        APT_INSTALL rubygem-rake 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -53,7 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

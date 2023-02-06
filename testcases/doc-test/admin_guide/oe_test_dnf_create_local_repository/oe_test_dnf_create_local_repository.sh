@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start environment preparation."
-	DNF_INSTALL createrepo
+	uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL createrepo 
+    else 
+        APT_INSTALL createrepo 
+    fi
 	LOG_INFO "environment preparation is over."
 }
 
@@ -39,7 +44,7 @@ function post_test() {
 	LOG_INFO "start environment cleanup."
 	umount /mnt
 	rm -rf /srv/repo/*
-	DNF_REMOVE
+	APT_REMOVE
 	LOG_INFO "Finish environment cleanup."
 }
 

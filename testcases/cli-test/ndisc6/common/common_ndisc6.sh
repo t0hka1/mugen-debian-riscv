@@ -17,7 +17,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    DNF_INSTALL "ndisc6 xinetd time"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ndisc6 xinetd time" 
+    else 
+        APT_INSTALL "ndisc6 xinetd time" 
+    fi
     hostname_init=$(hostname)
     hostname newlocalhost
     NODE1_IPV6=$(ip addr show ${NODE1_NIC[0]} | grep -w inet6 | awk '{print $2}' | awk -F '/' '{print $1}' | awk 'NR==1{print $1}')
@@ -26,12 +31,17 @@ function deploy_env() {
     sed -i 's/name/#&/' /etc/resolv.conf
     sed -i '6s/yes/no/g' /etc/xinetd.d/echo-stream
     systemctl restart xinetd
-    DNF_INSTALL xinetd 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL xinetd 2 
+    else 
+        APT_INSTALL xinetd 2 
+    fi
     P_SSH_CMD --node 2 --cmd "sed -i '6s/yes/no/g' /etc/xinetd.d/echo-stream;systemctl restart xinetd;"
 }
 
 function clear_env() {
-    DNF_REMOVE
+    APT_REMOVE
     hostname ${hostname_init}
     cp -rf /etc/resolv.conf-bak /etc/resolv.conf
     rm -rf file runtime /etc/resolv.conf-bak

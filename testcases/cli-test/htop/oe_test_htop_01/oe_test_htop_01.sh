@@ -22,7 +22,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
 
-	DNF_INSTALL "htop"
+	uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "htop" 
+    else 
+        APT_INSTALL "htop" 
+    fi
 
 	LOG_INFO "End to prepare the test environment."
 }
@@ -247,7 +252,7 @@ EOF
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
 
-	DNF_REMOVE
+	APT_REMOVE
 
 	LOG_INFO "End to restore the test environment."
 }

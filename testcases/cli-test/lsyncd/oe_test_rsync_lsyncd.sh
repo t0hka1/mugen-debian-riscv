@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL lsyncd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL lsyncd 
+    else 
+        APT_INSTALL lsyncd 
+    fi
     mkdir -p /var/source_dir /var/target_dir
     cat >> /etc/lsyncd.conf << EOF
 settings {
@@ -62,7 +67,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/source_dir /var/target_dir /var/log/lsyncd /etc/lsyncd.conf
     kill -9 $(ps -ef | grep "lsyncd" | grep -Ev "grep|bash" | awk '{print $2}')
     LOG_INFO "End to restore the test environment."

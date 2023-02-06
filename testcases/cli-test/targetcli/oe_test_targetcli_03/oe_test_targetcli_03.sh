@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL targetcli
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL targetcli 
+    else 
+        APT_INSTALL targetcli 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -108,7 +113,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

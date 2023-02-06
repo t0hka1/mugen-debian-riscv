@@ -21,7 +21,12 @@ source "common/common_dnf.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL vim
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL vim 
+    else 
+        APT_INSTALL vim 
+    fi
     rpm -e vim-enhanced
     LOG_INFO "End to prepare the test environment."
 }
@@ -54,7 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
-    DNF_REMOVE 1 httpd
+    APT_REMOVE 1 httpd
     dnf clean all
     LOG_INFO "Finish restoring the test environment."
 }

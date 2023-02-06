@@ -27,7 +27,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2" 
+    else 
+        APT_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2" 
+    fi
     echo -e "n\n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
     test -d /mnt/test_encrypted && rm -rf /mnt/test_encrypted
     mkdir /mnt/test_encrypted
@@ -130,7 +135,7 @@ function post_test() {
     rm -rf /mnt/test_encrypted
     mkfs.ext4 ${TEST_DISK}1 -F
     echo -e "d\n\nw" | fdisk "${TEST_DISK}"
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf secert.jwe adv.jws sec.jwe input-plain.txt /etc/systemd/system/tangd.socket.d /mnt/test_encrypted /tmp/header.bin
     mkfs.ext4 ${TEST_DISK} -F
     LOG_INFO "Finish environment cleanup!"

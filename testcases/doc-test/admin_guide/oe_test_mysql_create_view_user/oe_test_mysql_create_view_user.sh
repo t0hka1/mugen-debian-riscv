@@ -24,7 +24,12 @@ function pre_test() {
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
 	pkgs=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
-        DNF_INSTALL ${pkgs}
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ${pkgs} 
+    else 
+        APT_INSTALL ${pkgs} 
+    fi
 	CHECK_RESULT $?
         systemctl start mysqld
 	CHECK_RESULT $?
@@ -81,7 +86,7 @@ expect eof
     rm -rf testlog
     rm -rf log
     test -z ${mysql_flag} || clean_mysql
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

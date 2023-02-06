@@ -34,7 +34,12 @@ function conf_common() {
 }
 
 function kubernetes_install() {
-  DNF_INSTALL "docker conntrack-tools socat kubernetes*" 1
+  uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "docker conntrack-tools socat kubernetes*" 1 
+    else 
+        APT_INSTALL "docker conntrack-tools socat kubernetes*" 1 
+    fi
 }
 
 function certificate_prepare() {
@@ -43,9 +48,19 @@ function certificate_prepare() {
     LOG_INFO "Download failed!"
     exit 1
   }
-  which tar || DNF_INSTALL tar 1
+  which tar || uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tar 1 
+    else 
+        APT_INSTALL tar 1 
+    fi
   tar -zxvf ${pkg_path} -C ${cfssl_path} --strip-components=1
-  which golang || DNF_INSTALL golang 1
+  which golang || uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL golang 1 
+    else 
+        APT_INSTALL golang 1 
+    fi
   cd ${cfssl_path} || exit
   make -j6
   cp bin/cfssl* /usr/local/bin/
@@ -215,7 +230,12 @@ function certificate_prepare() {
 }
 
 function etcd_install() {
-  DNF_INSTALL etcd
+  uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL etcd 
+    else 
+        APT_INSTALL etcd 
+    fi
   systemctl start etcd
 }
 
@@ -447,7 +467,7 @@ function proxy_prepare() {
 }
 
 function kubernetes_remove() {
-  DNF_REMOVE
+  APT_REMOVE
   rm -rf /etc/kubernetes ${pkg_path} ${cfssl_path} /usr/local/bin/cfssl*
   hostnamectl set-hostname "${host_name}"
 }

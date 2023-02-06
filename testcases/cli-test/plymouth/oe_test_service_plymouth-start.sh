@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL plymouth
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL plymouth 
+    else 
+        APT_INSTALL plymouth 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -36,7 +41,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop plymouth-start.service
     plymouth --quit
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

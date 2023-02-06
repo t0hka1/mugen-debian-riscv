@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_lang=$(echo $LANG)
     export LANG=zh_CN.UTF-8    
-    DNF_INSTALL "expect"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "expect" 
+    else 
+        APT_INSTALL "expect" 
+    fi
     useradd -d /home/euler euler
     LOG_INFO "End of environmental preparation!"
 
@@ -48,7 +53,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     userdel -rf euler
     rm -rf testdir testfile
-    DNF_REMOVE
+    APT_REMOVE
     export LANG=$cur_lang
     LOG_INFO "Finish environment cleanup!"
 }

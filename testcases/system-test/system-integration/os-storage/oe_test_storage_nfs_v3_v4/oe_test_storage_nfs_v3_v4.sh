@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nfs-utils 
+    else 
+        APT_INSTALL nfs-utils 
+    fi
     systemctl stop firewalld
     iptables -F
     SSH_CMD "systemctl stop firewalld;iptables -F" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
@@ -55,7 +60,7 @@ function post_test() {
     rmdir home/{client1,client2}
     SSH_CMD "rm -rf /home/nfs;yum remove -y nfs-utils;mv -f /etc/exports.bak /etc/exports" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     systemctl start firewalld
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

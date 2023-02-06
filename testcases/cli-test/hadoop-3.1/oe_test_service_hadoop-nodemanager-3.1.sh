@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "hadoop-3.1-yarn java-1.8.0-openjdk hadoop-3.1-hdfs"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "hadoop-3.1-yarn java-1.8.0-openjdk hadoop-3.1-hdfs" 
+    else 
+        APT_INSTALL "hadoop-3.1-yarn java-1.8.0-openjdk hadoop-3.1-hdfs" 
+    fi
     echo "export JAVA_HOME=/usr/lib/jvm/jre" >>/usr/libexec/hadoop-layout.sh
     sed -i "/Group=hadoop/a SuccessExitStatus=143" /usr/lib/systemd/system/hadoop-nodemanager.service
     systemctl daemon-reload
@@ -49,7 +54,7 @@ function post_test() {
     sed -i "/export JAVA_HOME=\/usr\/lib\/jvm\/jre/d" /usr/libexec/hadoop-layout.sh
     sed -i "/SuccessExitStatus=143/d" /usr/lib/systemd/system/hadoop-nodemanager.service
     systemctl daemon-reload
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

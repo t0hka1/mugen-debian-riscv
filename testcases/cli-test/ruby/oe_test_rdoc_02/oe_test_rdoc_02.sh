@@ -21,7 +21,12 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL rubygem-rdoc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rubygem-rdoc 
+    else 
+        APT_INSTALL rubygem-rdoc 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -79,7 +84,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
     rm -rf /root/.rdoc/ .rdoc_options
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

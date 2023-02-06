@@ -26,7 +26,12 @@ function pre_test() {
     name_host=rabbitmq
     name_host_1=rabbitmq1
     name_host_2=rabbitmq2
-    DNF_INSTALL rabbitmq-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rabbitmq-server 
+    else 
+        APT_INSTALL rabbitmq-server 
+    fi
     which firewalld && systemctl stop firewalld
     sed -i "/${name_host}/d" /etc/hosts
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host_1}
@@ -98,7 +103,7 @@ function post_test() {
     sed -i "/${name_host}/d" /etc/hosts
     hostnamectl set-hostname "${host_name}"
     kill -9 $(pgrep -u rabbitmq)
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/rabbitmq/ /var/log/rabbitmq
     which firewalld && systemctl start firewalld
     SSH_CMD "

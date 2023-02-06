@@ -30,7 +30,12 @@ function config_params(){
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL "dejagnu sendmail procmail mailx"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "dejagnu sendmail procmail mailx" 
+    else 
+        APT_INSTALL "dejagnu sendmail procmail mailx" 
+    fi
     firewall-cmd --zone=public --add-port=25/tcp
     firewall-cmd --reload
     systemctl start sendmail
@@ -80,7 +85,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf tmp *.sum *.log /var/spool/mail/{${USER},${anotherUser}}
     LOG_INFO "Finish environment cleanup!"
 }

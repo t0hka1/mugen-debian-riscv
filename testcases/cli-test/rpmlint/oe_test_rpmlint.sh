@@ -22,7 +22,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "rpmlint"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "rpmlint" 
+    else 
+        APT_INSTALL "rpmlint" 
+    fi
     wget https://repo.openeuler.org/openEuler-20.03-LTS/everything/aarch64/Packages/LibRaw-0.19.0-9.oe1.aarch64.rpm
     LOG_INFO "End to prepare the test environment."
 }
@@ -58,7 +63,7 @@ function run_test()
 function post_test()
 {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    APT_REMOVE 
     rm -rf LibRaw-0.19.0-9.oe1.aarch64.rpm unzip
     LOG_INFO "End to restore the test environment."
 }

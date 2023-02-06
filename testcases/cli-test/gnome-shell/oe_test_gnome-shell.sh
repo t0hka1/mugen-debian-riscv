@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
-    DNF_INSTALL "gnome-shell elinks lynx"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "gnome-shell elinks lynx" 
+    else 
+        APT_INSTALL "gnome-shell elinks lynx" 
+    fi
     OLD_LANG=$LANG
     export LANG="en_US.UTF-8"
     LOG_INFO "End to prepare the database config."
@@ -48,7 +53,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

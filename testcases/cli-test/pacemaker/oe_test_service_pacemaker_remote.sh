@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pacemaker-remote
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pacemaker-remote 
+    else 
+        APT_INSTALL pacemaker-remote 
+    fi
     dd if=/dev/urandom of=/etc/pacemaker/authkey bs=4096 count=1
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop pacemaker_remote.service
     rm -rf /etc/pacemaker/authkey
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

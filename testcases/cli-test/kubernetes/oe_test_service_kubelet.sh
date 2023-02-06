@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "docker-engine kubernetes-kubelet conntrack-tools" 1
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "docker-engine kubernetes-kubelet conntrack-tools" 1 
+    else 
+        APT_INSTALL "docker-engine kubernetes-kubelet conntrack-tools" 1 
+    fi
     swapoff -a
     systemctl start docker
     service=kubelet.service
@@ -43,7 +48,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop docker kubelet
     swapon -a
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

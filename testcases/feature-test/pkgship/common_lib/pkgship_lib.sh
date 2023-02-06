@@ -164,7 +164,12 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    DNF_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc" 
+    else 
+        APT_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc" 
+    fi
     bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh redis
     bash ${SYS_CONF_PATH}/auto_install_pkgship_requires.sh elasticsearch
 }
@@ -176,7 +181,7 @@ function REVERT_ENV() {
         kill -9 $i 
     done
 
-    DNF_REMOVE
+    APT_REMOVE
     dnf remove elasticsearch redis -y
 }
 

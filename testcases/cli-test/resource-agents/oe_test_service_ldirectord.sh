@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL ldirectord
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ldirectord 
+    else 
+        APT_INSTALL ldirectord 
+    fi
     cp /usr/share/doc/ldirectord/ldirectord.cf /etc/ha.d/
     LOG_INFO "End of environmental preparation!"
 }
@@ -46,7 +51,7 @@ function post_test() {
     systemctl reload ldirectord.service
     systemctl stop ldirectord.service
     rm -rf /etc/ha.d/ldirectord.cf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

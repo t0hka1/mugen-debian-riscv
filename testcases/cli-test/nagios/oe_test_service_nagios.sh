@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nagios nagios-plugins-ping"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "nagios nagios-plugins-ping" 
+    else 
+        APT_INSTALL "nagios nagios-plugins-ping" 
+    fi
     sed -i 's\cfg_dir=/etc/nagios/conf.d\#cfg_dir=/etc/nagios/conf.d\g' /etc/nagios/nagios.cfg
     service=nagios.service
     log_time=$(date '+%Y-%m-%d %T')
@@ -51,7 +56,7 @@ function post_test() {
     systemctl reload "${service}"
     systemctl stop "${service}"
     sed -i 's\#cfg_dir=/etc/nagios/conf.d\cfg_dir=/etc/nagios/conf.d\g' /etc/nagios/nagios.cfg
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

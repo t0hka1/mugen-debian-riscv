@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "spawn-fcgi php-cgi nginx"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "spawn-fcgi php-cgi nginx" 
+    else 
+        APT_INSTALL "spawn-fcgi php-cgi nginx" 
+    fi
     echo 'SOCKET=/var/run/fcgiwrap.sock
 FCGI_SOCKET=/var/run/fcgiwrap.sock
 FCGI_PROGRAM=/usr/bin/php-cgi
@@ -55,7 +60,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop ${service}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

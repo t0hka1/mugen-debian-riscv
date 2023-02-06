@@ -29,7 +29,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL httpd 
+    else 
+        APT_INSTALL httpd 
+    fi
     echo 'hello' >/var/www/html/hello.html
     chmod 777 /var/www/html/hello.html
     sudo systemctl start httpd
@@ -53,7 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     nft delete table inet $table_name
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/www/html/hello.html
     LOG_INFO "Finish environment cleanup!"
 }

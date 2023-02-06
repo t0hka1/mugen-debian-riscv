@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL samba
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL samba 
+    else 
+        APT_INSTALL samba 
+    fi
     cp -a /etc/samba/smb.conf /etc/samba/smb.conf.bak
     echo -e "\n\n[example]\n\tguest ok = yes" >>/etc/samba/smb.conf
     sed -i "/[global]/a\\\tmap to guest = Bad User" /etc/samba/smb.conf
@@ -48,7 +53,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f /etc/samba/smb.conf testlog
     mv /etc/samba/smb.conf.bak /etc/samba/smb.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

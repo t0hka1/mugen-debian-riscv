@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL lm_sensors
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL lm_sensors 
+    else 
+        APT_INSTALL lm_sensors 
+    fi
     expect <<EOF
     log_file /tmp/sensors_log
         spawn sensors-detect
@@ -50,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop fancontrol.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

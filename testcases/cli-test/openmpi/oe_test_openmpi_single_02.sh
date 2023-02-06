@@ -19,7 +19,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "openmpi openmpi-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "openmpi openmpi-devel" 
+    else 
+        APT_INSTALL "openmpi openmpi-devel" 
+    fi
     mpi_path=$(whereis openmpi | awk '{print$2}')
     {
         echo "PATH=$PATH:${mpi_path}/bin"
@@ -78,7 +83,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./hello
     sed -i "/openmpi/d" $HOME/.bash_profile
     source $HOME/.bash_profile

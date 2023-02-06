@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL gdm
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL gdm 
+    else 
+        APT_INSTALL gdm 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/gdm --fatal-warnings\ExecStart=/usr/sbin/gdm\g' /usr/lib/systemd/system/gdm.service
     systemctl daemon-reload
     systemctl reload gdm.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

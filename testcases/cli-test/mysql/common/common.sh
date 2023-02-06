@@ -36,7 +36,12 @@ function mysql_pre() {
     touch {/data/mysql/log/mysql.log,/data/mysql/run/mysqld.pid}
     chown -R mysql:mysql /data
     cd - || exit 1
-    DNF_INSTALL mysql
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mysql 
+    else 
+        APT_INSTALL mysql 
+    fi
     rpm -qa | grep mysql || exit 1
     touch /etc/my.cnf
     echo "[mysqld_safe]

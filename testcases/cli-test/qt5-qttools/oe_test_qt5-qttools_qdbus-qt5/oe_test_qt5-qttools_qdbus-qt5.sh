@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL qt5-qttools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL qt5-qttools 
+    else 
+        APT_INSTALL qt5-qttools 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,7 +42,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

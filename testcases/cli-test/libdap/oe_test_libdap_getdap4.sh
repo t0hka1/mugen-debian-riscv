@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL libdap
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libdap 
+    else 
+        APT_INSTALL libdap 
+    fi
     LOG_INFO "End to prepare the test environment!"
 }
 
@@ -43,7 +48,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf aaa size*
     LOG_INFO "Finish environment cleanup."
 }

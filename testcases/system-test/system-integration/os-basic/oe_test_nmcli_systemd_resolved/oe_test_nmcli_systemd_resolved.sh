@@ -20,7 +20,12 @@
 source ../common/net_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "net-tools systemd-resolved"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "net-tools systemd-resolved" 
+    else 
+        APT_INSTALL "net-tools systemd-resolved" 
+    fi
     cp -r /etc/NetworkManager/NetworkManager.conf /etc/NetworkManager/NetworkManager.conf_bak
     LOG_INFO "End to prepare the test environment."
 }
@@ -43,7 +48,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     mv -f /etc/NetworkManager/NetworkManager.conf_bak /etc/NetworkManager/NetworkManager.conf
     systemctl reload NetworkManager
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

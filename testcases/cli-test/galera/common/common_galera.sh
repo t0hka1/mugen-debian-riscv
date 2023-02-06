@@ -23,7 +23,12 @@ function galera_pre() {
     systemctl stop firewalld
     systemctl disable firewalld
     setenforce 0
-    DNF_INSTALL "galera openssl"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "galera openssl" 
+    else 
+        APT_INSTALL "galera openssl" 
+    fi
     mkdir galera_zl
     touch galera_zl/log1 galera_zl/log2 galera_zl/log3
     openssl genrsa 2048 > galera_zl/ca-key.pem

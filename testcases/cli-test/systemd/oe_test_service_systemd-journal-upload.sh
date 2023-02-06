@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL systemd-journal-remote
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL systemd-journal-remote 
+    else 
+        APT_INSTALL systemd-journal-remote 
+    fi
     if [ $(getenforce | grep Enforcing) ]; then
         setenforce 0
         flag=true
@@ -47,7 +52,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl stop systemd-journal-remote.service
     systemctl stop systemd-journal-upload.service
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

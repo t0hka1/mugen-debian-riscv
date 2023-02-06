@@ -61,7 +61,7 @@ function post_test() {
     send "y\n"
     expect eof
 EOF
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

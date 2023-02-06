@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL unbound
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL unbound 
+    else 
+        APT_INSTALL unbound 
+    fi
     service=unbound.service
     log_time=$(date '+%Y-%m-%d %T')
     symlink_file=$(systemctl enable "${service}" 2>&1 | awk '{print $3}')
@@ -61,7 +66,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload ${service}
     systemctl stop ${service}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

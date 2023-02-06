@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rdate
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rdate 
+    else 
+        APT_INSTALL rdate 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -92,7 +97,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    APT_REMOVE 
     LOG_INFO "End to restore the test environment." 
 }
 

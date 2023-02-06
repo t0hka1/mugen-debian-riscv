@@ -21,7 +21,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cp -r ../common/testfile.rst ./
     cp -r ../common/template_html.txt ./
-    DNF_INSTALL "python-docutils"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "python-docutils" 
+    else 
+        APT_INSTALL "python-docutils" 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -68,7 +73,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./*.html ./*.rst ./*.log
     LOG_INFO "Finish restoring the test environment."
 }

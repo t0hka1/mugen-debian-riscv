@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "chrony"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "chrony" 
+    else 
+        APT_INSTALL "chrony" 
+    fi
     systemctl start chronyd
     LOG_INFO "End to prepare the test environment."
 }
@@ -52,7 +57,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./testlog
     systemctl stop chronyd
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

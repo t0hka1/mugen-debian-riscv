@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tuned
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tuned 
+    else 
+        APT_INSTALL tuned 
+    fi
     systemctl enable --now tuned
     test -d /etc/tuned/my-profile_new || mkdir /etc/tuned/my-profile_new
     echo "[main]
@@ -59,7 +64,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /etc/tuned/modified-profile /etc/tuned/my-profile_new 
     tuned-adm profile "$old_profile"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

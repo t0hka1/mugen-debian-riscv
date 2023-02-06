@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL dnssec-trigger
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dnssec-trigger 
+    else 
+        APT_INSTALL dnssec-trigger 
+    fi
     setenforce 0
     LOG_INFO "End of environmental preparation!"
 }
@@ -35,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     setenforce 1
     LOG_INFO "Finish environment cleanup!"
 }

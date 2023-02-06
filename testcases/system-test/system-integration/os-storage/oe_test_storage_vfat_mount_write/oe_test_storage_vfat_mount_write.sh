@@ -22,7 +22,12 @@ source ../common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    DNF_INSTALL dosfstools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dosfstools 
+    else 
+        APT_INSTALL dosfstools 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 

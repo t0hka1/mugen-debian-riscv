@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL python3-uWSGI
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL python3-uWSGI 
+    else 
+        APT_INSTALL python3-uWSGI 
+    fi
     pip3 install uwsgitop
     LOG_INFO "Finish preparing the test environment."
 }
@@ -88,7 +93,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $(ls | grep -vE ".sh|.py")
     pip3 uninstall uwsgitop -y
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

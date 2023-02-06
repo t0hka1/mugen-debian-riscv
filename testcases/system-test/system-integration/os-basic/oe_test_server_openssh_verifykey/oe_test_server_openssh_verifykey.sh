@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
-	DNF_INSTALL "openssh-server openssh-clients openssh"
+	uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "openssh-server openssh-clients openssh" 
+    else 
+        APT_INSTALL "openssh-server openssh-clients openssh" 
+    fi
 	systemctl start sshd
 	LOG_INFO "End to prepare the test environment."
 }

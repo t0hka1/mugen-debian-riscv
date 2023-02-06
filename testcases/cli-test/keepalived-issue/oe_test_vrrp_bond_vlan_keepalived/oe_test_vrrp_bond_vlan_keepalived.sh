@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     which firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
-    DNF_INSTALL "keepalived vconfig net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "keepalived vconfig net-tools" 
+    else 
+        APT_INSTALL "keepalived vconfig net-tools" 
+    fi
     net_cards=$(TEST_NIC 1)
     net_card2=$(echo $net_cards | awk -F ' ' '{print $1}')
     net_card3=$(echo $net_cards | awk -F ' ' '{print $2}')
@@ -93,7 +98,7 @@ function post_test() {
     nmcli connection del slave-38
     nmcli connection del slave-39
     nmcli connection del bond0
-    DNF_REMOVE 1 "keepalived vconfig net-tools"
+    APT_REMOVE 1 "keepalived vconfig net-tools"
     rm -rf /etc/keepalived/
     LOG_INFO "Finish environment cleanup!"
 }

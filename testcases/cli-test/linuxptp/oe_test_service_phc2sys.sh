@@ -26,7 +26,12 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 1
     else
-        DNF_INSTALL linuxptp
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL linuxptp 
+    else 
+        APT_INSTALL linuxptp 
+    fi
         sed -i "s\-f /etc/ptp4l.conf -i eth0\-f /etc/ptp4l.conf -i ${eth_name}\g" /etc/sysconfig/ptp4l
         systemctl start ptp4l.service
     fi
@@ -45,7 +50,7 @@ function post_test() {
     systemctl stop phc2sys.service
     systemctl stop ptp4l.service
     sed -i "s\-f /etc/ptp4l.conf -i ${eth_name}\-f /etc/ptp4l.conf -i eth0\g" /etc/sysconfig/ptp4l
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "hdparm util-linux"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "hdparm util-linux" 
+    else 
+        APT_INSTALL "hdparm util-linux" 
+    fi
     disk=$(lsblk -a -o NAME,TYPE | grep -v NAME | head -1 | awk '{print $1}')
     LOG_INFO "End of environmental preparation!"
 }
@@ -41,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main $@

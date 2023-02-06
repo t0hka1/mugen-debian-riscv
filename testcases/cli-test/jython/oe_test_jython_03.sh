@@ -18,7 +18,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "jython java-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "jython java-devel" 
+    else 
+        APT_INSTALL "jython java-devel" 
+    fi
     ss=""
     for file in $(ls /usr/share/jython/javalib); do
         ss=$ss"/usr/share/jython/javalib/${file}:"
@@ -60,7 +65,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf testlog Hello*
     export LANG=${old_LANG}
     LOG_INFO "Finish environment cleanup!"

@@ -27,7 +27,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "osc build"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "osc build" 
+    else 
+        APT_INSTALL "osc build" 
+    fi
     osc checkout $branches_path | grep 'revision'
     LOG_INFO "End to prepare the test environment."
 }

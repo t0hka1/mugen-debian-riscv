@@ -20,7 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL net-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL net-tools 
+    else 
+        APT_INSTALL net-tools 
+    fi
     SSH_CMD "sudo dnf install -y httpd net-tools
         sudo systemctl start httpd
         sudo systemctl stop firewalld" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
@@ -101,7 +106,7 @@ function post_test() {
     sudo systemctl start firewalld
     sudo ip addr del 192.168.100.1 dev "$net_card2"
     sudo systemctl stop httpd
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /tmp/ip_remote
     SSH_CMD "sudo systemctl stop httpd;sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del -net 192.168.100.0 netmask 255.255.255.0 gw 192.168.100.1;sudo yum remove -y net-tools httpd;rm -rf /root/ip_remote" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "Finish environment cleanup!"

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pcsc-lite
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pcsc-lite 
+    else 
+        APT_INSTALL pcsc-lite 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload pcscd.service
     systemctl stop pcscd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

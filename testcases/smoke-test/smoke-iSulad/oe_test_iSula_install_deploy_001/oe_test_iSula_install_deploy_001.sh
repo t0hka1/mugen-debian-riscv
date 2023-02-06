@@ -20,7 +20,12 @@
 source ../common/prepare_isulad.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL iSulad
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL iSulad 
+    else 
+        APT_INSTALL iSulad 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -42,7 +47,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /etc/isulad/daemon.json
     sed -i "/${Image_address}/d" /etc/isulad/daemon.json
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL at
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL at 
+    else 
+        APT_INSTALL at 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -40,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     atrm $(atq | awk -F " " '{print$1}')
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

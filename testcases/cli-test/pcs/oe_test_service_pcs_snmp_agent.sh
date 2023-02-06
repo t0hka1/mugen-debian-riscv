@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=pcs_snmp_agent.service
     ha_pre
-    DNF_INSTALL pcs-snmp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pcs-snmp 
+    else 
+        APT_INSTALL pcs-snmp 
+    fi
     echo "master agentx
 view systemview included .1.3.6.1.4.1.32723.100" >> /etc/snmp/snmpd.conf
     LOG_INFO "End of environmental preparation!"
@@ -41,7 +46,7 @@ function post_test() {
     systemctl stop "${service}"
     sed -i '/master agentx/d' /etc/snmp/snmpd.conf
     sed -i '/view systemview included/d' /etc/snmp/snmpd.conf
-    DNF_REMOVE
+    APT_REMOVE
     ha_post
     LOG_INFO "Finish environment cleanup!"
 }

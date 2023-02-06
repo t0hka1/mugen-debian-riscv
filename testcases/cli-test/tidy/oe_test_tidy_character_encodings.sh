@@ -21,8 +21,18 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL tidy
-    DNF_INSTALL uchardet
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tidy 
+    else 
+        APT_INSTALL tidy 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL uchardet 
+    else 
+        APT_INSTALL uchardet 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -99,7 +109,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -f ./tidied.html
     LOG_INFO "Finish environment cleanup!"
 }

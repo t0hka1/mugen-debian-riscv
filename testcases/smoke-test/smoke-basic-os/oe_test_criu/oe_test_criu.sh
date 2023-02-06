@@ -27,7 +27,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "criu gcc"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "criu gcc" 
+    else 
+        APT_INSTALL "criu gcc" 
+    fi
     mkdir checkpoint_demo
     LOG_INFO "End of environmental preparation!"
 }
@@ -56,7 +61,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf checkpoint_demo demo output.txt demo_pid
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

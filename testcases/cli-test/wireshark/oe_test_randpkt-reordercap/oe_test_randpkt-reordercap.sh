@@ -21,7 +21,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an'
     if [$? -eq 0]; then 
-        DNF_INSTALL wireshark
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL wireshark 
+    else 
+        APT_INSTALL wireshark 
+    fi
     else 
         APT_INSTALL wireshark
     fi
@@ -54,7 +59,7 @@ function post_test() {
     rm -rf $(ls | grep -v ".sh")
     uname -r | grep 'oe\|an'
     if [$? -eq 0]; then 
-        DNF_REMOVE wireshark
+        APT_REMOVE wireshark
     else
         APT_REMOVE wireshark
     fi

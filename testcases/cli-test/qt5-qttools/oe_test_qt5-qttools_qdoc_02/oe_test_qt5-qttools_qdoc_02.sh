@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "qt5-qttools qt5-doctools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "qt5-qttools qt5-doctools" 
+    else 
+        APT_INSTALL "qt5-qttools qt5-doctools" 
+    fi
     qt5_version=$(rpm -qa qt5-qttools | awk -F '-' '{print $3}')
     qt5_global=$(rpm -ql qt5-qtbase | grep "global" | head -n 1)
     cp -r $qt5_global ../example* ../hello* ./
@@ -69,7 +74,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf example.qdoc example.qdocconf hello.cpp hello.h hello.pro html global result
     LOG_INFO "End to restore the test environment."
 }

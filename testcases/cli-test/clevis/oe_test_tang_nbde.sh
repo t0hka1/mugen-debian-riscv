@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "clevis tang"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clevis tang" 
+    else 
+        APT_INSTALL "clevis tang" 
+    fi
     ls /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
     SOCKET_CONTENT='[Socket]\nListenStream=\nListenStream=8009'
     mkdir /etc/systemd/system/tangd.socket.d
@@ -76,7 +81,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop tangd.socket
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf secert.jwe adv.jws sec.jwe input-plain.txt /etc/systemd/system/tangd.socket.d input.txt /var/db/tang
     LOG_INFO "Finish environment cleanup!"
 }

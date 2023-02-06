@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "galera mariadb-server-galera mariadb"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "galera mariadb-server-galera mariadb" 
+    else 
+        APT_INSTALL "galera mariadb-server-galera mariadb" 
+    fi
     systemctl start mariadb
     mysqladmin -u root password 123456
     sed -i 's/#wsrep_cluster_address="dummy:\/\/"/wsrep_cluster_address="gcomm:\/\/"/g' /etc/my.cnf.d/galera.cnf
@@ -79,7 +84,7 @@ function post_test() {
     systemctl stop ${service}
     systemctl stop mariadb.service
     rm -rf /var/lib/mysql/*
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

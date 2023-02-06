@@ -26,7 +26,12 @@ function pre_test() {
     modprobe ipmi_devintf
     modprobe ipmi_si 
     modprobe ipmi_msghandler
-    DNF_INSTALL ipmitool
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ipmitool 
+    else 
+        APT_INSTALL ipmitool 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +50,7 @@ function post_test() {
     modprobe -r ipmi_si 
     modprobe -r ipmi_msghandler
     systemctl stop ipmievd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

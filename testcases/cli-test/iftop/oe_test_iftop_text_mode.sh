@@ -21,9 +21,24 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL iftop
-    DNF_INSTALL bind-utils
-    DNF_INSTALL ipcalc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL iftop 
+    else 
+        APT_INSTALL iftop 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL bind-utils 
+    else 
+        APT_INSTALL bind-utils 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ipcalc 
+    else 
+        APT_INSTALL ipcalc 
+    fi
     IFS=' ' read -r -a net_cards <<< "$(TEST_NIC)"
     ipv4_addr_1=$(nmcli device show ${net_cards[0]} | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
     ipv4_addr_2=$(nmcli device show ${net_cards[1]} | grep IP4.ADDRESS | awk '{print $2}' | cut -d '/' -f1)
@@ -120,7 +135,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

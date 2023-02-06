@@ -25,7 +25,12 @@ function pre_test() {
     export LANG=en_US.utf-8
     check_free_disk
     mkdir -p /home/sdbpoint/
-    DNF_INSTALL "multipath-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "multipath-tools" 
+    else 
+        APT_INSTALL "multipath-tools" 
+    fi
     LOG_INFO "Start to prepare the test environment."
 }
 function run_test() {
@@ -49,7 +54,7 @@ function post_test() {
     LOG_INFO "Start to clean the test environment."
     umount /home/sdbpoint
     rm -rf /home/sdbpoint
-    DNF_REMOVE
+    APT_REMOVE
     export LANG=${local_lang}
     LOG_INFO "Start to clean the test environment."
 }

@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "ftp vsftpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ftp vsftpd" 
+    else 
+        APT_INSTALL "ftp vsftpd" 
+    fi
     cp /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.bak
     sed -i 's/anonymous_enable=NO/anonymous_enable=YES/g' /etc/vsftpd/vsftpd.conf
     sed -i 's/#anon_upload_enable=YES/anon_upload_enable=YES/g' /etc/vsftpd/vsftpd.conf
@@ -60,7 +65,7 @@ function post_test() {
     systemctl status firewalld | grep dead && systemctl start firewalld
     rm -rf example.txt /var/ftp/pub/example.txt
     userdel -rf example
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

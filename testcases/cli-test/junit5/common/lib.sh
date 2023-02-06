@@ -20,13 +20,28 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_junit5() {
-    DNF_INSTALL junit5
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL junit5 
+    else 
+        APT_INSTALL junit5 
+    fi
     java_version=$(rpm -qa 'java*' | grep 'java-.*-openjdk' | head -1 | awk -F - '{print $2}')
-    DNF_INSTALL java-"${java_version}"-devel
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL java-"${java_version}"-devel 
+    else 
+        APT_INSTALL java-"${java_version}"-devel 
+    fi
 }
 
 function pre_maven() {
-    DNF_INSTALL maven
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL maven 
+    else 
+        APT_INSTALL maven 
+    fi
     JAVA_HOME=/usr/lib/jvm/java-openjdk
     PATH=$PATH:$JAVA_HOME/bin
     export JAVA_HOME PATH
@@ -35,6 +50,6 @@ function pre_maven() {
 }
 
 function clean_maven() {
-    DNF_REMOVE
+    APT_REMOVE
     source /etc/profile >/dev/null
 }

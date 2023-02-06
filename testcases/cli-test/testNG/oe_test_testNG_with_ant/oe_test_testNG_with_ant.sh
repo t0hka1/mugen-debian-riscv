@@ -39,9 +39,19 @@ function pre_test() {
 
     if ! java -version; then
         java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
-        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander ant"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander ant" 
+    else 
+        APT_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander ant" 
+    fi
     else
-        DNF_INSTALL "testng beust-jcommander ant"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "testng beust-jcommander ant" 
+    else 
+        APT_INSTALL "testng beust-jcommander ant" 
+    fi
     fi
     testng_jar=$(rpm -ql testng | grep testng.jar)
     jcommander_jar=$(rpm -ql beust-jcommander | grep beust-jcommander.jar)
@@ -64,7 +74,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf /tmp/test
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

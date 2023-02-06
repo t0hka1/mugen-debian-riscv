@@ -25,7 +25,12 @@ function pre_test()
     mkdir output_test
     wget -P ./ https://pngquant.org/Ducati_side_shadow.png && mv Ducati_side_shadow.png test.png
     cp test.png test-copy.png
-    DNF_INSTALL "pngquant libimagequant"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pngquant libimagequant" 
+    else 
+        APT_INSTALL "pngquant libimagequant" 
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -107,7 +112,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./test* ./output_test/
 
     LOG_INFO "End to restore the test environment."

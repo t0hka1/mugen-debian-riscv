@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL apache-zookeeper
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL apache-zookeeper 
+    else 
+        APT_INSTALL apache-zookeeper 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -41,7 +46,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's\tickTime=200\tickTime=2000\g' /opt/zookeeper/conf/zoo.cfg
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

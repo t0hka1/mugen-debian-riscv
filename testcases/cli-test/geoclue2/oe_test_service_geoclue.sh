@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "geoclue2 avahi"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "geoclue2 avahi" 
+    else 
+        APT_INSTALL "geoclue2 avahi" 
+    fi
     systemctl start avahi-daemon.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop avahi-daemon.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

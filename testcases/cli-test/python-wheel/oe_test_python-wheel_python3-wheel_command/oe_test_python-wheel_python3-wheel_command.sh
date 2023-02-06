@@ -30,7 +30,12 @@ function pre_test() {
         cd "${testpath}" || exit 1
         python3 setup.py bdist_egg
     )
-    DNF_INSTALL "python3-wheel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "python3-wheel" 
+    else 
+        APT_INSTALL "python3-wheel" 
+    fi
     if [ "$(expr $(rpm -q python3-wheel | awk -F '-' '{print $3}' | awk -F '.' '{print $1"."$2}') \>= 0.32)" -eq 0 ]; then
         pre_env_old_version
     fi
@@ -67,7 +72,7 @@ function post_test() {
     else
         clean_new_version
     fi
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf "${testpath}" wjfpkg-1.0
 
     LOG_INFO "End to restore the test environment."

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL multipath-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL multipath-tools 
+    else 
+        APT_INSTALL multipath-tools 
+    fi
     service=multipathd.service
     log_time=$(date '+%Y-%m-%d %T')
     disk_name=$(lsblk | grep disk | awk '{print $1}' | tr '\n' '|' | sed 's@|$@@')
@@ -62,7 +67,7 @@ function post_test() {
     systemctl reload multipathd.service
     mv /etc/multipath.bak /etc/multipath.conf
     systemctl stop multipathd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

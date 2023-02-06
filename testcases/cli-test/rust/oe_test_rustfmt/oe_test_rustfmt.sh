@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL "rustfmt rls"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "rustfmt rls" 
+    else 
+        APT_INSTALL "rustfmt rls" 
+    fi
     cp ../common/* ./
     LOG_INFO "End to prepare the test environment!"
 }
@@ -54,7 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./*.rs test*
     LOG_INFO "Finish environment cleanup!"
 }

@@ -23,7 +23,12 @@ function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "help2man"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "help2man" 
+    else 
+        APT_INSTALL "help2man" 
+    fi
 
     LOG_INFO "End to prepare the test environment."
 }
@@ -94,7 +99,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./additional.h2m ./help2man.1 
 
     LOG_INFO "End to restore the test environment."

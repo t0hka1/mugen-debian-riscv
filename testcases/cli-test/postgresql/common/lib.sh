@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function postgresql_install() {
-    DNF_INSTALL "postgresql postgresql-server postgresql-devel postgresql-contrib"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "postgresql postgresql-server postgresql-devel postgresql-contrib" 
+    else 
+        APT_INSTALL "postgresql postgresql-server postgresql-devel postgresql-contrib" 
+    fi
     rm -rf /tmp/.s.PGSQL*
     /usr/bin/postgresql-setup --initdb
     sed -i 's/ident/trust/g' /var/lib/pgsql/data/pg_hba.conf

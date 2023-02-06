@@ -21,7 +21,12 @@ source "../common/common_ruby.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL ruby-irb
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ruby-irb 
+    else 
+        APT_INSTALL ruby-irb 
+    fi
     VERSION_ID=$(grep "VERSION_ID" /etc/os-release | awk -F '\"' '{print$2}')
     LOG_INFO "Finish preparing the test environment."
 }
@@ -64,7 +69,7 @@ EOF
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     delete_files
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

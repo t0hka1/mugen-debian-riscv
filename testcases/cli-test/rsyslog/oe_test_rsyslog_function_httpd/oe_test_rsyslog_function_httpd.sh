@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd" 
+    else 
+        APT_INSTALL "httpd" 
+    fi
     setenforce 0
     systemctl stop iptables
     systemctl restart httpd
@@ -71,7 +76,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     SSH_CMD "rm -rf /etc/rsyslog.d/server.conf && systemctl restart rsyslog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     rm -rf /etc/rsyslog.d/client.conf
     systemctl restart rsyslog

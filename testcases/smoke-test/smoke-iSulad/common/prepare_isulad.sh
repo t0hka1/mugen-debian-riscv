@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_isulad_env() {
-    DNF_INSTALL "iSulad tar"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "iSulad tar" 
+    else 
+        APT_INSTALL "iSulad tar" 
+    fi
     clean_isulad_env
     if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
         os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)

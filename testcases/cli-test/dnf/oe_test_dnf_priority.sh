@@ -54,7 +54,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
     sed -ie '/priority=/d' /etc/yum.repos.d/*.repo
-    DNF_REMOVE 1 $test_pkg
+    APT_REMOVE 1 $test_pkg
     rm -rf anaconda_list mainline_pkg_list
     LOG_INFO "End of restore the test environment."
 }

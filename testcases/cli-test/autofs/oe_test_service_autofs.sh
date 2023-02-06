@@ -21,7 +21,12 @@ source "../common/common_autofs.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL autofs
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL autofs 
+    else 
+        APT_INSTALL autofs 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/automount -d\ExecStart=/usr/sbin/automount\g' /usr/lib/systemd/system/autofs.service
     systemctl daemon-reload
     systemctl reload autofs.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

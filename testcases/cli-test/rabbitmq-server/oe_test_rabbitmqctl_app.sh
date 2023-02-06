@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rabbitmq-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rabbitmq-server 
+    else 
+        APT_INSTALL rabbitmq-server 
+    fi
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     platform=$(uname -i)
@@ -63,7 +68,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/rabbitmq/
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"

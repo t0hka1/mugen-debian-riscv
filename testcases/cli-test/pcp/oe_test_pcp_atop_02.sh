@@ -21,7 +21,12 @@ source "common/common_pcp.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL pcp-system-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pcp-system-tools 
+    else 
+        APT_INSTALL pcp-system-tools 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -70,7 +75,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./testdir atop*
     kill -9 $(pgrep -f /usr/libexec/pcp/bin/pcp-atop)
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

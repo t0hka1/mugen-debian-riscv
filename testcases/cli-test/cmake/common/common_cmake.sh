@@ -20,7 +20,12 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    DNF_INSTALL "cmake gcc-c++ ninja-build make"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "cmake gcc-c++ ninja-build make" 
+    else 
+        APT_INSTALL "cmake gcc-c++ ninja-build make" 
+    fi
     mkdir build && cd build
 }
 
@@ -34,5 +39,5 @@ function clear_env() {
         roc=$(ls | grep -vE "\.sh|\.c|\.cpp|\.txt")
         rm -rf $roc
     }
-    DNF_REMOVE
+    APT_REMOVE
 }

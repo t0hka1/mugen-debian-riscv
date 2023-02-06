@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^example:" /etc/passwd && userdel -rf example
-    DNF_INSTALL net-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL net-tools 
+    else 
+        APT_INSTALL net-tools 
+    fi
     net_card=$(ip a | grep $NODE1_IPV4 | awk -F ' ' '{printf $NF}')
     LOG_INFO "End of environmental preparation!"
 }

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openwsman-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openwsman-server 
+    else 
+        APT_INSTALL openwsman-server 
+    fi
     expect <<EOF
         spawn /etc/openwsman/owsmangencert.sh --force
         expect {
@@ -49,7 +54,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop openwsmand.service
     rm -rf /etc/openwsman/servercert.pem /etc/openwsman/serverkey.pem
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

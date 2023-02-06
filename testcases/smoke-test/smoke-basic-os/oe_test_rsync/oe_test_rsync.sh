@@ -25,7 +25,12 @@ se_stat="Enforcing"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL rsync
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rsync 
+    else 
+        APT_INSTALL rsync 
+    fi
     cp $conf_file conf_bak
     mkdir -p "${src_dir}" "${des_dir}"
     se_stat="$(getenforce)"
@@ -58,7 +63,7 @@ function post_test() {
     mv conf_bak $conf_file
     rm -rf "${src_dir}" "${des_dir}"
     setenforce "${se_stat}"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

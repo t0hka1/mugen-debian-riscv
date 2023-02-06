@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL exiv2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL exiv2 
+    else 
+        APT_INSTALL exiv2 
+    fi
     LOG_INFO "End of environmental preparation!"
 
 }
@@ -52,7 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f  tmp.* test1.jpg
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 
 }

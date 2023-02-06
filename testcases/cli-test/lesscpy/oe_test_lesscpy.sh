@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL python3-lesscpy
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL python3-lesscpy 
+    else 
+        APT_INSTALL python3-lesscpy 
+    fi
     mkdir less_zl
     echo "@color: #4D926F;
 
@@ -56,7 +61,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf less_zl
     LOG_INFO "Finish environment cleanup."
 }

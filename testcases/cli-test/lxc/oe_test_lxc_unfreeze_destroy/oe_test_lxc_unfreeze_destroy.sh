@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox" 
+    else 
+        APT_INSTALL "lxc lxc-devel lxc-libs lxcfs lxcfs-tools tar busybox" 
+    fi
     version=$(rpm -qa lxc | awk -F '-' '{print $2}')
     LOG_INFO "End to prepare the test environment."
 }
@@ -62,7 +67,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the tet environment."
 }
 

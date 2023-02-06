@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL acpid
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL acpid 
+    else 
+        APT_INSTALL acpid 
+    fi
     flag=false
     if [ $(getenforce | grep Enforcing) ]; then
         setenforce 0
@@ -39,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

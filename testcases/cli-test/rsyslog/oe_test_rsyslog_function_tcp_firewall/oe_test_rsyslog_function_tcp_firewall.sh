@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "net-tools" 
+    else 
+        APT_INSTALL "net-tools" 
+    fi
     sed -i '/22/i\-A INPUT -p tcp -m state --state NEW -m tcp --dport 514 -j ACCEPT' /etc/sysconfig/iptables
     systemctl restart iptables
     SSH_CMD "systemctl start iptables" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
@@ -52,7 +57,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     sed -i "/-A INPUT -p tcp -m state --state NEW -m tcp --dport 514 -j ACCEPT/d" /etc/sysconfig/iptables
     CHECK_RESULT $?
     systemctl restart iptables

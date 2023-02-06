@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libstoragemgmt
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libstoragemgmt 
+    else 
+        APT_INSTALL libstoragemgmt 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/bin/lsmd -v\ExecStart=/usr/bin/lsmd\g' /usr/lib/systemd/system/libstoragemgmt.service
     systemctl daemon-reload
     systemctl reload libstoragemgmt.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

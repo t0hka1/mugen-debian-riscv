@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "freeradius"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "freeradius" 
+    else 
+        APT_INSTALL "freeradius" 
+    fi
     echo -e "show version\nquit" >/tmp/radminfile
     radiusd_version=$(rpm -q freeradius | awk -F '-' '{print $2}')
 
@@ -68,7 +73,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     systemctl stop radiusd
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius
     rm -rf /tmp/radminfile

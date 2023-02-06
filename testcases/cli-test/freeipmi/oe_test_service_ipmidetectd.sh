@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL freeipmi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL freeipmi 
+    else 
+        APT_INSTALL freeipmi 
+    fi
     echo "ipmiping_period 15000
 ipmidetectd_server_port 9225
 host localhost.localdomain" >/etc/freeipmi/ipmidetectd.conf
@@ -42,7 +47,7 @@ function post_test() {
     systemctl stop bmc-watchdog.service
     systemctl stop ipmiseld.service
     systemctl stop ipmidetectd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

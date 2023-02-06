@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "mailman postfix"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mailman postfix" 
+    else 
+        APT_INSTALL "mailman postfix" 
+    fi
     old_LANG=${LANG}
     export LANG=en_US.UTF-8
     expect <<EOF

@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     local_lang=$LANG
     export LANG=en_US.utf-8
-    DNF_INSTALL multipath-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL multipath-tools 
+    else 
+        APT_INSTALL multipath-tools 
+    fi
     mpathconf --enable --with_multipathd y
     LOG_INFO "Environmental preparation is over."
 }
@@ -46,7 +51,7 @@ function post_test() {
     mv /etc/multipath.conf.bak /etc/multipath.conf
     systemctl reload multipathd.service
     multipath -F
-    DNF_REMOVE
+    APT_REMOVE
     export LANG=${local_lang}
     LOG_INFO "Finish environment cleanup."
 }

@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "lz4"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "lz4" 
+    else 
+        APT_INSTALL "lz4" 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -46,7 +51,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf lz4_test.txt*
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

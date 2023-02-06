@@ -17,7 +17,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "podman podman-docker"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "podman podman-docker" 
+    else 
+        APT_INSTALL "podman podman-docker" 
+    fi
     echo -e "[registries.search]
 registries = ['docker.io']
 
@@ -33,5 +38,5 @@ function clear_env() {
     podman stop postgres
     podman rm -all
     podman rmi -f -all
-    DNF_REMOVE
+    APT_REMOVE
 }

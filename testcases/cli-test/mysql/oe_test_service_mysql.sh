@@ -53,7 +53,7 @@ function post_test() {
     systemctl reload "${service}"
     systemctl stop "${service}"
     mysql_post
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

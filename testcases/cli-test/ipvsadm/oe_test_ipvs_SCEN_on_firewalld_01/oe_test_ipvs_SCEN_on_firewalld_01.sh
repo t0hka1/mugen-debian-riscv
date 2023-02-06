@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    DNF_INSTALL "ipvsadm httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ipvsadm httpd" 
+    else 
+        APT_INSTALL "ipvsadm httpd" 
+    fi
     systemctl start httpd
     systemctl stop firewalld
     ip addr add $VIP/22 dev ${NODE2_NIC}
@@ -71,7 +76,7 @@ function post_test() {
     ipvsadm -C
     rm -rf /etc/sysconfig/ipvsadm ./result_*
     ip addr del $VIP/22 dev ${NODE2_NIC}
-    DNF_REMOVE
+    APT_REMOVE
     SSH_CMD "bash -x /tmp/LVS_DR_RIP_config.sh stop" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "bash -x /tmp/LVS_DR_RIP_config.sh stop" ${NODE3_IPV4} ${NODE3_PASSWORD} ${NODE3_USER}
     SSH_CMD "rm -rf /tmp/GET_CURL_RESULT.sh /tmp/result_curl.txt" ${NODE4_IPV4} ${NODE4_PASSWORD} ${NODE4_USER}

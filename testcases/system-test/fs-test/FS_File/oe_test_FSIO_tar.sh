@@ -20,7 +20,12 @@ source ../common_lib/fsio_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL tar
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tar 
+    else 
+        APT_INSTALL tar 
+    fi
     cur_date=$(date +%Y%m%d%H%M%S)
     point_list=($(CREATE_FS))
     testFile1="testFile1$cur_date"
@@ -54,7 +59,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     list=$(echo ${point_list[@]})
     REMOVE_FS "$list"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

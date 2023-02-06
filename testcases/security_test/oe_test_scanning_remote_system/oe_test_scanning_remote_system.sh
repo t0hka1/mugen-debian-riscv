@@ -20,7 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "expect scap-security-guide openscap"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "expect scap-security-guide openscap" 
+    else 
+        APT_INSTALL "expect scap-security-guide openscap" 
+    fi
     SSH_CMD "dnf install -y scap-security-guide openscap" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     LOG_INFO "End of environmental preparation!"
 }
@@ -51,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     SSH_CMD "dnf remove -y scap-security-guide openscap" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /root/remote-vulnerability.html
     LOG_INFO "Finish environment cleanup!"
 }

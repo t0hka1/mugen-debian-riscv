@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "postgresql postgresql-server rsyslog-pgsql"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "postgresql postgresql-server rsyslog-pgsql" 
+    else 
+        APT_INSTALL "postgresql postgresql-server rsyslog-pgsql" 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -73,7 +78,7 @@ END
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /etc/rsyslog.d/test.conf /opt/test.csv /var/lib/pgsql/*
-    DNF_REMOVE
+    APT_REMOVE
     systemctl restart rsyslog
     LOG_INFO "End to restore the test environment."
 }

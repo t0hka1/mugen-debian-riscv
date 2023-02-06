@@ -25,7 +25,12 @@ function config_params() {
 }
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "tuned dmidecode"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "tuned dmidecode" 
+    else 
+        APT_INSTALL "tuned dmidecode" 
+    fi
     if [[ "${NODE1_MACHINE}"x == "kvm"x ]]; then
         LOG_INFO "This only applies to physical machines."
         exit 0
@@ -70,7 +75,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /etc/tuned/my-profile /etc/tuned/my-profile_new 
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL amanda
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL amanda 
+    else 
+        APT_INSTALL amanda 
+    fi
     systemctl start amanda-udp.socket
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop amanda-udp.socket
     systemctl stop amanda-udp.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

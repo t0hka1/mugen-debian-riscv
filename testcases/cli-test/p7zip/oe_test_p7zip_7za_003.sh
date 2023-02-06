@@ -21,7 +21,12 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL 'p7zip tar'
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL 'p7zip tar' 
+    else 
+        APT_INSTALL 'p7zip tar' 
+    fi
     # create test files
     echo 1 > file1
     echo 2 > file2
@@ -67,7 +72,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf file* archive* tmp_* File*
     LOG_INFO "Finish environment cleanup!"
 }

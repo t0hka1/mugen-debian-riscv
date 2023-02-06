@@ -21,7 +21,12 @@ source "../common/common_javapackages-tools.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tar
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tar 
+    else 
+        APT_INSTALL tar 
+    fi
     deploy_env
     LOG_INFO "Finish preparing the test environment."
 }

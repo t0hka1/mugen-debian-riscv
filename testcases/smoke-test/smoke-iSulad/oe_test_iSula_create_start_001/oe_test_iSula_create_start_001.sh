@@ -40,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_isulad_env
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

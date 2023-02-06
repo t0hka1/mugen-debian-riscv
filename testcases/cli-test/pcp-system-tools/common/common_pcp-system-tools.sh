@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function deploy_env {
-    DNF_INSTALL "pcp pcp-system-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pcp pcp-system-tools" 
+    else 
+        APT_INSTALL "pcp pcp-system-tools" 
+    fi
     systemctl enable pmcd
     systemctl start pmcd
     systemctl enable pmlogger
@@ -32,5 +37,5 @@ function deploy_env {
 function clear_env {
     systemctl stop pmcd
     systemctl stop pmlogger
-    DNF_REMOVE
+    APT_REMOVE
 }

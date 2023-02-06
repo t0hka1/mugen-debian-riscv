@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL postfix
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL postfix 
+    else 
+        APT_INSTALL postfix 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload postfix.service
     systemctl stop postfix.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

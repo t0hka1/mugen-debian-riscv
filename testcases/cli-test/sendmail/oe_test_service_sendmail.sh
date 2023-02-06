@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL sendmail
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL sendmail 
+    else 
+        APT_INSTALL sendmail 
+    fi
     rpm -e --nodeps cyrus-sasl
     mkdir -p /usr/lib/sasl2/
     echo "ldapdb_uri: ldapi:///" >/usr/lib/sasl2/Sendmail.conf
@@ -48,7 +53,7 @@ function post_test() {
     systemctl reload sendmail.service
     rm -rf /usr/lib/sasl2
     systemctl stop sendmail.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

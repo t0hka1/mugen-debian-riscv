@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     echo "1" >/proc/sys/net/ipv4/ip_forward
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    DNF_INSTALL "ipvsadm httpd net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ipvsadm httpd net-tools" 
+    else 
+        APT_INSTALL "ipvsadm httpd net-tools" 
+    fi
     systemctl start httpd
     systemctl stop firewalld
     ip addr add $VIP/22 dev ${NODE2_NIC}
@@ -64,7 +69,7 @@ function post_test() {
     route del -host $VIP dev tunl0
     ifconfig tunl0 $VIP broadcast $VIP netmask 255.255.255.255 down
     ip addr del $VIP/22 dev ${NODE2_NIC}
-    DNF_REMOVE
+    APT_REMOVE
     SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh stop" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "bash -x /tmp/LVS_TUN_RIP_config.sh stop" ${NODE3_IPV4} ${NODE3_PASSWORD} ${NODE3_USER}
     SSH_CMD "rm -rf /tmp/GET_CURL_RESULT.sh /tmp/result_curl.txt" ${NODE4_IPV4} ${NODE4_PASSWORD} ${NODE4_USER}

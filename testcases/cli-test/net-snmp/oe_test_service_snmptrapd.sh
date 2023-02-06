@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL net-snmp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL net-snmp 
+    else 
+        APT_INSTALL net-snmp 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload snmptrapd.service
     systemctl stop snmptrapd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

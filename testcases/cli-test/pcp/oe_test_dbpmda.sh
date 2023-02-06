@@ -107,7 +107,7 @@ END
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -f testlog*
     LOG_INFO "End to restore the test environment."
 }

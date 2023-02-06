@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL dovecot
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dovecot 
+    else 
+        APT_INSTALL dovecot 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +50,7 @@ function post_test() {
     systemctl reload dovecot.service
     systemctl stop dovecot.service
     rm -rf /etc/pki/dovecot/certs/dovecot.pem /etc/pki/dovecot/private/dovecot.pem
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

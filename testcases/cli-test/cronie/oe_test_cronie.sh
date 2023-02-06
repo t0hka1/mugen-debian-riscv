@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     USER_NAME='test_user'
     useradd $USER_NAME
-    DNF_INSTALL "cronie"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "cronie" 
+    else 
+        APT_INSTALL "cronie" 
+    fi
     echo "echo \"Hello World: \$(date)\" >> $(pwd)/rst.txt" > ./test.sh
     chmod 777 ./test.sh
     echo "echo \"\$(whoami): \$(date)\" >> ~/rst.txt" > /home/"$USER_NAME"/test.sh
@@ -75,7 +80,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     crontab ./cron.bak
     crontab -u "$USER_NAME" /home/"$USER_NAME"/cron.bak
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf test.sh rst.txt cron.bak cron.test
     userdel -r $USER_NAME
     LOG_INFO "End to restore the test environment."

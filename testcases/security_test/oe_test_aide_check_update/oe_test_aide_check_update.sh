@@ -21,7 +21,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL aide
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL aide 
+    else 
+        APT_INSTALL aide 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -39,7 +44,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/aide/aide.db.*
     LOG_INFO "Finish environment cleanup!"
 }

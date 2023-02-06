@@ -26,7 +26,12 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     
-    DNF_INSTALL acl
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL acl 
+    else 
+        APT_INSTALL acl 
+    fi
     mkdir -p dir dir-b dir-d
     touch $myfilelist
     uid=$(whoami)
@@ -105,7 +110,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     
-    DNF_REMOVE 
+    APT_REMOVE 
     rm -rf dir dir-b dir-d $myfilelist
     
     LOG_INFO "End to restore the test environment."

@@ -28,7 +28,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL openssl
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openssl 
+    else 
+        APT_INSTALL openssl 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -51,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf cert.crt rsa_private.key $encry_file $decry_file
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

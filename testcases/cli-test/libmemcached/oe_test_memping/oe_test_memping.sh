@@ -21,7 +21,12 @@ source "../common/common_libmemcached.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "libmemcached memcached telnet net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "libmemcached memcached telnet net-tools" 
+    else 
+        APT_INSTALL "libmemcached memcached telnet net-tools" 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 

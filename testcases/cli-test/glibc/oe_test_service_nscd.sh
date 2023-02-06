@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nscd 
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nscd  
+    else 
+        APT_INSTALL nscd  
+    fi
     touch /etc/netgroup
     LOG_INFO "End of environmental preparation!"
 }
@@ -46,7 +51,7 @@ function post_test() {
     systemctl reload nscd.service
     systemctl stop nscd.service
     rm -rf /etc/netgroup
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -26,7 +26,12 @@ function pre_test() {
 	echo  \\\"\\thosts deny = client2.example.com\\\" >> /etc/samba/smb.conf" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "systemctl stop firewalld; systemctl restart smb || systemctl start smb;systemctl enable smb;
 	setsebool -P samba_export_all_ro on;setsebool -P samba_export_all_rw on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_INSTALL cifs-utils
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL cifs-utils 
+    else 
+        APT_INSTALL cifs-utils 
+    fi
     systemctl stop firewalld
     mkdir -p /home/client
     LOG_INFO "Environmental preparation is over."
@@ -47,7 +52,7 @@ function post_test() {
     rmdir /home/client
     SSH_CMD "systemctl stop smb; rm -f /etc/samba/smb.conf;mv /etc/samba/smb.conf.bak /etc/samba/smb.conf;
     yum remove samba policycoreutils-python-utils -y; userdel -r testsamba; systemctl start firewalld" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    APT_REMOVE
     systemctl start firewalld
     LOG_INFO "Finish environment cleanup."
 }

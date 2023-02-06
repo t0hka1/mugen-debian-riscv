@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "hadoop-yarn java-1.8.0-openjdk hadoop-hdfs"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "hadoop-yarn java-1.8.0-openjdk hadoop-hdfs" 
+    else 
+        APT_INSTALL "hadoop-yarn java-1.8.0-openjdk hadoop-hdfs" 
+    fi
     echo "export JAVA_HOME=/usr/lib/jvm/jre" >>/usr/libexec/hadoop-layout.sh
     sed -i "/Group=hadoop/a SuccessExitStatus=143" /usr/lib/systemd/system/hadoop-proxyserver.service
     systemctl daemon-reload
@@ -52,7 +57,7 @@ function post_test() {
     sed -i "/SuccessExitStatus=143/d" /usr/lib/systemd/system/hadoop-proxyserver.service
     systemctl daemon-reload
     mv /tmp/yarn-site.xml /etc/hadoop/yarn-site.xml
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

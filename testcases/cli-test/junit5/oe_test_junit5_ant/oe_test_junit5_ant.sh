@@ -22,7 +22,12 @@ source "../common/lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_junit5
-    DNF_INSTALL "ant ant-junit5"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ant ant-junit5" 
+    else 
+        APT_INSTALL "ant ant-junit5" 
+    fi
     JAVA_HOME=/usr/lib/jvm/java-openjdk
     PATH=$PATH:$JAVA_HOME/bin
     export JAVA_HOME PATH
@@ -54,7 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf junit5_ant /tmp/ant_result
     source /etc/profile >/dev/null
     LOG_INFO "Finish environment cleanup!"

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "clamav clamd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clamav clamd" 
+    else 
+        APT_INSTALL "clamav clamd" 
+    fi
     echo "LogSyslog yes
 TCPSocket 3310
 TCPAddr ${NODE1_IPV4}
@@ -42,7 +47,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     kill -9 $(pgrep -f clamd)
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     pre_env
-    DNF_INSTALL "springframework springframework-beans springframework-context springframework-expression apache-commons-logging"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "springframework springframework-beans springframework-context springframework-expression apache-commons-logging" 
+    else 
+        APT_INSTALL "springframework springframework-beans springframework-context springframework-expression apache-commons-logging" 
+    fi
     springcore_jar=$(rpm -ql springframework | grep spring-core.jar)
     springbeans_jar=$(rpm -ql springframework-beans | grep spring-beans.jar)
     springcontext_jar=$(rpm -ql springframework-context | grep spring-context.jar)

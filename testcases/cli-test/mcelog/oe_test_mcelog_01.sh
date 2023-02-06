@@ -24,7 +24,12 @@ function pre_test() {
         echo "Non X86 architecture,this function is not supported"
         exit
     else
-        DNF_INSTALL "mcelog gcc gcc-c++ flex dialog git"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mcelog gcc gcc-c++ flex dialog git" 
+    else 
+        APT_INSTALL "mcelog gcc gcc-c++ flex dialog git" 
+    fi
     fi
     cat >correct <<EOF
 CPU 1 BANK 2
@@ -72,7 +77,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     echo "0" >/sys/devices/system/machinecheck/machinecheck0/tolerant
     rm -f correct /var/log/mcelog haha.txt
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

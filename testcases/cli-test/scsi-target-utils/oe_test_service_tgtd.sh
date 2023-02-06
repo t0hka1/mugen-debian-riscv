@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL scsi-target-utils
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL scsi-target-utils 
+    else 
+        APT_INSTALL scsi-target-utils 
+    fi
     service=tgtd.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
@@ -61,7 +66,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload tgtd.service
     systemctl stop tgtd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

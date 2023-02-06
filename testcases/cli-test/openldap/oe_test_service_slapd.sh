@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openldap-servers
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openldap-servers 
+    else 
+        APT_INSTALL openldap-servers 
+    fi
     rpm -e --nodeps cyrus-sasl
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop slapd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

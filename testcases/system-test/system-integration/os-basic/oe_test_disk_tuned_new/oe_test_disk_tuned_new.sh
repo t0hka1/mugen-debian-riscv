@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL tuned
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tuned 
+    else 
+        APT_INSTALL tuned 
+    fi
     systemctl enable --now tuned
     mkdir /etc/tuned/my-profile
     old_profile=$(tuned-adm active | awk '{print $4}')
@@ -51,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf tuned_log /etc/tuned
     LOG_INFO "End to restore the test environment."
 }

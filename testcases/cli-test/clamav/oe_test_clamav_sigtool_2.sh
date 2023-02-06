@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL clamav
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clamav 
+    else 
+        APT_INSTALL clamav 
+    fi
     cp /var/lib/clamav/bytecode.cvd /opt
     cp /var/lib/clamav/main.cvd ./
     echo "test" > testfile
@@ -68,7 +73,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf nocomment.html notags.html rfc2397 /opt/bytecode.cvd /opt/bytecode.cvd.ascii testfile normalised_text main.cvd
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

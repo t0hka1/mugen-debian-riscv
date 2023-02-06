@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL php-cli
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL php-cli 
+    else 
+        APT_INSTALL php-cli 
+    fi
     sed -i 's/;phar.readonly = On/phar.readonly = Off/g' /etc/php.ini || exit 1
     LOG_INFO "Finish preparing the test environment."
 }
@@ -160,7 +165,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     sed -i 's/phar.readonly = Off/;phar.readonly = On/g' /etc/php.ini
     rm -rf $(ls | grep -v ".sh")
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

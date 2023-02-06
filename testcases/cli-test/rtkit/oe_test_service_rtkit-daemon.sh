@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rtkit
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rtkit 
+    else 
+        APT_INSTALL rtkit 
+    fi
     sed -i "29i\Slice=-.slice" /usr/lib/systemd/system/rtkit-daemon.service
     sed -i "30i\DisableControllers=cpu cpuacct" /usr/lib/systemd/system/rtkit-daemon.service
     systemctl daemon-reload
@@ -38,7 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rtkit-daemon.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

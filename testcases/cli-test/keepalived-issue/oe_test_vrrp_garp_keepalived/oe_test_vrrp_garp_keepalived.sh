@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL keepalived
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL keepalived 
+    else 
+        APT_INSTALL keepalived 
+    fi
     which firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     LOG_INFO "End of environmental preparation!"
@@ -71,7 +76,7 @@ vrrp_instance VI_11 {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE 1
+    APT_REMOVE 1
     rm -rf /etc/keepalived/ /tmp/tmp_mesg
     LOG_INFO "Finish environment cleanup!"
 }

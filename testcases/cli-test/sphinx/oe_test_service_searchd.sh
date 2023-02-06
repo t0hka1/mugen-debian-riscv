@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL sphinx
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL sphinx 
+    else 
+        APT_INSTALL sphinx 
+    fi
     file=$(find / -name libpq.so.5)
     flag=false
     if [ $(echo ${file} | grep -v '/usr/lib64') ]; then
@@ -44,7 +49,7 @@ function post_test() {
     if [ ${flag} = 'true' ]; then
         rm -rf /usr/lib64/libpq.so.5
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

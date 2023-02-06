@@ -37,7 +37,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pps-tools kernel-source"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pps-tools kernel-source" 
+    else 
+        APT_INSTALL "pps-tools kernel-source" 
+    fi
     CRTDIR=$(
         cd "$(dirname $0)" || exit 1
         pwd
@@ -112,7 +117,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rmmod pps-ktimer1 pps-ktimer2
     rm -rf pps_client ppstest_log* ppswatch_log*
     LOG_INFO "End to restore the test environment."

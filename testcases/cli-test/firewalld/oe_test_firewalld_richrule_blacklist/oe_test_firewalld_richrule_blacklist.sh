@@ -69,7 +69,7 @@ function post_test() {
     sudo systemctl start firewalld
     rm -rf /tmp/tmp_log
     kill -9 $(pgrep -f 'nc -l -p 5555')
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pcp-import-iostat2pcp sysstat"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pcp-import-iostat2pcp sysstat" 
+    else 
+        APT_INSTALL "pcp-import-iostat2pcp sysstat" 
+    fi
     export LC_ALL=en_US.UTF-8
     LOG_INFO "End to prepare the test environment."
 }
@@ -56,7 +61,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf inputfile
     LOG_INFO "End to restore the test environment."
 }

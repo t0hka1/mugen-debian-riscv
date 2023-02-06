@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "psacct"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "psacct" 
+    else 
+        APT_INSTALL "psacct" 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -108,7 +113,7 @@ function post_test()
     if [ $INIT_STATUS -eq 0 ]; then
         systemctl start psacct.service
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

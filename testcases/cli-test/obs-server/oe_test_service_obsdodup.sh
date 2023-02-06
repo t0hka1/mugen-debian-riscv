@@ -25,7 +25,12 @@ function pre_test() {
         setenforce 0
         flag=true
     fi
-    DNF_INSTALL obs-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL obs-server 
+    else 
+        APT_INSTALL obs-server 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -48,7 +53,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload obsdodup.service
     systemctl stop obsdodup.service
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

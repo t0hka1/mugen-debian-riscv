@@ -30,7 +30,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nss_wrapper
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nss_wrapper 
+    else 
+        APT_INSTALL nss_wrapper 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -54,7 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    APT_REMOVE
     userdel -rf Bruce_liu
     LOG_INFO "End to restore the test environment."
 }

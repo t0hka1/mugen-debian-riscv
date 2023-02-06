@@ -20,7 +20,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "opensp"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "opensp" 
+    else 
+        APT_INSTALL "opensp" 
+    fi
     cp -r ../common/normal.sgml ./normal.sgml
     cp -r normal.sgml normal2.sgml
     printf "DOCUMENT normal.sgml\nDOCUMENT normal2.sgml" >catalogs
@@ -57,7 +62,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf testdir catalogs normal*.sgml ./*.log tmp.result
     LOG_INFO "Finish restoring the test environment."
 }

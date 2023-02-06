@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL clamav
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clamav 
+    else 
+        APT_INSTALL clamav 
+    fi
     mkdir /opt/test_clambc
     cd /opt/test_clambc
     sigtool -u /var/lib/clamav/bytecode.cvd
@@ -65,7 +70,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     cd - && rm -rf /opt/test_clambc
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

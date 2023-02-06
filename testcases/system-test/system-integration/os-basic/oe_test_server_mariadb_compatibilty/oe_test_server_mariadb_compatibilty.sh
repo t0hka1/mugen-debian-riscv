@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "net-tools mariadb-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "net-tools mariadb-server" 
+    else 
+        APT_INSTALL "net-tools mariadb-server" 
+    fi
     rm -rf /var/lib/mysql/*
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1
@@ -65,7 +70,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /var/lib/mysql  mariadb_remote
     SSH_CMD "yum remove mariadb-server expect -y;rm -rf /opt/mugen/mariadb_remote /root/testlog" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

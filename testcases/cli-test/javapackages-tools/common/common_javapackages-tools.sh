@@ -21,13 +21,23 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL junit
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL junit 
+    else 
+        APT_INSTALL junit 
+    fi
     java_version=$(rpm -qa java* | grep java-.*-openjdk | awk -F '-' '{print $2}')
-    DNF_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j" 
+    else 
+        APT_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j" 
+    fi
 }
 
 function clear_env() {
     roc=$(ls | grep -v ".sh")
     rm -rf $roc
-    DNF_REMOVE
+    APT_REMOVE
 }

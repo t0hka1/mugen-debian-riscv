@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL docker-engine
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL docker-engine 
+    else 
+        APT_INSTALL docker-engine 
+    fi
     service=docker.service
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"
@@ -46,7 +51,7 @@ function post_test() {
     sed -i 's\dockerd --log-level=info\dockerd\g' /usr/lib/systemd/system/docker.service
     systemctl daemon-reload
     systemctl reload docker.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

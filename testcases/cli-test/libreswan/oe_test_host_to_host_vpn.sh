@@ -21,9 +21,19 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libreswan
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 
+    else 
+        APT_INSTALL libreswan 
+    fi
     systemctl start firewalld
-    DNF_INSTALL libreswan 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 2 
+    else 
+        APT_INSTALL libreswan 2 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -79,8 +89,8 @@ function post_test() {
     firewall-cmd --remove-service="ipsec"
     firewall-cmd --runtime-to-permanent
     P_SSH_CMD "systemctl stop ipsec;firewall-cmd --remove-service=ipsec;firewall-cmd --runtime-to-permanent" 2
-    DNF_REMOVE
-    DNF_REMOVE 2 libreswan
+    APT_REMOVE
+    APT_REMOVE 2 libreswan
     rm -rf /tmp/key.txt /tmp/rsa.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db
     P_SSH_CMD "rm -rf /tmp/key.txt /tmp/rsa.txt /etc/ipsec.d/* /var/lib/ipsec/nss/*.db" 2
 

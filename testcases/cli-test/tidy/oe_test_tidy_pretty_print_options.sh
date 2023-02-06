@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL tidy
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tidy 
+    else 
+        APT_INSTALL tidy 
+    fi
     OLD_LANG=$LANG
     export LANG="en_US.UTF-8"
     version_id=$(grep VERSION_ID /etc/os-release | awk -F "\"" '{print $2}')
@@ -123,7 +128,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -f ./tidyrc
     export LANG=$OLD_LANG
     LOG_INFO "Finish environment cleanup!"

@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL clippy
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clippy 
+    else 
+        APT_INSTALL clippy 
+    fi
     cp ../common/test.rs test.rs
     LOG_INFO "End to prepare the test environment!"
 }
@@ -64,7 +69,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./test* hello*
     LOG_INFO "Finish environment cleanup!"
 }

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL conntrack-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL conntrack-tools 
+    else 
+        APT_INSTALL conntrack-tools 
+    fi
     sed -i "s\Interface eth2\Interface ${NODE1_NIC}\g" /etc/conntrackd/conntrackd.conf
     sed -i "s\IPv4_interface 192.168.100.100\IPv4_interface ${NODE1_IPV4}\g"  /etc/conntrackd/conntrackd.conf
     LOG_INFO "End of environmental preparation!"
@@ -38,7 +43,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s\Interface ${NODE1_NIC}\Interface eth2\g" /etc/conntrackd/conntrackd.conf
     sed -i "s\IPv4_interface ${NODE1_IPV4}\IPv4_interface 192.168.100.100\g"  /etc/conntrackd/conntrackd.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

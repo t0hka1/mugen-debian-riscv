@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL rasdaemon
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rasdaemon 
+    else 
+        APT_INSTALL rasdaemon 
+    fi
     service=ras-mc-ctl.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
@@ -48,7 +53,7 @@ function post_test() {
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

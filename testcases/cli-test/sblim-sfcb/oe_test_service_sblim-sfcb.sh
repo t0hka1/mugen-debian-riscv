@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL sblim-sfcb
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL sblim-sfcb 
+    else 
+        APT_INSTALL sblim-sfcb 
+    fi
     sed -i 's/#enableSlp: true/enableSlp: false/g' /etc/sfcb/sfcb.cfg
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's/enableSlp: false/#enableSlp: true/g' /etc/sfcb/sfcb.cfg
     systemctl stop sblim-sfcb.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

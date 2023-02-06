@@ -32,7 +32,12 @@ function pre_test() {
     os_version=$(grep '^VERSION_ID=' /etc/os-release | awk -F '=' '{print $NF}' | tr -d '"')
     repo_address=$(grep -i 'everything' /etc/yum.repos.d/*.repo | grep -v name | grep 'baseurl' | awk -F '=' '{print $NF}')
     if yum list | grep oemaker; then
-        DNF_INSTALL oemaker
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL oemaker 
+    else 
+        APT_INSTALL oemaker 
+    fi
     else
         echo "Not found oemaker package in repo source."
         exit 0
@@ -54,7 +59,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     export LANG=${OLD_LANG}
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /result
     LOG_INFO "End to restore the test environment."
 }

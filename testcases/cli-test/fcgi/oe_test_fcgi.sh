@@ -31,7 +31,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "fcgi libtool tar"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "fcgi libtool tar" 
+    else 
+        APT_INSTALL "fcgi libtool tar" 
+    fi
     pre_fcgi
     LOG_INFO "End to prepare the test environment."
 }
@@ -56,7 +61,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf fcgi2-2.4.2 2.4.2.tar.gz cmdFile
     LOG_INFO "End to restore the test environment."
 }

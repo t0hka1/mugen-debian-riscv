@@ -24,7 +24,12 @@ function pre_test() {
         exit 0
     fi
     rm -rf /var/lib/mysql/*
-    DNF_INSTALL mysql-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mysql-server 
+    else 
+        APT_INSTALL mysql-server 
+    fi
     systemctl start mysqld
     LOG_INFO "End to prepare the test environment!"
 }
@@ -69,7 +74,7 @@ function post_test() {
     systemctl stop mysqld
     rm -rf test.txt ib_sdipGMuTI
     mysql -e "use test45;DROP TABLE mytexttable;DROP DATABASE test45"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

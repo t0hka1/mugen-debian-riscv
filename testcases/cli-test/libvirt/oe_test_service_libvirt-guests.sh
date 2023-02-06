@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "libvirt-client libvirt-daemon"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "libvirt-client libvirt-daemon" 
+    else 
+        APT_INSTALL "libvirt-client libvirt-daemon" 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -35,7 +40,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop libvirt-guests.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

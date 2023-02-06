@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openvswitch-ipsec
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openvswitch-ipsec 
+    else 
+        APT_INSTALL openvswitch-ipsec 
+    fi
     service=openvswitch-ipsec.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
@@ -52,7 +57,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     service "${service}" stop
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

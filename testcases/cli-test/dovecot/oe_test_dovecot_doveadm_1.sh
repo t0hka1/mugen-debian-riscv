@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL dovecot
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dovecot 
+    else 
+        APT_INSTALL dovecot 
+    fi
     cp /etc/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf.bak
     sed -i '/ssl_key = <\/etc\/pki\/dovecot\/private\/dovecot.pem/d' /etc/dovecot/conf.d/10-ssl.conf
     systemctl restart dovecot
@@ -77,7 +82,7 @@ function post_test() {
     rm -f a.sh* /etc/dovecot/conf.d/10-ssl.conf
     mv /etc/dovecot/conf.d/10-ssl.conf.bak /etc/dovecot/conf.d/10-ssl.conf
     kill -9 $(ps -ef | grep "doveadm" | grep -Ev "grep|.sh" | awk '{print $2}')
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

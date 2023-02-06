@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL netconsole-service
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL netconsole-service 
+    else 
+        APT_INSTALL netconsole-service 
+    fi
     echo "SYSLOGMACADDR=${NODE1_MAC}
 SYSLOGADDR=${NODE1_IPV4}" >/etc/sysconfig/netconsole
     systemctl start rsyslog
@@ -38,7 +43,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop netconsole.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

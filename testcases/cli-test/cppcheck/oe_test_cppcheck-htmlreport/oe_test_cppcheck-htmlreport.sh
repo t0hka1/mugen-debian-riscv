@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL cppcheck
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL cppcheck 
+    else 
+        APT_INSTALL cppcheck 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -56,7 +61,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     roc=$(ls | grep -vE "\.sh|\.c")
     rm -rf $roc
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

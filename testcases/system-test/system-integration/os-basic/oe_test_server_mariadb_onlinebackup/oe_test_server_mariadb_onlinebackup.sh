@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "mariadb-server mariadb-backup"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mariadb-server mariadb-backup" 
+    else 
+        APT_INSTALL "mariadb-server mariadb-backup" 
+    fi
     rm -rf /var/lib/mysql/*
     systemctl start mariadb.service
     systemctl status mariadb.service | grep running || exit 1
@@ -44,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /etc/my.cnf.d/mariabackup.cnf /home/backup  /var/lib/mysql
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

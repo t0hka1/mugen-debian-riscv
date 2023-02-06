@@ -22,7 +22,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     echo 20 > test.json
-    DNF_INSTALL "cobbler httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "cobbler httpd" 
+    else 
+        APT_INSTALL "cobbler httpd" 
+    fi
     systemctl start httpd
     systemctl start cobblerd
     LOG_INFO "End of environmental preparation!"
@@ -70,7 +75,7 @@ function post_test() {
     rm -rf test.json generated.iso
     systemctl stop httpd
     systemctl stop cobblerd
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

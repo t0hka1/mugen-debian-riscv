@@ -18,15 +18,25 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_env() {
-    DNF_INSTALL "netperf"
-    DNF_INSTALL "netperf" 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "netperf" 
+    else 
+        APT_INSTALL "netperf" 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "netperf" 2 
+    else 
+        APT_INSTALL "netperf" 2 
+    fi
     rdport=$(GET_FREE_PORT "$NODE2_IPV4")
     P_SSH_CMD --cmd "systemctl stop firewalld"
 }
 
 function clean_env() {
     P_SSH_CMD --cmd "systemctl start firewalld"
-    DNF_REMOVE 0
+    APT_REMOVE 0
 }
 
 function test_server() {

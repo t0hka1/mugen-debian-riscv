@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nvmetcli
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nvmetcli 
+    else 
+        APT_INSTALL nvmetcli 
+    fi
     modprobe nvmet
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop nvmet.service
-    DNF_REMOVE
+    APT_REMOVE
     rmmod nvmet
     LOG_INFO "Finish environment cleanup!"
 }

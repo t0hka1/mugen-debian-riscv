@@ -24,7 +24,12 @@ function pre_test() {
         echo "Non X86 architecture,this function is not supported"
         exit
     else
-        DNF_INSTALL mcelog
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mcelog 
+    else 
+        APT_INSTALL mcelog 
+    fi
     fi
     LOG_INFO "End to prepare the test environment."
 }
@@ -66,7 +71,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

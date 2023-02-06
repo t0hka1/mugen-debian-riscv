@@ -21,8 +21,13 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     userdel -r postgres
-    DNF_REMOVE postgresql-server
-    DNF_INSTALL postgresql-server
+    APT_REMOVE postgresql-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL postgresql-server 
+    else 
+        APT_INSTALL postgresql-server 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -41,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     userdel -r postgres
     LOG_INFO "Finish environment cleanup."
 }

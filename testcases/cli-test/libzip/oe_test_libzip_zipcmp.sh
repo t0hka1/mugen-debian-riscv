@@ -19,7 +19,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL libzip
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libzip 
+    else 
+        APT_INSTALL libzip 
+    fi
     mkdir testdir1 testdir2
     echo "hello" >testdir1/testfile1
     echo "hello" >testdir1/testA
@@ -63,7 +68,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf testdir* test*.zip
     LOG_INFO "Finish restoring the test environment."
 }

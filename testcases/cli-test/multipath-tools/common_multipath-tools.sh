@@ -25,7 +25,12 @@ function deploy_env() {
         echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf; 
         systemctl restart tgtd; 
         systemctl stop firewalld;"
-    DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper" 
+    else 
+        APT_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper" 
+    fi
     systemctl restart iscsid
     iscsiadm -m discovery -t sendtargets -p ${NODE2_IPV4}
     iscsiadm -m node -T iqn.2013-12.com.make:ws.httpd -l
@@ -67,7 +72,7 @@ function clear_env() {
     P_SSH_CMD --node 2 --cmd "dnf remove -y scsi-target-utils; echo -e 'd\nw\n' | fdisk ${remote_disk}"
     iscsiadm -m node --logoutall=all
     multipath -F
-    DNF_REMOVE
+    APT_REMOVE
     del_file=$(ls | grep -vE ".sh")
     rm -rf ${del_file} /tmp/disk1
 }

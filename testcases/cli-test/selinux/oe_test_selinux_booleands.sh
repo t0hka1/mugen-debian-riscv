@@ -21,8 +21,18 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setroubleshoot-server"
-    DNF_INSTALL "setroubleshoot-server" 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "setroubleshoot-server" 
+    else 
+        APT_INSTALL "setroubleshoot-server" 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "setroubleshoot-server" 2 
+    else 
+        APT_INSTALL "setroubleshoot-server" 2 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -55,8 +65,8 @@ function post_test() {
     setsebool httpd_use_nfs off
     setsebool httpd_use_cifs off
     SSH_CMD "setsebool -P httpd_use_nfs off;setsebool -P httpd_use_cifs off" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
-    DNF_REMOVE 2 "setroubleshoot-server"
+    APT_REMOVE
+    APT_REMOVE 2 "setroubleshoot-server"
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

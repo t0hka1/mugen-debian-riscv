@@ -63,7 +63,7 @@ EOF
     expect eof
 EOF
     rm -rf test.txt backup.img ntfsmeta.img
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

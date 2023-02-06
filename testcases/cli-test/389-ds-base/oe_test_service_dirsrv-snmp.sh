@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL 389-ds-base-snmp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL 389-ds-base-snmp 
+    else 
+        APT_INSTALL 389-ds-base-snmp 
+    fi
     echo "agentx-master /var/agentx/master
 agent-logdir /var/log/dirsrv
 server schema" >/etc/dirsrv/config/ldap-agent.conf
@@ -50,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop dirsrv-snmp.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

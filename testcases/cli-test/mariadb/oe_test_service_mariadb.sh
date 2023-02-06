@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL mariadb-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mariadb-server 
+    else 
+        APT_INSTALL mariadb-server 
+    fi
     mv /etc/my.cnf /etc/my.bak
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mariadb.service
     mv /etc/my.bak /etc/my.cnf
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }

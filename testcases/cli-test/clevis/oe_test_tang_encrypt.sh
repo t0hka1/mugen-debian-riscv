@@ -20,7 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL tang
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tang 
+    else 
+        APT_INSTALL tang 
+    fi
     ls /etc/systemd/system/tangd.socket.d && rm -rf /etc/systemd/system/tangd.socket.d
     SOCKET_CONTENT='[Socket]\nListenStream=\nListenStream=8009'
     mkdir /etc/systemd/system/tangd.socket.d
@@ -48,7 +53,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/systemd/system/tangd.socket.d /var/db/tang
     LOG_INFO "Finish environment cleanup!"
 }

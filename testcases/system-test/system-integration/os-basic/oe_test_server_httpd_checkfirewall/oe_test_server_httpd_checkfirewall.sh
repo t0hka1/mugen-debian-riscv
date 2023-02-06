@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL firewalld
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL firewalld 
+    else 
+        APT_INSTALL firewalld 
+    fi
     systemctl start firewalld
     systemctl status firewalld | grep running || exit 1
     flag_http=0
@@ -43,7 +48,7 @@ function post_test() {
         firewall-cmd --remove-service=http
     fi
     systemctl stop firewalld
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

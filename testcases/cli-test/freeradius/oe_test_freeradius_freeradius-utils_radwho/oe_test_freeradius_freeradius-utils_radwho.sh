@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "freeradius freeradius-utils"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "freeradius freeradius-utils" 
+    else 
+        APT_INSTALL "freeradius freeradius-utils" 
+    fi
     touch /var/log/radius/radutmp
     test -e /var/log/radius/radutmp
 
@@ -60,7 +65,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
 
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius
 

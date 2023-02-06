@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "obs-server httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "obs-server httpd" 
+    else 
+        APT_INSTALL "obs-server httpd" 
+    fi
     sed -i "s/seq 600/seq 30/" /usr/sbin/obsscheduler
     echo -e "<productdefinition>\n</productdefinition>" >1.xml
     echo "hello world" >1.txt
@@ -124,7 +129,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -f 1.txt 1.xml obsworker.log
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

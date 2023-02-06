@@ -28,7 +28,12 @@ function ha_pre() {
         P_SSH_CMD --node 2 --cmd "setenforce 0"
         flag=true
     fi
-    DNF_INSTALL "corosync pacemaker pcs"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "corosync pacemaker pcs" 
+    else 
+        APT_INSTALL "corosync pacemaker pcs" 
+    fi
     hostname=$(hostname)
     hostnamectl set-hostname ha1
     cp /etc/hosts /etc/hosts_bak
@@ -112,7 +117,7 @@ function ha_post() {
     rm -rf /etc/hosts /etc/corosync/corosync.conf
     mv /etc/hosts_bak /etc/hosts
     hostnamectl set-hostname ${hostname}
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
         P_SSH_CMD --node 2 --cmd "setenforce 1"

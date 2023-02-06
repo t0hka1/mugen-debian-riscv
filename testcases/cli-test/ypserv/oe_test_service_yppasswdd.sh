@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "ypbind ypserv"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "ypbind ypserv" 
+    else 
+        APT_INSTALL "ypbind ypserv" 
+    fi
     host_name=$(hostname)
     systemctl start ypserv
     systemctl start yppasswdd
@@ -53,7 +58,7 @@ function post_test() {
     systemctl stop ypserv
     systemctl stop yppasswdd
     systemctl stop ypbind.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

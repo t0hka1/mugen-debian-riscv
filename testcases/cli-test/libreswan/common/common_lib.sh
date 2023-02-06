@@ -18,8 +18,18 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function SET_CONF() {
-    DNF_INSTALL libreswan
-    DNF_INSTALL libreswan 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 
+    else 
+        APT_INSTALL libreswan 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 2 
+    else 
+        APT_INSTALL libreswan 2 
+    fi
     cp ./common/test-vm.secrets /etc/ipsec.d/test-vm.secrets
     sed -i "s/left=left/left=${NODE1_IPV4}/g" /etc/ipsec.d/test-vm.secrets
     sed -i "s/right=right/right=${NODE2_IPV4}/g" /etc/ipsec.d/test-vm.secrets
@@ -47,6 +57,6 @@ function REVERT_CONF() {
     rm -f /etc/ipsec.d/test-vm.secrets
     SSH_CMD "systemctl restart firewalld
             rm -f /etc/ipsec.d/test-vm.secrets" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_REMOVE
+    APT_REMOVE
 }
 

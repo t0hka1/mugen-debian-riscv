@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-milter"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clamav clamav-milter" 
+    else 
+        APT_INSTALL "clamav clamav-milter" 
+    fi
     mv /etc/mail/clamav-milter.conf /etc/mail/clamav-milter.conf.bak
     echo "  MilterSocket /run/clamav-milter/clamav-milter.socket
             User clamilt
@@ -57,7 +62,7 @@ function post_test() {
 
     rm -f /etc/mail/clamav-milter.conf
     mv /etc/mail/clamav-milter.conf.bak /etc/mail/clamav-milter.conf
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

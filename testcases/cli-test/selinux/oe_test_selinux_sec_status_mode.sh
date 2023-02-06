@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     default_selinux_status=$(getenforce)
     setenforce 1
-    DNF_INSTALL "setroubleshoot-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "setroubleshoot-server" 
+    else 
+        APT_INSTALL "setroubleshoot-server" 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -51,7 +56,7 @@ function post_test() {
     else
         setenforce 0
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

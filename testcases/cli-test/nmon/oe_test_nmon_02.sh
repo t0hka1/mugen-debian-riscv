@@ -20,7 +20,12 @@ source "./common/common.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb" 
+    else 
+        APT_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb" 
+    fi
     env_pre
     LOG_INFO "End of environmental preparation!"
 }
@@ -472,7 +477,7 @@ EOF
 function post_test() {
     LOG_INFO "Start restore the test environment."
     env_post
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

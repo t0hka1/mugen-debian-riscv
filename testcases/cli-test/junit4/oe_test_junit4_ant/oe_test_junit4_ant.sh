@@ -22,7 +22,12 @@ source "../common/common_junit.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL ant-junit
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ant-junit 
+    else 
+        APT_INSTALL ant-junit 
+    fi
     cp /usr/share/java/junit.jar /usr/share/ant/lib/
     cp /etc/profile /etc/profile-bak
     echo -e "export ANT_HOME=/usr/share/ant\nexport PATH=\$PATH:\$ANT_HOME/bin" >>/etc/profile
@@ -40,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf /usr/share/ant/lib/junit.jar
-    DNF_REMOVE
+    APT_REMOVE
     mv /etc/profile-bak /etc/profile -f
     source /etc/profile
     rm -rf $(ls | grep -vE ".xml|.java|.sh")

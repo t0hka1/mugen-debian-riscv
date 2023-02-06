@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL cryptsetup-reencrypt
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL cryptsetup-reencrypt 
+    else 
+        APT_INSTALL cryptsetup-reencrypt 
+    fi
     echo -e "n\n\np\n\n\n+100M\nn\n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
     test -d /mnt/test_encrypted && rm -rf /mnt/test_encrypted
     mkdir /mnt/test_encrypted
@@ -53,7 +58,7 @@ function post_test() {
     rm -rf /mnt/test_encrypted
     mkfs.ext4 ${TEST_DISK}1 -F
     echo -e "d\n\nw" | fdisk "${TEST_DISK}"
-    DNF_REMOVE
+    APT_REMOVE
     mkfs.ext4 ${TEST_DISK} -F
     LOG_INFO "Finish environment cleanup!"
 }

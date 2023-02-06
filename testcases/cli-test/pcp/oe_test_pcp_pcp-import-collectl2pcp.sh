@@ -19,7 +19,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "pcp-import-collectl2pcp tar"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pcp-import-collectl2pcp tar" 
+    else 
+        APT_INSTALL "pcp-import-collectl2pcp tar" 
+    fi
     wget -nd http://jaist.dl.sourceforge.net/sourceforge/collectl/collectl-3.1.3.src.tar.gz
     tar zxvf collectl-3.1.3.src.tar.gz
     cd collectl-3.1.3
@@ -45,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./collect* ./wget-log* /opt/hp*
     LOG_INFO "End to restore the test environment."
 }

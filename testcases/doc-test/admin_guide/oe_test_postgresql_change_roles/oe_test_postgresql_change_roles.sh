@@ -28,7 +28,12 @@ function pre_test() {
     echo ${NODE1_PASSWORD} | passwd --stdin postgres
     test -d /tmp/data || mkdir -p /tmp/data
     chown -R postgres:postgres /tmp/data/
-    DNF_INSTALL postgresql-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL postgresql-server 
+    else 
+        APT_INSTALL postgresql-server 
+    fi
     su - postgres -c "/usr/bin/initdb -D /tmp/data/"
     su - postgres -c "/usr/bin/pg_ctl -D /tmp/data/ -l /tmp/data/logfile start"
     LOG_INFO "Environmental preparation is over."
@@ -59,7 +64,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     su - postgres -c "/usr/bin/pg_ctl -D /tmp/data/ -l /tmp/data/logfile stop"
     setenforce 1
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf log /tmp/data
     userdel -r postgres
     groupdel postgres

@@ -21,7 +21,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "libmemcached memcached telnet net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "libmemcached memcached telnet net-tools" 
+    else 
+        APT_INSTALL "libmemcached memcached telnet net-tools" 
+    fi
     memcached -d -u root -m 512 -p 11211
     SLEEP_WAIT 5
     netstat -an | grep 11211
@@ -31,5 +36,5 @@ function deploy_env() {
 function clear_env() {
     kill -9 $(pgrep -f 'memcached -d -u')
     rm -rf $(ls | grep -vE ".sh|config")
-    DNF_REMOVE
+    APT_REMOVE
 }

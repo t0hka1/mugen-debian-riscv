@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     rm -rf /var/lib/redis/dump.rdb
-    DNF_INSTALL redis
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL redis 
+    else 
+        APT_INSTALL redis 
+    fi
     systemctl start redis
     LOG_INFO "End to prepare the test environment!"
 }
@@ -53,7 +58,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     systemctl stop redis
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

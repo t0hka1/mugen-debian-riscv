@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL clamav
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clamav 
+    else 
+        APT_INSTALL clamav 
+    fi
     mkdir testu testunpack
     cp /var/lib/clamav/main.cvd testu/
     cp /var/lib/clamav/main.cvd testunpack/
@@ -69,7 +74,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     cd ../ && rm -rf testu testunpack
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

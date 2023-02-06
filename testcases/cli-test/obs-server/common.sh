@@ -25,7 +25,12 @@ function env_pre() {
         setenforce 0
         flag=true
     fi
-    DNF_INSTALL "mariadb-server obs-api obs-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mariadb-server obs-api obs-server" 
+    else 
+        APT_INSTALL "mariadb-server obs-api obs-server" 
+    fi
     mv /etc/my.cnf /etc/my.bak
     systemctl start mariadb
     echo 'create database api_production;' | mysql
@@ -37,7 +42,7 @@ function env_pre() {
 function env_post() {
     systemctl stop mariadb obssrcserver obsapisetup
     sed -i 's/OBS_API_AUTOSETUP="yes"/OBS_API_AUTOSETUP="no"/g' /etc/sysconfig/obs-server
-    DNF_REMOVE
+    APT_REMOVE
     mv /etc/my.bak /etc/my.cnf
     rm -rf /var/lib/mysql/*
     if [ ${flag} = 'true' ]; then

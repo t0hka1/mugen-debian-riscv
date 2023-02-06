@@ -21,7 +21,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "at"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "at" 
+    else 
+        APT_INSTALL "at" 
+    fi
     grep "^testuser1:" /etc/passwd && userdel -rf testuser1
     grep "^testuser2:" /etc/passwd && userdel -rf testuser2
     LOG_INFO "End of environmental preparation!"
@@ -53,7 +58,7 @@ function post_test() {
     mv /etc/at.allow-bak /etc/at.allow -f
     userdel -rf testuser1
     userdel -rf testuser2
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

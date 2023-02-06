@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd mod_ssl"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd mod_ssl" 
+    else 
+        APT_INSTALL "httpd mod_ssl" 
+    fi
     createCA_and_Self_signed_certificate
     generate_PrivateKey_and_Certificate_Signing_Request
     CA_Signature_Authentication
@@ -50,7 +55,7 @@ function post_test() {
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     clean_httpd_openssl
     systemctl stop httpd
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

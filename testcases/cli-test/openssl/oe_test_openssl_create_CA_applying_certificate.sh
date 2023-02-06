@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nginx
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nginx 
+    else 
+        APT_INSTALL nginx 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     rm -f $CA_Path/index* $CA_Path/serial* $CA_Path/private/cakey.pem $CA_Path/cacert.pem $CA_Path/testlog1
     mv -f /etc/pki/tls/openssl.cnf.bak /etc/pki/tls/openssl.cnf
     rm -rf /etc/nginx/ssl
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

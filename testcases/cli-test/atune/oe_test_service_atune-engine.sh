@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "atune-engine atune"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "atune-engine atune" 
+    else 
+        APT_INSTALL "atune-engine atune" 
+    fi
     disk_name=$(lsblk | grep disk | awk 'NR==1{print $1}')
     sed -i "s\disk = sda\disk = ${disk_name}\g" /etc/atuned/atuned.cnf
     sed -i "s\network = enp189s0f0\network = ${NODE1_NIC}\g" /etc/atuned/atuned.cnf
@@ -41,7 +46,7 @@ function post_test() {
     systemctl stop atuned.service
     sed -i "s\disk = ${disk_name}\disk = sda\g" /etc/atuned/atuned.cnf
     sed -i "s\network = ${NODE1_NIC}\network = enp189s0f0\g" /etc/atuned/atuned.cnf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

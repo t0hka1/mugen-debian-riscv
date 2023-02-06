@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "abrt-addon-upload-watch abrt"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "abrt-addon-upload-watch abrt" 
+    else 
+        APT_INSTALL "abrt-addon-upload-watch abrt" 
+    fi
     systemctl start abrtd
     echo "WatchCrashdumpArchiveDir = /var/spool/abrt-upload" >> /etc/abrt/abrt.conf
     LOG_INFO "End of environmental preparation!"
@@ -38,7 +43,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i '$d' /etc/abrt/abrt.conf
     systemctl stop abrtd
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

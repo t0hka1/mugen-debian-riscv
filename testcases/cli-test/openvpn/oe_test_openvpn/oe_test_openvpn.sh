@@ -21,8 +21,18 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL openvpn
-    DNF_INSTALL openvpn 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openvpn 
+    else 
+        APT_INSTALL openvpn 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openvpn 2 
+    else 
+        APT_INSTALL openvpn 2 
+    fi
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -192,7 +202,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf $(ls | grep -v ".sh")
     P_SSH_CMD --node 2 --cmd "rm -rf ca.crt dh1024.pem key server.crt server.key"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

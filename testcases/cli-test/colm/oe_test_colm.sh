@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "colm colm-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "colm colm-devel" 
+    else 
+        APT_INSTALL "colm colm-devel" 
+    fi
     touch mu.txt
     cat >zjl.c <<EOF
 #include<stdio.h>
@@ -105,7 +110,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -f mu mu.c mu.txt zjl.c zhu zhu.c
     LOG_INFO "End to restore the test environment."
 }

@@ -21,7 +21,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "setroubleshoot-server httpd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "setroubleshoot-server httpd" 
+    else 
+        APT_INSTALL "setroubleshoot-server httpd" 
+    fi
     test -f /srv/www1 || rm -rf /srv/www1
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     LOG_INFO "End of environmental preparation!"
@@ -61,7 +66,7 @@ function post_test() {
     setsebool -P httpd_can_network_connect_db off
     systemctl stop httpd
     rm -rf /var/www/html/index1.html /srv/www1
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

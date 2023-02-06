@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function deploy_env() {
-    DNF_INSTALL "nfs-utils net-tools" 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "nfs-utils net-tools" 2 
+    else 
+        APT_INSTALL "nfs-utils net-tools" 2 
+    fi
     P_SSH_CMD --node 2 --cmd "mkdir -p /shared/{automount_a,automount_b};
         echo '/shared *(rw,sync,no_root_squash)' >/etc/exports;
         systemctl stop firewalld;
@@ -28,7 +33,12 @@ function deploy_env() {
         netstat -antulp | grep ':2049';
         showmount -e localhost | grep '/shared'
         "
-    DNF_INSTALL "autofs nfs-utils"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "autofs nfs-utils" 
+    else 
+        APT_INSTALL "autofs nfs-utils" 
+    fi
     cat >/etc/auto.master <<EOF
 +auto.master
 /mnt01 /etc/auto.mnt01
@@ -52,6 +62,6 @@ function clear_env() {
         systemctl stop nfs;
         systemctl start firewalld
         "
-    DNF_REMOVE
+    APT_REMOVE
     rm -f /etc/auto.* /tmp/automount_pid /run/autofs.fifodevel
 }

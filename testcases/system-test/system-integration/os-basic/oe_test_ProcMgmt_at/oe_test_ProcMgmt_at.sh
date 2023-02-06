@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL at
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL at 
+    else 
+        APT_INSTALL at 
+    fi
     systemctl start atd
     time=$(date "+%Y-%m-%d %H:%M:%S")
     old_count=$(atq | wc -l)
@@ -58,7 +63,7 @@ function post_test() {
     done
     date -s "$time 1 minute"
     rm -rf /tmp/test
-    DNF_REMOVE 
+    APT_REMOVE 
     LOG_INFO "End to restore the test environment."
 }
 

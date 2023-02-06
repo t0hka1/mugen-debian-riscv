@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "rpmdevtools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "rpmdevtools" 
+    else 
+        APT_INSTALL "rpmdevtools" 
+    fi
     pkg_name=$(dnf list | head -n 3 | tail -n 1 | awk '{print $1}' | awk 'BEGIN {FS="."} {print $1}')
     yumdownloader ${pkg_name}
     test -d ~/rpmbuild && rm -rf ~/rpmbuild && LOG_INFO "Successfully deleted this dir."
@@ -83,7 +88,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ~/rpmbuild *rpm
     LOG_INFO "End to restore the test environment."
 }

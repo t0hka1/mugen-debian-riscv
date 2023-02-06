@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL samba-winbind
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL samba-winbind 
+    else 
+        APT_INSTALL samba-winbind 
+    fi
     flag=false
     if [ $(getenforce | grep Enforcing) ]; then
         setenforce 0
@@ -49,7 +54,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload winbind.service
     systemctl stop winbind.service
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

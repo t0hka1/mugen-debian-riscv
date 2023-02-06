@@ -25,7 +25,12 @@ function pre_test()
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart
-    DNF_INSTALL gcc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL gcc 
+    else 
+        APT_INSTALL gcc 
+    fi
     gcc -o audit_socket audit_socket.c
     touch /home/test
     LOG_INFO "End to prepare the test environment."
@@ -68,7 +73,7 @@ function post_test()
     sed -i 's/active = yes/active = no/g' "${path}"
     service auditd restart
     auditctl -D
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

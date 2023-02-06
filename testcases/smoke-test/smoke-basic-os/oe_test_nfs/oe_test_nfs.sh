@@ -31,7 +31,12 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL "nfs-utils nfs4-acl-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "nfs-utils nfs4-acl-tools" 
+    else 
+        APT_INSTALL "nfs-utils nfs4-acl-tools" 
+    fi
     useradd $test_user
     mkdir $server_dir $client_dir
     test -f /etc/exports && cp /etc/exports .
@@ -78,7 +83,7 @@ function post_test() {
     userdel -r $test_user
     rm -f /tmp/error.log
     test -f exports && mv exports /etc/exports
-    DNF_REMOVE
+    APT_REMOVE
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }

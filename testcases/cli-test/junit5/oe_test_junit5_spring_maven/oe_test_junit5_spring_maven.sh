@@ -22,7 +22,12 @@ source "../common/lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_junit5
-    DNF_INSTALL "springframework springframework-test"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "springframework springframework-test" 
+    else 
+        APT_INSTALL "springframework springframework-test" 
+    fi
     pre_maven
     mkdir -p junit5-spring/src/test/java/com/example/springjunit5
     mkdir -p junit5-spring/src/test/java/com/example/springjunit5
@@ -45,7 +50,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     clean_maven
     LOG_INFO "Finish environment cleanup!"
 }

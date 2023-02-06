@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL varnish
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL varnish 
+    else 
+        APT_INSTALL varnish 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -44,7 +49,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/varnishd -C\ExecStart=/usr/sbin/varnishd\g' /usr/lib/systemd/system/varnish.service
     systemctl daemon-reload
     systemctl reload varnish.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

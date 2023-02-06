@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL lsyncd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL lsyncd 
+    else 
+        APT_INSTALL lsyncd 
+    fi
     mkdir -p /tmp/htmlcopy
     cat >> /etc/lsyncd.conf << EOF
     sync{default.rsyncssh, source="/var/www/html", host="localhost", targetdir="/tmp/htmlcopy/"}
@@ -64,7 +69,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop lsyncd.service
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/www /var/log/lsyncd /tmp/htmlcopy /etc/lsyncd.conf
     kill -9 $(ps -ef | grep "lsyncd" | grep -Ev "grep|bash" | awk '{print $2}')
     LOG_INFO "Finish environment cleanup!"

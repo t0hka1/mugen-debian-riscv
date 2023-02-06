@@ -20,7 +20,12 @@ source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     check_free_disk
-    DNF_INSTALL fio
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL fio 
+    else 
+        APT_INSTALL fio 
+    fi
     echo "dsafdsfdddddddddddddddddddddddddddddddddddddddddd" >test.txt
     LOG_INFO "End to prepare the test environment!"
 }
@@ -57,7 +62,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start environment cleanup."
     rm -rf test_file test.txt test-fio_bw.1.log dellr720-day2
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

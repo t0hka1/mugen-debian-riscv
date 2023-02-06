@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL clamav
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clamav 
+    else 
+        APT_INSTALL clamav 
+    fi
     mkdir test_virus_collection
     echo "test1" >test_virus_collection/testfile1
     echo "test2" >test_virus_collection/testfile2
@@ -70,7 +75,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -rf test_clamscan.log test_virus_collection test_log.log
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

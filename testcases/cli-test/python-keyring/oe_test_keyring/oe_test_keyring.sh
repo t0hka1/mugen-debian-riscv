@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL python3-keyring
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL python3-keyring 
+    else 
+        APT_INSTALL python3-keyring 
+    fi
     pip3 install keyrings.alt
     LOG_INFO "Finish preparing the test environment."
 }
@@ -70,7 +75,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf demo
     pip3 uninstall keyrings.alt -y
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

@@ -25,7 +25,12 @@ function pre_test() {
     check_algorithm='Scheduler or persistence engine nt found'
     check_mode="-j:unknown option"
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    DNF_INSTALL ipvsadm
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ipvsadm 
+    else 
+        APT_INSTALL ipvsadm 
+    fi
     ip addr add $VIP/22 dev ${NODE2_NIC}
     LOG_INFO "End to prepare the test environment."
 }
@@ -50,7 +55,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     ipvsadm -C
     ip addr del $VIP/22 dev ${NODE2_NIC}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

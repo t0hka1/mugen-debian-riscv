@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel" 
+    else 
+        APT_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel" 
+    fi
     qt5_version=$(rpm -qa qt5-qttools | awk -F '-' '{print $3}')
     LOG_INFO "End to prepare the test environment."
 }
@@ -69,7 +74,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf hello.ts debug test.ts list
     LOG_INFO "End to restore the test environment."
 }

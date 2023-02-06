@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL patch
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL patch 
+    else 
+        APT_INSTALL patch 
+    fi
     LOG_INFO "End of environmental preparation!"
 
 }
@@ -51,7 +56,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -f  patch_test_old.txt patch_test_new.txt foo.patch
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 
 }

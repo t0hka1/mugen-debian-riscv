@@ -20,7 +20,12 @@
 source ../common/net_lib.sh
 function pre_test() {
     LOG_INFO "start to pre the test env"
-    DNF_INSTALL "NetworkManager-wifi"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "NetworkManager-wifi" 
+    else 
+        APT_INSTALL "NetworkManager-wifi" 
+    fi
     LOG_INFO "end to pre the test"
 }
 
@@ -50,7 +55,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     nmcli con delete ${con_name}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

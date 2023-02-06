@@ -27,7 +27,12 @@ function pre_test() {
     echo \\\"#root\\\" >> /etc/vsftpd/user_list" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     SSH_CMD "firewall-cmd --add-service=ftp --permanent;firewall-cmd --reload;systemctl restart vsftpd;
     setsebool -P ftpd_full_access=on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    DNF_INSTALL ftp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ftp 
+    else 
+        APT_INSTALL ftp 
+    fi
     setsebool -P ftpd_full_access=on
     LOG_INFO "Environmental preparation is over."
 }

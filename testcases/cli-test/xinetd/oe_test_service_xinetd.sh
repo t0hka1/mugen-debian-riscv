@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL xinetd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL xinetd 
+    else 
+        APT_INSTALL xinetd 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/xinetd -d\ExecStart=/usr/sbin/xinetd\g' /usr/lib/systemd/system/xinetd.service
     systemctl daemon-reload
     systemctl reload xinetd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

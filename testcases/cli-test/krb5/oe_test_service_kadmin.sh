@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL krb5-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL krb5-server 
+    else 
+        APT_INSTALL krb5-server 
+    fi
     host_name=$(hostname)
     sed -i "s\kdc = nfs-server.example.com\kdc = nfs.server.com\g" /etc/krb5.conf
     sed -i "s\admin_server = nfs-server.example.com\admin_server = nfs.server.com\g" /etc/krb5.conf
@@ -69,7 +74,7 @@ function post_test() {
     sed -i "s\admin_server = nfs.server.com\admin_server = nfs-server.example.com\g" /etc/krb5.conf
     hostname "${host_name}"
     systemctl stop sssd-kcm
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "vdo kmod-kvdo"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "vdo kmod-kvdo" 
+    else 
+        APT_INSTALL "vdo kmod-kvdo" 
+    fi
     free_disks=$(TEST_DISK 1)
     free_disk=/dev/$(echo "${free_disks}" | awk -F " " '{for(i=1;i<=NF;i++) if ($i!~/[0-9]/)j=i;print $j}')
     test -z "${free_disk}" && exit 1
@@ -61,7 +66,7 @@ function post_test() {
     kill -9 $(pgrep -f cp_result)
     rm -rf /mnt/./*
     vdo remove --name=vdo1
-    DNF_REMOVE 1
+    APT_REMOVE 1
     rm -rf cp_result*
     LOG_INFO "Finish environment cleanup!"
 }

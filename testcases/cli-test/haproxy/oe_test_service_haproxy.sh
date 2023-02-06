@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL haproxy
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL haproxy 
+    else 
+        APT_INSTALL haproxy 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/haproxy -D\ExecStart=/usr/sbin/haproxy\g' /usr/lib/systemd/system/haproxy.service
     systemctl daemon-reload
     systemctl reload haproxy.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

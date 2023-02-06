@@ -32,7 +32,12 @@ function pre_test() {
     mkdir data tmp run log
     chown -R mysql:mysql /data
     cd - || exit
-    DNF_INSTALL mariadb-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mariadb-server 
+    else 
+        APT_INSTALL mariadb-server 
+    fi
     CHECK_RESULT $?
     rm -rf /var/lib/mysql/*
     systemctl start mariadb
@@ -69,7 +74,7 @@ expect eof
 function post_test() {
     LOG_INFO "start environment cleanup."
     setenforce 1
-    DNF_REMOVE
+    APT_REMOVE
     userdel -r mysql
     groupdel mysql
     rm -rf testlog

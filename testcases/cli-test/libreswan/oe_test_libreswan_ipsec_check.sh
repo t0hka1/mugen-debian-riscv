@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL libreswan
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 
+    else 
+        APT_INSTALL libreswan 
+    fi
     ipsec restart
     ipsec initnss
 
@@ -69,7 +74,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     rm -f /var/lib/ipsec/nss/*.db
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

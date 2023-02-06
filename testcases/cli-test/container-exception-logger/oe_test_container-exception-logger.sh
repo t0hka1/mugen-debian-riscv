@@ -21,7 +21,12 @@ source "${OET_PATH}/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "docker-engine wget"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "docker-engine wget" 
+    else 
+        APT_INSTALL "docker-engine wget" 
+    fi
     # read version from file
     . /etc/os-release
     PRETTY_NAME=$(echo $PRETTY_NAME | tr -d '(' | tr -d ')' | tr ' ' -)
@@ -59,7 +64,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf Dockerfile openEuler-docker.$NODE1_FRAME.tar.xz
     docker rmi openeuler-container-exception-logger $IMAGE_NAME
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -22,7 +22,12 @@ source "common/common_dnf.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL time
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL time 
+    else 
+        APT_INSTALL time 
+    fi
     dnf list --available | grep "arch\|"| grep -E "x86_64|riscv" | awk '{print $1}' | awk -F . 'OFS="."{$NF="";print}' | awk '{print substr($0, 1, length($0)-1)}' >pkg_list
     LOG_INFO "Finish preparing the test environment."
 }
@@ -53,7 +58,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     clear_env
     rm -rf pkg_list file_list time.log
-    DNF_REMOVE 1 "$pkg_name time"
+    APT_REMOVE 1 "$pkg_name time"
     LOG_INFO "End of restore the test environment."
 }
 

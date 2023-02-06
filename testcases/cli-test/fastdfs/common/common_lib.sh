@@ -18,7 +18,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
-    DNF_INSTALL "fastdfs* libfdfsclient net-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "fastdfs* libfdfsclient net-tools" 
+    else 
+        APT_INSTALL "fastdfs* libfdfsclient net-tools" 
+    fi
     cp /etc/fdfs/client.conf.sample ./client.conf
     cp /etc/fdfs/storage.conf.sample ./storage.conf
     cp /etc/fdfs/tracker.conf.sample ./tracker.conf
@@ -38,6 +43,6 @@ function Pre_Test() {
 
 function Post_Test() {
     rm -rf ./client.conf ./storage.conf ./tracker.conf /tmp/guochenyang
-    DNF_REMOVE
+    APT_REMOVE
 }
 main "$@"

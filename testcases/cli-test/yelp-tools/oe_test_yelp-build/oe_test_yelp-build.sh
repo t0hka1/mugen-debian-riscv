@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "yelp-tools yelp"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "yelp-tools yelp" 
+    else 
+        APT_INSTALL "yelp-tools yelp" 
+    fi
     wget https://gitlab.gnome.org/GNOME/yelp-tools/-/blob/master/help/C/yelp-build.page
     LOG_INFO "End to prepare the test environment."
 }
@@ -48,7 +53,7 @@ function post_test()
 {
     LOG_INFO "Start to restore the test environment."
     rm -rf highlight.pack.js index.cache index.epub yelp-build.page C.css yelp-build.html yelp.js
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openvswitch
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openvswitch 
+    else 
+        APT_INSTALL openvswitch 
+    fi
     if getenforce | grep -i Enforcing; then
         setenforce 0
         result_flag=1
@@ -103,7 +108,7 @@ function post_test() {
     if [ $result_flag -eq 1 ]; then
         setenforce 1
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End of environmental cleanup"
 }
 main "$@"

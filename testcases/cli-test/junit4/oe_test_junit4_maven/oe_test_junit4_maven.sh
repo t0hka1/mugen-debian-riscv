@@ -22,7 +22,12 @@ source "../common/common_junit.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL maven
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL maven 
+    else 
+        APT_INSTALL maven 
+    fi
     cp /etc/profile /etc/profile-bak
     echo -e "export MAVEN_HOME=/usr/share/maven\nexport PATH=\$PATH:\$MAVEN_HOME" >>/etc/profile
     source /etc/profile
@@ -44,7 +49,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     mv /etc/profile-bak /etc/profile -f
     source /etc/profile
     rm -rf $(ls | grep -vE ".xml|main|.sh|test") /root/.m2

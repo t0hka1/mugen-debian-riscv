@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL dovecot
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dovecot 
+    else 
+        APT_INSTALL dovecot 
+    fi
     useradd testuser
     printf 'testuser\ntestuser\n' | passwd testuser
     systemctl restart dovecot
@@ -67,7 +72,7 @@ function post_test() {
 
     userdel testuser
     rm -rf dovecot-sysreport* 
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

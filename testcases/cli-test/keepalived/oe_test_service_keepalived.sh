@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL keepalived
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL keepalived 
+    else 
+        APT_INSTALL keepalived 
+    fi
     mv /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.bak
     eth_name=$(ip route | grep "${NODE1_IPV4}" | awk '{print $3}')
     echo "global_defs {
@@ -64,7 +69,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload keepalived.service
     mv -f /etc/keepalived/keepalived.bak /etc/keepalived/keepalived.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

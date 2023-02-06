@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "qt5-qttools qt5-qttools-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "qt5-qttools qt5-qttools-devel" 
+    else 
+        APT_INSTALL "qt5-qttools qt5-qttools-devel" 
+    fi
     qt5_version=$(rpm -qa qt5-qttools | awk -F '-' '{print $3}')
     example_so=/usr/lib64/qt5/plugins/printsupport/libcupsprintersupport.so
     cp ../assistant.qhp ./
@@ -50,7 +55,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./actul_result* example_so ./assistant* help.qhc
     LOG_INFO "End to restore the test environment."
 }

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "lorax-composer python3-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "lorax-composer python3-devel" 
+    else 
+        APT_INSTALL "lorax-composer python3-devel" 
+    fi
     pip3 install rpmfluff pycdlib ansible_runner
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop lorax-composer.service
     pip3 uninstall rpmfluff pycdlib ansible_runner -y
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

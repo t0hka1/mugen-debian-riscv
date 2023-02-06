@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL libreswan
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libreswan 
+    else 
+        APT_INSTALL libreswan 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/libexec/ipsec/pluto --debug\ExecStart=/usr/libexec/ipsec/pluto\g' /usr/lib/systemd/system/ipsec.service
     systemctl daemon-reload
     systemctl reload ipsec.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

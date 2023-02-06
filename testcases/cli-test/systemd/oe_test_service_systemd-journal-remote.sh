@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL systemd-journal-remote
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL systemd-journal-remote 
+    else 
+        APT_INSTALL systemd-journal-remote 
+    fi
     sed -i "s\listen-https=-3\listen-http=-3\g" /usr/lib/systemd/system/systemd-journal-remote.service
     systemctl daemon-reload
     LOG_INFO "End of environmental preparation!"
@@ -39,7 +44,7 @@ function post_test() {
     sed -i "s\listen-http=-3\listen-https=-3\g" /usr/lib/systemd/system/systemd-journal-remote.service
     systemctl daemon-reload
     systemctl stop systemd-journal-remote.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

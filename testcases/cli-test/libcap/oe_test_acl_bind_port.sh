@@ -22,7 +22,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     grep "^example:" /etc/passwd && userdel -rf example
-    DNF_INSTALL nc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nc 
+    else 
+        APT_INSTALL nc 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -47,7 +52,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     setcap -r /bin/ncat
     userdel -rf example
-    DNF_REMOVE nc
+    APT_REMOVE nc
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

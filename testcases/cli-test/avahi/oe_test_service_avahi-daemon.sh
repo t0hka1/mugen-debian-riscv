@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL avahi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL avahi 
+    else 
+        APT_INSTALL avahi 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/avahi-daemon --debug\ExecStart=/usr/sbin/avahi-daemon\g' /usr/lib/systemd/system/avahi-daemon.service
     systemctl daemon-reload
     systemctl reload avahi-daemon.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

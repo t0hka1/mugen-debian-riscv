@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL net-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL net-tools 
+    else 
+        APT_INSTALL net-tools 
+    fi
     SSH_CMD "sudo dnf install -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     test $? -ne 0 && exit 1
     sudo systemctl start firewalld
@@ -79,7 +84,7 @@ function post_test() {
         sudo firewall-cmd --zone=internal --remove-interface="$net_card2"
     fi
     sudo ip addr del 192.168.100.1 dev "$net_card2"
-    DNF_REMOVE 
+    APT_REMOVE 
     SSH_CMD "sudo ip addr del 192.168.100.2 dev $remote_net_card2;sudo route del default  gw 192.168.100.1;sleep 2;sudo dnf remove -y net-tools" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     mv /etc/sysctl.conf.bak /etc/sysctl.conf
     sudo firewall-cmd --reload

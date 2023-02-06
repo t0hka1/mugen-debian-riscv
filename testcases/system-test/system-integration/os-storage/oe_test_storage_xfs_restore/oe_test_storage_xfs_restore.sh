@@ -22,7 +22,12 @@ source ../common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    DNF_INSTALL xfsdump
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL xfsdump 
+    else 
+        APT_INSTALL xfsdump 
+    fi
     echo "n
 
 p
@@ -58,7 +63,7 @@ function post_test() {
     echo "d
 
 w" | fdisk "/dev/${local_disk}"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

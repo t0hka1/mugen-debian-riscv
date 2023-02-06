@@ -31,7 +31,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "open-iscsi multipath-tools target-restore targetcli"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "open-iscsi multipath-tools target-restore targetcli" 
+    else 
+        APT_INSTALL "open-iscsi multipath-tools target-restore targetcli" 
+    fi
     dd if=/dev/zero of=$lun1 count=10 bs=1M
     dd if=/dev/zero of=$lun2 count=10 bs=1M
     systemctl status --no-pager firewalld && firewall_status=1
@@ -87,7 +92,7 @@ function post_test() {
     test -f initiatorname.iscsi && mv initiatorname.iscsi /etc/iscsi/initiatorname.iscsi
     rm -rf $lun1 $lun2
     test ${firewall_status} -eq 1 && systemctl restart firewalld
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

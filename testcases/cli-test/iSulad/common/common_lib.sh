@@ -20,13 +20,18 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function iSulad_install() {
-    DNF_INSTALL iSulad
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL iSulad 
+    else 
+        APT_INSTALL iSulad 
+    fi
     sed -i '/registry-mirrors/a\"docker.io"' /etc/isulad/daemon.json
     systemctl restart isulad
 }
 
 function iSulad_remove() {
     systemctl stop isulad
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/isulad
 }

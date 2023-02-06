@@ -19,7 +19,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_env_old_version() {
 
-    DNF_INSTALL "python3-pyxdg python3-keyring"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "python3-pyxdg python3-keyring" 
+    else 
+        APT_INSTALL "python3-pyxdg python3-keyring" 
+    fi
     pip3 install keyrings.alt
 
 }

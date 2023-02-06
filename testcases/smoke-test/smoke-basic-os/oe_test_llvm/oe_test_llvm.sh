@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test(){
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "llvm clang"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "llvm clang" 
+    else 
+        APT_INSTALL "llvm clang" 
+    fi
     mkdir /tmp/test_llvm
     path=/tmp/test_llvm
     cat > /tmp/test_llvm/llvm_test.c   <<EOF
@@ -61,7 +66,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf ${path}
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "lxc-libs lxc-devel busybox"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "lxc-libs lxc-devel busybox" 
+    else 
+        APT_INSTALL "lxc-libs lxc-devel busybox" 
+    fi
     systemctl start lxc.service
     lxc-create -t busybox -n myhost
     LOG_INFO "End of environmental preparation!"
@@ -47,7 +52,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload lxc.service
     systemctl stop lxc.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL nfs-utils
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nfs-utils 
+    else 
+        APT_INSTALL nfs-utils 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -41,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /home/nfs
     mv -f /etc/exports.bak /etc/exports
     LOG_INFO "Finish environment cleanup."

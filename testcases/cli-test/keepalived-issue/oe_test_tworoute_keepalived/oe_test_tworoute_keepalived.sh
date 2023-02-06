@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL keepalived
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL keepalived 
+    else 
+        APT_INSTALL keepalived 
+    fi
     which firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     node1_net_cards=$(TEST_NIC 1)
@@ -66,7 +71,12 @@ function pre_test() {
     ip addr add 2001:db8:4::10/64 dev ${node3_net_card3}
     ip addr add 2001:db8::2/128 dev lo
     ip -6 route add default nexthop via 2001:db8:3::1 nexthop via 2001:db8:4::1" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
-    DNF_INSTALL "keepalived tcpdump"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "keepalived tcpdump" 
+    else 
+        APT_INSTALL "keepalived tcpdump" 
+    fi
     rm -rf /etc/keepalived/keepalived.conf
     cp keepalived_backup1.conf /etc/keepalived/keepalived.conf
     sed -i "s/node1_net_card2/${node1_net_card2}/g" /etc/keepalived/keepalived.conf
@@ -95,7 +105,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     kill -9 $(pgrep -f keepalived.conf)
     rm -rf /run/keepalived.pid tcpdump_pack2 tcpdump_pack
-    DNF_REMOVE 1
+    APT_REMOVE 1
     rm -rf /etc/keepalived/
     ip -6 route del default nexthop via 2001:db8:1::1 nexthop via 2001:db8:2::1
     ip addr del 2001:db8::1/128 dev lo

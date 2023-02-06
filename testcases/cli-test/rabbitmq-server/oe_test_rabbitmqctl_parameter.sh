@@ -24,7 +24,12 @@ function pre_test() {
     vhost_name="myvhost"
     user_mq="test"
     passwd_mq="test"
-    DNF_INSTALL rabbitmq-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL rabbitmq-server 
+    else 
+        APT_INSTALL rabbitmq-server 
+    fi
     which firewalld && systemctl stop firewalld
     systemctl restart rabbitmq-server
     rabbitmqctl add_vhost ${vhost_name}
@@ -61,7 +66,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop rabbitmq-server
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/rabbitmq/
     which firewalld && systemctl start firewalld
     LOG_INFO "Finish environment cleanup!"

@@ -22,7 +22,12 @@ origin_file="/etc/os-release"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL lzop
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL lzop 
+    else 
+        APT_INSTALL lzop 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf test test.lzo
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

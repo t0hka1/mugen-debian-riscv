@@ -23,7 +23,12 @@ se_stat="Enforcing"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "httpd curl haproxy"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd curl haproxy" 
+    else 
+        APT_INSTALL "httpd curl haproxy" 
+    fi
     se_stat=$(getenforce)
     getenforce | grep Enforcing && setenforce 0
 
@@ -53,7 +58,7 @@ function post_test() {
     mv httpd.conf $conf
     setenforce "$se_stat"
     rm -rf index.html
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "storm apache-zookeeper"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "storm apache-zookeeper" 
+    else 
+        APT_INSTALL "storm apache-zookeeper" 
+    fi
     echo "storm.zookeeper.servers:
       - \"127.0.0.1\"
 nimbus.host: \"127.0.0.1\"
@@ -48,7 +53,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop zookeeper.service
     systemctl stop storm-ui.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

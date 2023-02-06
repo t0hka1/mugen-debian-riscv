@@ -20,7 +20,12 @@ source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL tomcat-servlet-4.0-api
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tomcat-servlet-4.0-api 
+    else 
+        APT_INSTALL tomcat-servlet-4.0-api 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 

@@ -19,8 +19,18 @@ source ./common/open-iscsi_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "open-iscsi net-tools"
-    DNF_INSTALL "targetcli net-tools" 2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "open-iscsi net-tools" 
+    else 
+        APT_INSTALL "open-iscsi net-tools" 
+    fi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "targetcli net-tools" 2 
+    else 
+        APT_INSTALL "targetcli net-tools" 2 
+    fi
     TARGET_CONF
     LOG_INFO "Finish preparing the test environment."
 }
@@ -90,7 +100,7 @@ function post_test() {
     dd if=/dev/zero of=/dev/${unused_disk} bs=2G count=1;
     rm -rf /tmp/disk_info.sh;
     " "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/iscsi/*
     LOG_INFO "Finish restoring the test environment."
 }

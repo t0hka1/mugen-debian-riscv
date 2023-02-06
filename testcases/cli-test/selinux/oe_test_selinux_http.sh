@@ -22,7 +22,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "httpd setroubleshoot-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd setroubleshoot-server" 
+    else 
+        APT_INSTALL "httpd setroubleshoot-server" 
+    fi
     rdport=$(GET_FREE_PORT "$NODE1_IPV4")
     cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf-bak
     sed -i "s/Listen 80/Listen $rdport/g" /etc/httpd/conf/httpd.conf
@@ -54,7 +59,7 @@ function post_test() {
     semanage fcontext -d -e /var/www /var/test_www
     semanage port --delete -t ssh_port_t -p tcp $rdport
     systemctl stop httpd
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/test_www index.html /home/http_status.txt
     LOG_INFO "Finish environment cleanup!"
 }

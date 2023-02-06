@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clamav clamav-server" 
+    else 
+        APT_INSTALL "clamav clamav-server" 
+    fi
     mv /etc/clamd.d/scan.conf /etc/clamd.d/scan.conf.bak
     echo "LogFile /var/log/clamd.scan
         LogFileMaxSize 2M
@@ -62,7 +67,7 @@ function post_test() {
     rm -f /etc/clamd.d/scan.conf
     mv /etc/clamd.d/scan.conf.bak /etc/clamd.d/scan.conf
     systemctl restart clamd@scan.service
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

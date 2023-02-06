@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
 	LOG_INFO "Start executing testcase."
-	DNF_INSTALL ntp
+	uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ntp 
+    else 
+        APT_INSTALL ntp 
+    fi
 	LOG_INFO "End of testcase execution."
 }
 
@@ -35,7 +40,7 @@ function run_test() {
 
 function post_test() {
 	LOG_INFO "start environment cleanup."
-	DNF_REMOVE
+	APT_REMOVE
 	LOG_INFO "Finish environment cleanup."
 }
 

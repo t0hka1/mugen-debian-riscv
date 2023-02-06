@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL opencc
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL opencc 
+    else 
+        APT_INSTALL opencc 
+    fi
     cp /usr/share/opencc/HKVariantsRev.ocd2 /usr/share/opencc/HKVariantsRev.ocd2-bak
     LOG_INFO "End of environmental preparation!"
 }
@@ -44,7 +49,7 @@ function run_test() {
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE 1
+    APT_REMOVE 1
     rm -rf /tmp/HKVariantsRev.txt-old
     cp /usr/share/opencc/HKVariantsRev.ocd2-bak /usr/share/opencc/HKVariantsRev.ocd2
     LOG_INFO "Finish environment cleanup!"

@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL ocaml
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ocaml 
+    else 
+        APT_INSTALL ocaml 
+    fi
     cp ../example.ml ./
     mkdir ocamltest
     ocaml_version=$(rpm -qa ocaml | awk -F '-' '{print $2}')
@@ -97,7 +102,7 @@ EOF
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf a.out log ./example* ocamltest
     LOG_INFO "End to restore the test environment."
 }

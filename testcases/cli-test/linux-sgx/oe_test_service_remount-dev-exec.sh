@@ -25,7 +25,12 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         return 0
     else
-        DNF_INSTALL libsgx-enclave-common
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL libsgx-enclave-common 
+    else 
+        APT_INSTALL libsgx-enclave-common 
+    fi
     fi
     LOG_INFO "End of environmental preparation!"
 }
@@ -41,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

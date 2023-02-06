@@ -34,7 +34,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "logwatch postfix dovecot"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "logwatch postfix dovecot" 
+    else 
+        APT_INSTALL "logwatch postfix dovecot" 
+    fi
     echo 'Archives = No' >>/usr/share/logwatch/default.conf/logwatch.conf
     systemctl start dovecot
     flag = false
@@ -145,7 +150,7 @@ function post_test() {
     systemctl stop dovecot
     systemctl stop postfix
     userdel mufiyemailuser
-    DNF_REMOVE
+    APT_REMOVE
     if [${flag} = 'true']; then
         setenforce 1
     fi

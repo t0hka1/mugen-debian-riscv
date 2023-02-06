@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "mutt sendmail"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mutt sendmail" 
+    else 
+        APT_INSTALL "mutt sendmail" 
+    fi
     export LANG="en_US.UTF-8"
     muttFile=$(find / -name Muttrc)
     cp $muttFile /root/.muttrc
@@ -33,7 +38,7 @@ function pre_test() {
     set realname="itdhz"' >>/root/.muttrc
     touch test.jar
     echo "test mutt from lisa" >sendmail
-    version=$(rpm -qa mutt | awk -F "-" '{print$2}')
+    
     LOG_INFO "Finish preparing the test environment."
 }
 
@@ -62,7 +67,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf test.jar sendmail /root/sent /root/.muttrc
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

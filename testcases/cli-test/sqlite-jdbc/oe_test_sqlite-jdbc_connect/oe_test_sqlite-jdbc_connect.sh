@@ -22,9 +22,19 @@ function pre_test() {
 
     if ! java -version; then
         java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
-        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc" 
+    else 
+        APT_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc" 
+    fi
     else
-        DNF_INSTALL "sqlite-jdbc"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "sqlite-jdbc" 
+    else 
+        APT_INSTALL "sqlite-jdbc" 
+    fi
     fi
     sqlite_jdbc_jar=$(rpm -ql sqlite-jdbc | grep sqlite-jdbc.jar)
     export CLASSPATH=${sqlite_jdbc_jar}:.
@@ -48,7 +58,7 @@ function post_test() {
 
     unset CLASSPATH
     rm -rf ./*.class
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

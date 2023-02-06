@@ -20,7 +20,12 @@ source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    DNF_INSTALL maven
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL maven 
+    else 
+        APT_INSTALL maven 
+    fi
     mkdir libs
     cp -rf "$(rpm -ql junit | grep junit.jar)" "$(rpm -ql easymock | grep easymock.jar)" "$(rpm -ql hamcrest | grep core.jar)" libs
     LOG_INFO "End to prepare the test environment."

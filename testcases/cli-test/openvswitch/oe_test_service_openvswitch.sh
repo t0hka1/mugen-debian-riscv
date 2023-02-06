@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openvswitch
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openvswitch 
+    else 
+        APT_INSTALL openvswitch 
+    fi
     service=openvswitch.service
     log_time=$(date '+%Y-%m-%d %T')
     flag=false
@@ -61,7 +66,7 @@ function post_test() {
     systemctl daemon-reload
     service "${service}" reload
     service "${service}" stop
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi

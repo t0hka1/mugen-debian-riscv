@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL dhcp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL dhcp 
+    else 
+        APT_INSTALL dhcp 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -76,7 +81,7 @@ function post_test() {
     pkill dhcpd
     ps -aux | grep dhclient | grep -v grep | awk '{print $2}' | xargs kill -9
     rm -fr dhcpd6.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

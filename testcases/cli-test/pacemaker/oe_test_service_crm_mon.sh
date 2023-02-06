@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pacemaker-cli
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pacemaker-cli 
+    else 
+        APT_INSTALL pacemaker-cli 
+    fi
     echo 'OPTIONS="-d --as-html /tmp/xxx.html"' >> /etc/sysconfig/crm_mon
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop crm_mon.service
     sed -i '/OPTIONS="-d --as-html \/tmp\/xxx.html"/d' /etc/sysconfig/crm_mon
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

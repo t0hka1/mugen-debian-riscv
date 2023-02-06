@@ -27,7 +27,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL zerofree
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL zerofree 
+    else 
+        APT_INSTALL zerofree 
+    fi
     mkdir ./testmnt ./images
     dd if=/dev/zero of=./images/fs.img bs=1M count=1024
     mkfs.ext3 -F ./images/fs.img
@@ -66,7 +71,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ./testmnt ./images
     LOG_INFO "Finish environment cleanup!"
 }

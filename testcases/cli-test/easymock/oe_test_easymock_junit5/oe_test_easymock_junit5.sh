@@ -19,9 +19,19 @@
 source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "easymock junit5 maven"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "easymock junit5 maven" 
+    else 
+        APT_INSTALL "easymock junit5 maven" 
+    fi
     java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
-    DNF_INSTALL java-${java_version}-devel
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL java-${java_version}-devel 
+    else 
+        APT_INSTALL java-${java_version}-devel 
+    fi
     mkdir libs
     cp -rf "$(rpm -ql junit5 | grep junit-jupiter-api.jar)" "$(rpm -ql easymock | grep easymock.jar)" "$(rpm -ql hamcrest | grep core.jar)" libs
     LOG_INFO "End to prepare the test environment."
@@ -36,7 +46,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf $(ls | grep -vE ".xml|main|.sh|test") /root/.m2
     LOG_INFO "End to restore the test environment."
 }

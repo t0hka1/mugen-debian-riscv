@@ -64,7 +64,7 @@ function post_test() {
     expect eof
 EOF
     rm -rf /mnt/windows test.txt* mft debug*
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

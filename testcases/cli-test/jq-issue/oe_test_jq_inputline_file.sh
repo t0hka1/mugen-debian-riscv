@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL jq
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL jq 
+    else 
+        APT_INSTALL jq 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -40,7 +45,7 @@ jq -n "now|strflocaltime(\"%Y-%m-%dT%H%M%S\")"' >/tmp/tlist.txt
 }
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /tmp/tlist.txt /tmp/jq_result /tmp/diff_result
     LOG_INFO "Finish environment cleanup!"
 }

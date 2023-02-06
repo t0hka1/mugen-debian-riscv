@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
 	LOG_INFO "Start to prepare the test environment."
-	DNF_INSTALL "sos tar"
+	uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "sos tar" 
+    else 
+        APT_INSTALL "sos tar" 
+    fi
 	LOG_INFO "Finish preparing the test environment."
 }
 
@@ -97,7 +102,7 @@ EOF
 function post_test() {
 	LOG_INFO "Start to restore the test environment."
 	rm -rf $(ls | grep -v ".sh") /var/tmp/sos*
-	DNF_REMOVE
+	APT_REMOVE
 	LOG_INFO "Finish restoring the test environment."
 }
 

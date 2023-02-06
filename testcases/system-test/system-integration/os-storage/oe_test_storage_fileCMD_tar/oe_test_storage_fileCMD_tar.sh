@@ -24,7 +24,12 @@ function pre_test() {
         cd "$(dirname $0)" || exit 1
         pwd
     )
-    DNF_INSTALL tar
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tar 
+    else 
+        APT_INSTALL tar 
+    fi
     cd /tmp || exit 1
     mkdir test
     dd if=/dev/zero of=/tmp/test/test count=1 bs=512
@@ -46,7 +51,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test /tmp/test.tar
-    DNF_REMOVE
+    APT_REMOVE
     cd ${current_path} || exit 1
     LOG_INFO "Finish environment cleanup."
 }

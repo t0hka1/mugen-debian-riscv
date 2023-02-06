@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL pciutils
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pciutils 
+    else 
+        APT_INSTALL pciutils 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -39,7 +44,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     test -f /tmp/error.log && rm -f error.log
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

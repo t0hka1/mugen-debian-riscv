@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL ntp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ntp 
+    else 
+        APT_INSTALL ntp 
+    fi
     echo "server 127.127.1.0 iburst prefer maxpoll 4 minpoll 4" >> /etc/ntp.conf
     sed -i "s/restrict default nomodify notrap nopeer noepeer noquery/#restrict default nomodify notrap nopeer noepeer noquery/" \
 /etc/ntp.conf
@@ -48,7 +53,7 @@ function post_test() {
     sed -i "/server 127.127.1.0 iburst prefer maxpoll 4 minpoll 4/d" /etc/ntp.conf
     sed -i "s/#restrict default nomodify notrap nopeer noepeer noquery/restrict default nomodify notrap nopeer noepeer noquery/" \
 /etc/ntp.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

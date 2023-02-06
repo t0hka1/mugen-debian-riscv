@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL iSulad
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL iSulad 
+    else 
+        APT_INSTALL iSulad 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -43,7 +48,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/bin/isulad --log-level=ERROR\ExecStart=/usr/bin/isulad\g' /usr/lib/systemd/system/isulad.service
     systemctl daemon-reload
     systemctl reload isulad.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
-    DNF_INSTALL "freeradius"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "freeradius" 
+    else 
+        APT_INSTALL "freeradius" 
+    fi
     ln -s /etc/raddb/sites-available/control-socket /etc/raddb/sites-enabled/control-socket
     sed -i '/mode = rw/a mode = rw' /etc/raddb/sites-enabled/control-socket
     sed -i '1i "test" Cleartext-Password := "pass123"' /etc/raddb/users
@@ -110,7 +115,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
 
     systemctl stop radiusd
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/raddb
     rm -rf /var/log/radius
 

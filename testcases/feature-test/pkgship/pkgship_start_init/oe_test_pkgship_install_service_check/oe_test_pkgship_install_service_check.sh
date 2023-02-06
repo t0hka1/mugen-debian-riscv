@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     test -f ${YUM_PATH}/pkgship_yum.repo && rm -f ${YUM_PATH}/pkgship_yum.repo
-    DNF_INSTALL "pkgship bc"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "pkgship bc" 
+    else 
+        APT_INSTALL "pkgship bc" 
+    fi
     
     LOG_INFO "End to prepare the test environment."
 }

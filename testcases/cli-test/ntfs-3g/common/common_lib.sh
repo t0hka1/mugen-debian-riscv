@@ -24,7 +24,12 @@ function get_disk() {
     disk_list=($disks)
     disk1=${disk_list[0]}
     disk2=${disk_list[1]}
-    DNF_INSTALL ntfs-3g
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ntfs-3g 
+    else 
+        APT_INSTALL ntfs-3g 
+    fi
     mkntfs --fast /dev/${disk1}
     mkntfs --fast /dev/${disk2}
 }

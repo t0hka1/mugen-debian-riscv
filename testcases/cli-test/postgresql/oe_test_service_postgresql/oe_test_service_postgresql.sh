@@ -21,7 +21,12 @@ source "../../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL postgresql-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL postgresql-server 
+    else 
+        APT_INSTALL postgresql-server 
+    fi
     postgresql-setup --initdb
     LOG_INFO "End of environmental preparation!"
 }
@@ -45,7 +50,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload postgresql.service
     systemctl stop postgresql.service
-    DNF_REMOVE 1 "postgresql-server" 
+    APT_REMOVE 1 "postgresql-server" 
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,9 +21,19 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_env() {
     if ! java -version; then
         java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
-        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander" 
+    else 
+        APT_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander" 
+    fi
     else
-        DNF_INSTALL "testng beust-jcommander"
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "testng beust-jcommander" 
+    else 
+        APT_INSTALL "testng beust-jcommander" 
+    fi
     fi
     testng_jar=$(rpm -ql testng | grep testng.jar)
     jcommander_jar=$(rpm -ql beust-jcommander | grep beust-jcommander.jar)
@@ -34,5 +44,5 @@ function clean_env() {
     unset CLASSPATH
     rm -rf ./*.class
     rm -rf ./test-output
-    DNF_REMOVE
+    APT_REMOVE
 }

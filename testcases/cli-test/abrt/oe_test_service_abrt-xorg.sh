@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL abrt-addon-xorg
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL abrt-addon-xorg 
+    else 
+        APT_INSTALL abrt-addon-xorg 
+    fi
     systemctl start abrtd.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -35,7 +40,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

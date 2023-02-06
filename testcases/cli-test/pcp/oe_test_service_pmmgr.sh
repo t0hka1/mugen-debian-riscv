@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pcp-manager
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pcp-manager 
+    else 
+        APT_INSTALL pcp-manager 
+    fi
     if [ $(getenforce | grep Enforcing) ]; then
         setenforce 0
         flag=true
@@ -42,7 +47,7 @@ function post_test() {
     if [ ${flag} = 'true' ]; then
         setenforce 1
     fi
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

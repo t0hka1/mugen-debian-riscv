@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL java-1.8.0-openjdk*
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL java-1.8.0-openjdk* 
+    else 
+        APT_INSTALL java-1.8.0-openjdk* 
+    fi
     cp ../common/Hello.java .
     LOG_INFO "End to prepare the test environment."
 }
@@ -55,7 +60,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Need't to restore the tet environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf Hello.* portlog
     LOG_INFO "End to restore the test environment."
 }

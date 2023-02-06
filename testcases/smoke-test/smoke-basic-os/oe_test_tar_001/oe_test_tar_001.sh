@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
-    DNF_INSTALL tar
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tar 
+    else 
+        APT_INSTALL tar 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /tmp/test test.tar
-    DNF_REMOVE
+    APT_REMOVE
     export LANG=${OLD_LANG}
     LOG_INFO "Finish environment cleanup!"
 }

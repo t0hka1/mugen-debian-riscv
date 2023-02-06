@@ -75,7 +75,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf galera_zl
     LOG_INFO "Finish environment cleanup."
 }

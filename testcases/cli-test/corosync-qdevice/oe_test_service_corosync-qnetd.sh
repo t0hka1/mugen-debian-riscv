@@ -23,7 +23,12 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=corosync-qnetd.service
     ha_pre
-    DNF_INSTALL "corosync-qdevice corosync-qnetd"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "corosync-qdevice corosync-qnetd" 
+    else 
+        APT_INSTALL "corosync-qdevice corosync-qnetd" 
+    fi
     P_SSH_CMD --node 2 --cmd "dnf install -y corosync-qdevice corosync-qnetd"
     P_SSH_CMD --node 3 --cmd "mv /etc/hosts /etc/hosts_bak"
     echo "${NODE3_IPV4} qdevice" >> /etc/hosts    
@@ -60,7 +65,7 @@ function post_test() {
     systemctl enable firewalld;
     dnf remove -y corosync pacemaker pcs corosync-qdevice corosync-qnetd;
     mv /etc/hosts_bak /etc/hosts"
-    DNF_REMOVE
+    APT_REMOVE
     P_SSH_CMD --node 2 --cmd "dnf remove -y corosync-qdevice corosync-qnetd"
     ha_post
     LOG_INFO "Finish environment cleanup!"

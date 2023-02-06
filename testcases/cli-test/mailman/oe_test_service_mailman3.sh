@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "mailman postfix"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mailman postfix" 
+    else 
+        APT_INSTALL "mailman postfix" 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -45,7 +50,7 @@ function post_test() {
     systemctl reload mailman3.service
     systemctl stop mailman3.service
     /usr/lib/mailman/bin/rmlist mailman3
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

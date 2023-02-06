@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "cifs-utils samba"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "cifs-utils samba" 
+    else 
+        APT_INSTALL "cifs-utils samba" 
+    fi
     cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
     echo "[share]
         comment = share folder
@@ -51,7 +56,7 @@ function post_test() {
     systemctl stop smb
     userdel -rf smbtest
     mv /etc/samba/smb.conf.bak /etc/samba/smb.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

@@ -20,7 +20,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "opensp"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "opensp" 
+    else 
+        APT_INSTALL "opensp" 
+    fi
     cp -r ../common/normal.xml ./normal.xml
     cp -r normal.xml normal2.xml
     printf "DOCUMENT normal.xml\nDOCUMENT normal2.xml" >catalogs
@@ -51,7 +56,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf testdir catalogs normal*.xml ./*.log
     LOG_INFO "Finish restoring the test environment."
 }

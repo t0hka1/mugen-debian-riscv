@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "squid firewalld"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "squid firewalld" 
+    else 
+        APT_INSTALL "squid firewalld" 
+    fi
     systemctl start firewalld
     LOG_INFO "End to prepare the test environment."
 }
@@ -53,7 +58,7 @@ function post_test() {
     rm -rf baidu
     test -n ${count_line} && sed -i "${count_line}s/allow/deny/g" /etc/squid/squid.conf
     sed -i "/http_port 8080/d" /etc/squid/squid.conf
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

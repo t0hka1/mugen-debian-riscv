@@ -20,7 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel" 
+    else 
+        APT_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel" 
+    fi
     wget https://github.com/PeterHuewe/tpm-emulator/archive/v0.7.5.zip
     unzip v0.7.5.zip
     test -d tpm-emulator-0.7.5 && cd tpm-emulator-0.7.5
@@ -65,5 +70,5 @@ function clear_env() {
     test "$currentName"x = "build"x && cd ../../ && {
         rm -rf $(ls | grep -v ".sh")
     }
-    DNF_REMOVE
+    APT_REMOVE
 }

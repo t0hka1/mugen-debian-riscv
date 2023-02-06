@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL multipath-tools
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL multipath-tools 
+    else 
+        APT_INSTALL multipath-tools 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -49,7 +54,7 @@ function post_test() {
     mv /etc/multipath.conf.bak /etc/multipath.conf
     systemctl reload multipathd.service
     multipath -F
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

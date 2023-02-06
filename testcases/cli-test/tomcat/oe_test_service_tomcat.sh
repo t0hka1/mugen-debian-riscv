@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL tomcat
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL tomcat 
+    else 
+        APT_INSTALL tomcat 
+    fi
     sed -i 's/protocol="AJP\/1.3"/protocol="AJP\/1.3" secretRequired=""/g' /etc/tomcat/server.xml
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop tomcat.service
     sed -i 's/protocol="AJP\/1.3" secretRequired=""/protocol="AJP\/1.3"/g' /etc/tomcat/server.xml
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

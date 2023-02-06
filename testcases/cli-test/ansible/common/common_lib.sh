@@ -17,7 +17,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
-    DNF_INSTALL ansible
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL ansible 
+    else 
+        APT_INSTALL ansible 
+    fi
     sed -i '1i\${NODE2_IPV4}' /etc/ansible/hosts
     expect <<-END
     spawn ssh-keygen
@@ -41,7 +46,7 @@ END
 
 function Post_Test() {
     rm -rf /etc/ansible/hosts
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /root/.ssh
 }
 main "$@"

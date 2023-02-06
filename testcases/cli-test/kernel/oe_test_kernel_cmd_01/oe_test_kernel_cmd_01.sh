@@ -19,7 +19,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "kernel-tools"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "kernel-tools" 
+    else 
+        APT_INSTALL "kernel-tools" 
+    fi
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -54,7 +59,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the tet environment."
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish to restore the tet environment."
 }
 

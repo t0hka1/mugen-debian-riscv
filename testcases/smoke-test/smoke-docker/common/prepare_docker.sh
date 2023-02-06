@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_docker_env() {
-    DNF_INSTALL docker
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL docker 
+    else 
+        APT_INSTALL docker 
+    fi
     clean_docker_env
     if grep -i version= /etc/os-release | awk -F '"' '{print$2}' | grep "("; then
         os_version=$(grep -i version= /etc/os-release | awk -F '"' '{print$2}' | tr '()' '- ' | sed s/[[:space:]]//g)

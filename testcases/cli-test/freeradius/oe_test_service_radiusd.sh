@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    DNF_INSTALL freeradius
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL freeradius 
+    else 
+        APT_INSTALL freeradius 
+    fi
     test_execution radiusd.service
     systemctl start radiusd.service
     sed -i 's\ExecStart=/usr/sbin/radiusd\ExecStart=/usr/sbin/radiusd -P\g' /usr/lib/systemd/system/radiusd.service
@@ -38,7 +43,7 @@ function post_test() {
     sed -i 's\ExecStart=/usr/sbin/radiusd -P\ExecStart=/usr/sbin/radiusd\g' /usr/lib/systemd/system/radiusd.service
     systemctl daemon-reload
     systemctl reload radiusd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL varnish
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL varnish 
+    else 
+        APT_INSTALL varnish 
+    fi
     systemctl start varnish.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -47,7 +52,7 @@ function post_test() {
     systemctl reload varnishncsa.service
     systemctl stop varnish.service
     systemctl stop varnishncsa.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

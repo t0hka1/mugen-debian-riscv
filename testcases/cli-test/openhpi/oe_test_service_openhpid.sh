@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL openhpi
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL openhpi 
+    else 
+        APT_INSTALL openhpi 
+    fi
     sed -i 's/OPENHPI_UNCONFIGURED = "YES"/OPENHPI_UNCONFIGURED = "NO"/g' /etc/openhpi/openhpi.conf
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i 's/OPENHPI_UNCONFIGURED = "NO"/OPENHPI_UNCONFIGURED = "YES"/g' /etc/openhpi/openhpi.conf
     systemctl stop openhpid.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

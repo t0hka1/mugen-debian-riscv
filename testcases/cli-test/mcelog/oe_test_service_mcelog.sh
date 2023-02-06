@@ -25,7 +25,12 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 0
     else
-        DNF_INSTALL mcelog
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mcelog 
+    else 
+        APT_INSTALL mcelog 
+    fi
     fi
     LOG_INFO "End of environmental preparation!"
 }
@@ -40,7 +45,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop mcelog.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

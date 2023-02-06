@@ -47,7 +47,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     clean_maven
     rm -rf junit5-maven /tmp/result
     LOG_INFO "Finish environment cleanup!"

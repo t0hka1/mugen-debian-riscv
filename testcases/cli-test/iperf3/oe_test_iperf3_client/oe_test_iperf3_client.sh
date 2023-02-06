@@ -20,7 +20,12 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
  
 function pre_test() {
-    DNF_INSTALL iperf3
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL iperf3 
+    else 
+        APT_INSTALL iperf3 
+    fi
 }
 
 function run_test() {
@@ -52,7 +57,7 @@ function run_test() {
 }
 
 function post_test() {
-    DNF_REMOVE
+    APT_REMOVE
 }
 
 main "$@"

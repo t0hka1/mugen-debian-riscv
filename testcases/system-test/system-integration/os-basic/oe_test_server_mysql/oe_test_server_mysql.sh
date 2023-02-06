@@ -24,7 +24,12 @@ function pre_test() {
     dnf list | grep mysql-server
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
-        DNF_INSTALL mysql-server
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mysql-server 
+    else 
+        APT_INSTALL mysql-server 
+    fi
         systemctl start mysqld
         servername=mysqld
     else
@@ -64,7 +69,7 @@ function post_test() {
         userdel -r mysql
         rm -rf /tmp/mysql.sock
     }
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

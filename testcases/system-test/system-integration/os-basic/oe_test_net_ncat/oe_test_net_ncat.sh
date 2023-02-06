@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL nmap
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nmap 
+    else 
+        APT_INSTALL nmap 
+    fi
     iptables -F
     SSH_CMD "
             yum install -y nmap iptables;
@@ -43,7 +48,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ncat_log
-    DNF_REMOVE
+    APT_REMOVE
     SSH_CMD "yum remove -y nmap; rm -rf ~/ncat_log" "${NODE2_IPV4}" "${NODE2_PASSWORD}" "${NODE2_USER}"
     LOG_INFO "End to restore the test environment."
 }

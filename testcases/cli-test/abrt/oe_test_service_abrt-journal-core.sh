@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL abrt-addon-ccpp
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL abrt-addon-ccpp 
+    else 
+        APT_INSTALL abrt-addon-ccpp 
+    fi
     systemctl start abrtd.service
     LOG_INFO "End of environmental preparation!"
 }
@@ -36,7 +41,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop abrtd.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

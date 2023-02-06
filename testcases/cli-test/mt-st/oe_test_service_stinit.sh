@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "mt-st mt-st-help"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mt-st mt-st-help" 
+    else 
+        APT_INSTALL "mt-st mt-st-help" 
+    fi
     cp /usr/share/doc/mt-st-help/stinit.def.examples /etc/stinit.def
     LOG_INFO "End of environmental preparation!"
 }
@@ -37,7 +42,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop stinit.service
     rm -rf /etc/stinit.def
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

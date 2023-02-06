@@ -26,7 +26,12 @@ function pre_test() {
         rpm -e --nodeps cyrus-sasl
         flag=true
     fi   
-    DNF_INSTALL PackageKit
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL PackageKit 
+    else 
+        APT_INSTALL PackageKit 
+    fi
     LOG_INFO "End of environmental preparation!"
 }
 
@@ -40,9 +45,14 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop packagekit.service
-    DNF_REMOVE
+    APT_REMOVE
     if [ ${flag} = 'true' ]; then
-        DNF_INSTALL cyrus-sasl
+        uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL cyrus-sasl 
+    else 
+        APT_INSTALL cyrus-sasl 
+    fi
     fi
     LOG_INFO "Finish environment cleanup!"
 }

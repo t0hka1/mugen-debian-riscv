@@ -21,7 +21,12 @@ source "${OET_PATH}"/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL cpio
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL cpio 
+    else 
+        APT_INSTALL cpio 
+    fi
 
     mkdir "testdir"
     for i in {a..z}; do

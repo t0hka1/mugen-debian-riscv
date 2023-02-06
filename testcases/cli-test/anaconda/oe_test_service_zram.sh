@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL anaconda-core 
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL anaconda-core  
+    else 
+        APT_INSTALL anaconda-core  
+    fi
     sed -i "s/MAX_RAM_ON=2097152/MAX_RAM_ON=4097152/g" /usr/libexec/anaconda/zramswapon
     systemctl start zram.service
     LOG_INFO "End of environmental preparation!"
@@ -37,7 +42,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     sed -i "s/MAX_RAM_ON=4097152/MAX_RAM_ON=2097152/g" /usr/libexec/anaconda/zramswapon
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

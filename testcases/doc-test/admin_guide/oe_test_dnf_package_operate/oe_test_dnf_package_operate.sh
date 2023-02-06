@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start executing testcase."
-    DNF_INSTALL httpd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL httpd 
+    else 
+        APT_INSTALL httpd 
+    fi
     LOG_INFO "End of testcase execution."
 }
 

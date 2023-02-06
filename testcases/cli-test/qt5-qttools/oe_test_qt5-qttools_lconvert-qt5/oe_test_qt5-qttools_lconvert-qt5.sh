@@ -20,7 +20,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel" 
+    else 
+        APT_INSTALL "qt5-qttools qt5-linguist qt5-qtbase-devel" 
+    fi
     qt5_version=$(rpm -qa qt5-qttools | awk -F '-' '{print $3}')
     swedish=$(rpm -ql qt5-linguist | grep "swedish.qph")
     cp $swedish ./
@@ -87,7 +92,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf swedish swedish.qph verbose swedish.ts
     LOG_INFO "End to restore the test environment."
 }

@@ -30,7 +30,12 @@ function pre_test() {
         cd "${testpath}" || exit 1
         python2 setup2.py bdist_egg
     )
-    DNF_INSTALL "python2-wheel python2-pyxdg python2-keyring"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "python2-wheel python2-pyxdg python2-keyring" 
+    else 
+        APT_INSTALL "python2-wheel python2-pyxdg python2-keyring" 
+    fi
     pip2 install keyrings.alt
     wheelpy=$(python2 -V 2>&1 | awk '{print $2}' | awk -F '.' '{print $1"."$2}')
 
@@ -84,7 +89,7 @@ function post_test() {
     pip2 uninstall keyrings.alt -y
     rm -rf "$(which wjfexe)"
     pip2 uninstall wjfpkg -y
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf "${testpath}" wjfpkg-1.0-py"${wheelpy}"-none-any.whl wjfpkg-1.0
 
     LOG_INFO "End to restore the test environment."

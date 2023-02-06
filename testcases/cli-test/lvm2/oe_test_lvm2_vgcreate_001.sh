@@ -19,7 +19,12 @@
 source ./common/disk_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL lvm2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL lvm2 
+    else 
+        APT_INSTALL lvm2 
+    fi
     check_free_disk
     version_id=$(cat /etc/os-release | grep "VERSION_ID" | awk -F "=" {'print$NF'} | awk -F "\"" {'print$2'})
     LOG_INFO "End to prepare the test environment!"
@@ -110,7 +115,7 @@ function post_test() {
     vgremove test -f
     pvremove -f /dev/${local_disk} /dev/${local_disk1} /dev/${local_disk2}
     rm -rf /etc/lvm/profile/lh.profile
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

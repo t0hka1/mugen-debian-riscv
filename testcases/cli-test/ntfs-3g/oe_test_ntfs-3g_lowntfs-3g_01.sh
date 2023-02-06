@@ -83,7 +83,7 @@ function post_test() {
     expect eof
 EOF
     rm -rf /mnt/windows
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

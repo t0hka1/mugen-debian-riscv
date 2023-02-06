@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL etcd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL etcd 
+    else 
+        APT_INSTALL etcd 
+    fi
     systemctl start etcd
     LOG_INFO "End to prepare the test environment."
 }
@@ -81,7 +86,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     systemctl stop etcd
     rm -rf etcd_log*
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 main "$@"

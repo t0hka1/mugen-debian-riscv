@@ -32,7 +32,12 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    DNF_INSTALL postgresql-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL postgresql-server 
+    else 
+        APT_INSTALL postgresql-server 
+    fi
     CHECK_RESULT $?
     rpm -qa | grep postgresql
     CHECK_RESULT $?
@@ -54,7 +59,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     setenforce 1
-    DNF_REMOVE
+    APT_REMOVE
     userdel -r postgres
     groupdel postgres
     rm -rf testlog

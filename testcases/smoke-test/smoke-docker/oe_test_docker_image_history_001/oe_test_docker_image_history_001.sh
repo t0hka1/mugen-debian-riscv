@@ -50,7 +50,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     docker rmi $(docker images -q)
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf ${Images_name}.tar
     LOG_INFO "Finish environment cleanup."
 }

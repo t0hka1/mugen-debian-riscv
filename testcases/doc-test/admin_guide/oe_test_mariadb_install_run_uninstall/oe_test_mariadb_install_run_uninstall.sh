@@ -41,7 +41,12 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     rm -rf /var/lib/mysql/*
-    DNF_INSTALL mariadb-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mariadb-server 
+    else 
+        APT_INSTALL mariadb-server 
+    fi
     CHECK_RESULT $?
     systemctl start mariadb
     mysqladmin -uroot password $NODE1_PASSWORD
@@ -89,7 +94,7 @@ function post_test() {
     userdel -r mysql
     groupdel mysql
     rm -rf testlog
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

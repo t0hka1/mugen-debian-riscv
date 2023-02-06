@@ -19,7 +19,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL mosquitto
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mosquitto 
+    else 
+        APT_INSTALL mosquitto 
+    fi
     service=mosquitto.service 
     LOG_INFO "Finish preparing the test environment."
 }
@@ -44,7 +49,7 @@ function post_test() {
     systemctl daemon-reload
     systemctl reload "${service}"
     systemctl stop "${service}"
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish restoring the test environment."
 }
 

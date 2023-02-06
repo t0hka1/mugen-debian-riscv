@@ -18,13 +18,23 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    DNF_INSTALL "easymock junit"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "easymock junit" 
+    else 
+        APT_INSTALL "easymock junit" 
+    fi
     java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
-    DNF_INSTALL java-${java_version}-devel
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL java-${java_version}-devel 
+    else 
+        APT_INSTALL java-${java_version}-devel 
+    fi
 }
 
 function clear_env() {
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf $(ls | grep -vE ".sh|.java|.xml|expect_result|main|test")
 }
 

@@ -20,7 +20,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL "libiodbc mariadb mariadb-server mariadb-connector-odbc"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "libiodbc mariadb mariadb-server mariadb-connector-odbc" 
+    else 
+        APT_INSTALL "libiodbc mariadb mariadb-server mariadb-connector-odbc" 
+    fi
     systemctl start mariadb
     /usr/bin/expect <<-EOF
     spawn mysql -u root -p
@@ -61,7 +66,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start environment cleanup."
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/odbc.ini
     LOG_INFO "Finish environment cleanup."
 }

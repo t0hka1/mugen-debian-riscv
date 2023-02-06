@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL httpd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL httpd 
+    else 
+        APT_INSTALL httpd 
+    fi
     sudo systemctl start httpd
     sudo systemctl start firewalld
     default_zone=$(sudo firewall-cmd --get-default-zone)
@@ -55,7 +60,7 @@ function post_test() {
     sudo firewall-cmd --reload
     sudo systemctl start firewalld
     sudo systemctl stop httpd
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 main "$@"

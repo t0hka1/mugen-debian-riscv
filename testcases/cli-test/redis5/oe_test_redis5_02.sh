@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
-    DNF_INSTALL redis5
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL redis5 
+    else 
+        APT_INSTALL redis5 
+    fi
     systemctl start redis
     LOG_INFO "End to prepare the test environment!"
 }
@@ -79,7 +84,7 @@ function post_test() {
     kill -9 ${PID}
     rm -rf testlog* /var/lib/redis/redis/appendonly_bak.aof
     systemctl stop redis
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

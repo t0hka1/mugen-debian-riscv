@@ -26,7 +26,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL netdata
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL netdata 
+    else 
+        APT_INSTALL netdata 
+    fi
     touch test.txt  
     LOG_INFO "End of environmental preparation!"
 }
@@ -86,7 +91,7 @@ function run_test() {
 
 function post_test() {
     LOG_INFO "Start to restore the test environment."
-    DNF_REMOVE 
+    APT_REMOVE 
     rm  test.txt
     LOG_INFO "End to restore the test environment." 
 }

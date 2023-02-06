@@ -21,7 +21,12 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "diffutils"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "diffutils" 
+    else 
+        APT_INSTALL "diffutils" 
+    fi
     local=$(localectl status | grep System | awk -F "=" '{print $2}')
     localectl set-locale LANG=zh_CN.utf8    
     LOG_INFO "End of environmental preparation!"
@@ -54,7 +59,7 @@ EOF
 function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /opt/file{1,2,3}
-    DNF_REMOVE
+    APT_REMOVE
     localectl set-locale LANG=${local}
     LOG_INFO "Finish environment cleanup!"
 }

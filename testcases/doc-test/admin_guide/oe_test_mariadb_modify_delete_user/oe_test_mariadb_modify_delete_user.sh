@@ -33,7 +33,12 @@ function pre_test() {
     chown -R mysql:mysql /data
     cd - || exit
     rm -rf /var/lib/mysql/*
-    DNF_INSTALL mariadb-server
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mariadb-server 
+    else 
+        APT_INSTALL mariadb-server 
+    fi
     systemctl start mariadb
     mysqladmin -uroot password ${NODE1_PASSWORD}
     expect -c "
@@ -98,7 +103,7 @@ function post_test() {
 expect eof
 "
     setenforce 1
-    DNF_REMOVE
+    APT_REMOVE
     userdel -r mysql
     groupdel mysql
     rm -rf testlog /data/mariadb

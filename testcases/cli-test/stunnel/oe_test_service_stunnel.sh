@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL stunnel
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL stunnel 
+    else 
+        APT_INSTALL stunnel 
+    fi
     echo "client=yes
 pid=/tmp/stunnel.pid
 debug=7
@@ -44,7 +49,7 @@ function post_test() {
     LOG_INFO "start environment cleanup."
     rm -rf /etc/stunnel/stunnel.conf
     systemctl stop stunnel.service
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL "httpd strace mod_ssl"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "httpd strace mod_ssl" 
+    else 
+        APT_INSTALL "httpd strace mod_ssl" 
+    fi
     expect <<EOF
         spawn openssl genrsa -des3 -out server.key 2048
         expect "pass" { send "${NODE1_PASSWORD}\r" }
@@ -70,7 +75,7 @@ function post_test() {
     rm -rf /etc/pki/tls/private/server.key /etc/pki/tls/certs/server.* ./server* ./ca* /var/www/html/example
     getenforce | grep Permissive && setenforce 1
     systemctl status firewalld | grep dead && systemctl start firewalld
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 

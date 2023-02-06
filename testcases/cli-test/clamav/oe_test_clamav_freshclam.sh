@@ -21,7 +21,12 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    DNF_INSTALL "clamav clamav-update"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "clamav clamav-update" 
+    else 
+        APT_INSTALL "clamav clamav-update" 
+    fi
     cp /etc/clamd.conf /etc/clamd.conf.bak
 
     LOG_INFO "End to prepare the database config."
@@ -78,7 +83,7 @@ function post_test() {
 
     rm -f pid_log /etc/clamd.conf 
     mv /etc/clamd.conf.bak /etc/clamd.conf
-    DNF_REMOVE
+    APT_REMOVE
 
     LOG_INFO "End to restore the test environment."
 }

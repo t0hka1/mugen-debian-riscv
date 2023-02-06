@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL "vsftpd ftp"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "vsftpd ftp" 
+    else 
+        APT_INSTALL "vsftpd ftp" 
+    fi
     systemctl start vsftpd
     useradd -m ftpuser1
     echo ${NODE1_PASSWORD} | passwd --stdin ftpuser1
@@ -93,7 +98,7 @@ function post_test() {
     sed -i "/ftpuser2/d" /etc/vsftpd/user_list
     sed -i "/ftpuser2/d" /etc/vsftpd/ftpusers
     mv /etc/vsftpd/vsftpd.conf.bak /etc/vsftpd/vsftpd.conf
-    DNF_REMOVE
+    APT_REMOVE
     userdel -r ftpuser1
     userdel -r ftpuser2
     rm -rf testlog*

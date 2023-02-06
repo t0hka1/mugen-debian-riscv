@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL "bacula-client mysql5-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "bacula-client mysql5-server" 
+    else 
+        APT_INSTALL "bacula-client mysql5-server" 
+    fi
     systemctl restart mysqld
     /usr/libexec/bacula/create_mysql_database
     /usr/libexec/bacula/make_mysql_tables
@@ -49,7 +54,7 @@ function post_test() {
     /usr/libexec/bacula/drop_mysql_tables
     /usr/libexec/bacula/drop_mysql_database
     systemctl stop mysqld
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /var/lib/mysql/*
     LOG_INFO "Finish environment cleanup!"
 }

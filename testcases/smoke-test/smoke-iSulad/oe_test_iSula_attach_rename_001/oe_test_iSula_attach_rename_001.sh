@@ -61,7 +61,7 @@ expect eof
 function post_test() {
     LOG_INFO "start environment cleanup."
     clean_isulad_env
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf testlog
     LOG_INFO "Finish environment cleanup."
 }

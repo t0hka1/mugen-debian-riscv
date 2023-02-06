@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL pesign
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL pesign 
+    else 
+        APT_INSTALL pesign 
+    fi
     mkdir /etc/pki/pesign
     expect <<EOF
         log_file log
@@ -51,7 +56,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "start environment cleanup."
     systemctl stop pesign.service
-    DNF_REMOVE
+    APT_REMOVE
     rm -rf /etc/pki/pesign log
     LOG_INFO "Finish environment cleanup!"
 }

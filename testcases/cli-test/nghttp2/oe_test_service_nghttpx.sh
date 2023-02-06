@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL nghttp2
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL nghttp2 
+    else 
+        APT_INSTALL nghttp2 
+    fi
     mkdir /etc/nghttpx/
     echo "frontend=0.0.0.0,4433;no-tls
 backend=127.0.0.1,3128
@@ -51,7 +56,7 @@ function post_test() {
     systemctl reload nghttpx.service
     systemctl stop nghttpx.service
     rm -rf /etc/nghttpx/
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

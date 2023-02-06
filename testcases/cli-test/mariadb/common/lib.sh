@@ -19,7 +19,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function mariadb_init() {
-    DNF_INSTALL "mariadb mariadb-server"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "mariadb mariadb-server" 
+    else 
+        APT_INSTALL "mariadb mariadb-server" 
+    fi
     systemctl start mariadb
     mysqladmin -u root password '123456'
     mysql -uroot -hlocalhost -p123456 <<EOF
@@ -34,5 +39,5 @@ EOF
 function mariadb_clear() {
     systemctl stop mariadb
     rm -f /var/lib/mysql/*
-    DNF_REMOVE
+    APT_REMOVE
 }

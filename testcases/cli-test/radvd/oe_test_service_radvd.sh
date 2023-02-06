@@ -21,7 +21,12 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    DNF_INSTALL radvd
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL radvd 
+    else 
+        APT_INSTALL radvd 
+    fi
     eth_name=$(ip route | grep "${NODE1_IPV4}" | awk '{print $3}')
     cp /etc/radvd.conf /etc/radvd.bak
     echo "interface ${eth_name}
@@ -62,7 +67,7 @@ function post_test() {
     systemctl stop radvd.service
     mv -f /etc/radvd.bak /etc/radvd.conf
     echo 0 >/proc/sys/net/ipv6/conf/all/forwarding
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup!"
 }
 

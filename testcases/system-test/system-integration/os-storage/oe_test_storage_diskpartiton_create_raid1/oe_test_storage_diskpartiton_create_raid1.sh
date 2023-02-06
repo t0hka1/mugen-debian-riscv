@@ -25,7 +25,12 @@ function config_params() {
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    DNF_INSTALL mdadm
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL mdadm 
+    else 
+        APT_INSTALL mdadm 
+    fi
     LOG_INFO "Environmental preparation is over."
 }
 
@@ -57,7 +62,7 @@ function post_test() {
     SLEEP_WAIT 2
     mkfs.ext4 -F ${local_disk3}
     SLEEP_WAIT 2
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "Finish environment cleanup."
 }
 

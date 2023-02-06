@@ -20,7 +20,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to pre the test env"
-    DNF_INSTALL "dmidecode csh lshw"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "dmidecode csh lshw" 
+    else 
+        APT_INSTALL "dmidecode csh lshw" 
+    fi
     LOG_INFO "End to pre the test env"
 }
 function run_test() {
@@ -44,7 +49,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to clean env."
     userdel -rf testuser
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to clean env."
 }
 main "$@"

@@ -22,7 +22,12 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     pre_env
-    DNF_INSTALL "junit hamcrest"
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL "junit hamcrest" 
+    else 
+        APT_INSTALL "junit hamcrest" 
+    fi
     junit_jar=$(rpm -ql junit | grep junit.jar)
     hamcrestcore_jar=$(rpm -ql hamcrest | grep core.jar)
     export CLASSPATH=${CLASSPATH}:${junit_jar}:${hamcrestcore_jar}

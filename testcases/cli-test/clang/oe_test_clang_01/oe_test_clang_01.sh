@@ -18,7 +18,12 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    DNF_INSTALL clang
+    uname -r | grep 'oe\|an' 
+    if [$? -eq 0]; then  
+        DNF_INSTALL clang 
+    else 
+        APT_INSTALL clang 
+    fi
     cp -r ../common ./tmp
     cd ./tmp
     LOG_INFO "End to prepare the test environment."
@@ -58,7 +63,7 @@ function run_test() {
 function post_test() {
     LOG_INFO "Start to restore the test environment."
     rm -rf ./tmp
-    DNF_REMOVE
+    APT_REMOVE
     LOG_INFO "End to restore the test environment."
 }
 main "$@"
