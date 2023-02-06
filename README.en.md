@@ -180,6 +180,19 @@ import xxx
   tpmfile = rpm_manage.rpm_install(pkgs, node, tmpfile)
   rpm_manage.rpm_remove(node, pkgs, tmpfile)
   ```
+  - Install/Uninstall of apt packages
+  ```
+  # bash
+  ## func 1
+  APT_INSTALL "vim bc" "$node_id"
+  APT_REMOVE "$node_id" "jq" "$mode"
+  
+  # mode：Default 0, indicates normal removal of the package; when mode is not 0, mugen will only remove the required package.
+  # python
+  import apt_manage
+  tmpfile = apt_manage.apt_install(pkgs, node, tmpfile)
+  apt_manage.apt_remove(node, pkgs, tmpfile)
+  ```
   - Remote execution
   ```
   # bash

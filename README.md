@@ -177,8 +177,21 @@ import xxx
   # mode：默认为0，会删除用例中安装的包，当为非0时，则只卸载当软件包
   # python
   import rpm_manage
-  tpmfile = rpm_manage.rpm_install(pkgs, node, tmpfile)
+  tmpfile = rpm_manage.rpm_install(pkgs, node, tmpfile)
   rpm_manage.rpm_remove(node, pkgs, tmpfile)
+  ```
+  - apt包安装卸载
+  ```
+  # bash
+  ## func 1
+  APT_INSTALL "vim bc" "$node_id"
+  APT_REMOVE "$node_id" "jq" "$mode"
+  
+  # mode：默认为0，会删除用例中安装的包，当为非0时，则只卸载当软件包
+  # python
+  import apt_manage
+  tmpfile = apt_manage.apt_install(pkgs, node, tmpfile)
+  apt_manage.apt_remove(node, pkgs, tmpfile)
   ```
   - 远程命令执行
   ```
