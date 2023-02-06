@@ -350,8 +350,7 @@ function APT_INSTALL() {
 
     location=$[ "NODE"$node"_LOCATION" ]
     if [[ location == "local" ]]; then
-        # reponames=$(grep '^\[.*\]' /etc/apt/sources.list.d/*.list | tr -d [] | sed -e ':a;N;$!ba;s/\n/ /g')
-        # mapfile -t __install_pkgs < <(apt --assumeno install ${__pkg_list[*]} 2>&1 | grep -wE "${reponames// /|}" | grep -wE "$(uname -m)|noarch" | awk '{print $1}')
+        mapfile -t __install_pkgs < <  ${__pkg_list[*]}
         apt -y install ${__pkg_list[*]}
 
         if ! apt -y install ${__pkg_list[*]}; then
@@ -373,7 +372,7 @@ function APT_INSTALL() {
         fi
     fi
 
-    # __installed_pkgs+=" ${__install_pkgs[*]}"
+    __installed_pkgs+=" ${__install_pkgs[*]}"
 
     return 0
 }
@@ -390,15 +389,15 @@ function APT_REMOVE() {
     __pkg_list=${2-""}
     mode=${3-0}
 
-    # if [[ -z "$__installed_pkgs" && -z "$pkg_list" ]]; then
-    #     LOG_WARN "no thing to do."
-    #     return 0
-    # fi
+    if [[ -z "$__installed_pkgs" && -z "$pkg_list" ]]; then
+        LOG_WARN "no thing to do."
+        return 0
+    fi
 
-    # [ $mode -ne 0 ] && {
-    #     tmpf=$__installed_pkgs
-    #     __installed_pkgs=""
-    # }
+    [ $mode -ne 0 ] && {
+        tmpf=$__installed_pkgs
+        __installed_pkgs=""
+    }
 
     node_number=$(env | grep -E "NODE[0-9]+=" | wc -l)
 
@@ -406,7 +405,7 @@ function APT_REMOVE() {
         for node_id in $(seq 1 $node_number); do
             location=$[ "NODE"$node_id"_LOCATION" ]
             if [[ location == "local" ]]; then
-                if ! apt -y remove ${__pkg_list[*]}; then
+                if ! apt -y autoremove ${__pkg_list[*]}; then
                     LOG_ERROR "pkg_list: ${__pkg_list[*]} remove failed."
                     exit 1
                 fi
@@ -415,7 +414,7 @@ function APT_REMOVE() {
                 password=$[ "NODE"$node_id"_PASSWORD" ]
                 ssh_port=$[ "NODE"$node_id"_SSH_PORT" ]
                 remoteUser=$[ "NODE"$node_id"_USER" ]
-                cmd="apt -y remove  ${__pkg_list[*]}"
+                cmd="apt -y autoremove  ${__pkg_list[*]}"
 
                 ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
 
@@ -428,7 +427,7 @@ function APT_REMOVE() {
     else
         location=$[ "NODE"$node"_LOCATION" ]
         if [[ location == "local" ]]; then
-            if ! apt -y remove  ${__pkg_list[*]}; then
+            if ! apt -y autoremove  ${__pkg_list[*]}; then
                 LOG_ERROR "pkg_list: ${__pkg_list[*]} remove failed."
                 exit 1
             fi
@@ -437,7 +436,7 @@ function APT_REMOVE() {
             password=$[ "NODE"$node"_PASSWORD" ]
             ssh_port=$[ "NODE"$node"_SSH_PORT" ]
             remoteUser=$[ "NODE"$node"_USER" ]
-            cmd="apt -y remove ${__pkg_list[*]}"
+            cmd="apt -y autoremove ${__pkg_list[*]}"
 
             ret=SSH_CMD "$cmd" "$remoteIp" "$password" "$remoteUser" 300 "$ssh_port"
 
@@ -448,7 +447,7 @@ function APT_REMOVE() {
         fi
     fi
 
-    # [ $mode -ne 0 ] && {
-    #     __installed_pkgs=$tmpf
-    # }
+    [ $mode -ne 0 ] && {
+        __installed_pkgs=$tmpf
+    }
 }

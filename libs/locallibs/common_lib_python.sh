@@ -167,3 +167,47 @@ function SLEEP_WAIT() {
     mode=${3-1}
     python3 ${OET_PATH}/libs/locallibs/sleep_wait.py --time $wait_time --cmd "$cmd" --mode $mode
 }
+
+function APT_INSTALL() {  # 卸载无法卸载干净，因为没有记录安装了哪些包
+    pkgs=$1
+    node=${2-1}
+    #多节点初始系统环境相同，本地和远端安装的包，在任何节点不不应该存在
+    [ -z "$tmpfile" ] && tmpfile=""
+
+    tmpfile2=$(python3 ${OET_PATH}/libs/locallibs/apt_manage.py \
+        install --pkgs "$pkgs" --node $node --tempfile "$tmpfile")
+
+    [ -z "$tmpfile" ] && tmpfile=$tmpfile2
+}
+
+function APT_REMOVE() {
+    node=${1-1}
+    pkg_list=${2-""}
+    mode=${3-0}
+
+    if [[ -z "$tmpfile" && -z "$pkg_list" ]]; then
+        LOG_WARN "no thing to do."
+        return 0
+    fi
+
+    [ $mode -ne 0 ] && {
+        tmpf=$tmpfile
+        tmpfile=""
+    }
+
+    if [ "$node" == 0 ]; then
+        node_num=$(python3 ${OET_PATH}/libs/locallibs/read_conf.py node-num)
+
+        for node_id in $(seq 1 $node_num); do
+            python3 ${OET_PATH}/libs/locallibs/apt_manage.py \
+                remove --node $node_id --pkgs "$pkg_list" --tempfile "$tmpfile"
+        done
+    else
+        python3 ${OET_PATH}/libs/locallibs/apt_manage.py \
+            remove --node $node --pkgs "$pkg_list" --tempfile "$tmpfile"
+    fi
+
+    [ $mode -ne 0 ] && {
+        tmpfile=$tmpf
+    }
+}
