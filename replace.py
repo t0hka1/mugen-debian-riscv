@@ -15,7 +15,7 @@ for file in all_files_path:
         content = f.read()
 
     new_content = re.sub(r"DNF_INSTALL (.*?)\n","uname -r | grep 'oe\|an' \n\
-    if [$? -eq 0]; then  \n\
+    if [ $? -eq 0 ]; then  \n\
         DNF_INSTALL \\1 \n\
     else \n\
         APT_INSTALL \\1 \n\
