@@ -19,7 +19,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "fastdfs* libfdfsclient net-tools" 
     else 
         APT_INSTALL "fastdfs* libfdfsclient net-tools" 

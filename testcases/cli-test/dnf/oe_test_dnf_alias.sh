@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL tree 
     else 
         APT_INSTALL tree 

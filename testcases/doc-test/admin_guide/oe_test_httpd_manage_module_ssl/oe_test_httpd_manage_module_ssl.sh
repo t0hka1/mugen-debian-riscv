@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "httpd" 
     else 
         APT_INSTALL "httpd" 
@@ -39,7 +39,7 @@ function run_test() {
     httpd -M | grep asis
     CHECK_RESULT $?
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mod_ssl 
     else 
         APT_INSTALL mod_ssl 

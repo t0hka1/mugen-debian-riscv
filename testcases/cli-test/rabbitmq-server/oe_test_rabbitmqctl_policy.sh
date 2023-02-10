@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     vhost_name="myvhost"
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL rabbitmq-server 
     else 
         APT_INSTALL rabbitmq-server 

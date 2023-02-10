@@ -25,7 +25,7 @@ function pre_test() {
         rm -rf /var/lib/mysql/*
 	pck=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ${pck} 
     else 
         APT_INSTALL ${pck} 

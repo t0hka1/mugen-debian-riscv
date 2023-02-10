@@ -31,7 +31,7 @@ function pre_test() {
         python3 setup.py bdist_egg
     )
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "python3-wheel" 
     else 
         APT_INSTALL "python3-wheel" 

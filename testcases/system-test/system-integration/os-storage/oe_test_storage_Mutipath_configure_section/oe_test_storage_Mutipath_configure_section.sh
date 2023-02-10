@@ -23,7 +23,7 @@ function pre_test() {
     local_lang=$LANG
     export LANG=en_US.utf-8
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL multipath-tools 
     else 
         APT_INSTALL multipath-tools 

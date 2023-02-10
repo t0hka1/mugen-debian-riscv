@@ -22,7 +22,7 @@ source "../common/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "hbase hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn" 
     else 
         APT_INSTALL "hbase hadoop-3.1-hdfs hadoop-3.1-mapreduce hadoop-3.1-yarn" 

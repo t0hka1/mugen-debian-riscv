@@ -27,7 +27,7 @@ function pre_test() {
         exit 1
     else
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL linuxptp 
     else 
         APT_INSTALL linuxptp 

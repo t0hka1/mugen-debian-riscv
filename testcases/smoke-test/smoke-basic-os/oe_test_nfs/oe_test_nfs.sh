@@ -32,7 +32,7 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "nfs-utils nfs4-acl-tools" 
     else 
         APT_INSTALL "nfs-utils nfs4-acl-tools" 

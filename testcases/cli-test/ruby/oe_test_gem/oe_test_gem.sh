@@ -22,7 +22,7 @@ source "../common/common_ruby.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL rubygems 
     else 
         APT_INSTALL rubygems 

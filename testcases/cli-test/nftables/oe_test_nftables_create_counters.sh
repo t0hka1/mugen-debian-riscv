@@ -30,7 +30,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL httpd 
     else 
         APT_INSTALL httpd 

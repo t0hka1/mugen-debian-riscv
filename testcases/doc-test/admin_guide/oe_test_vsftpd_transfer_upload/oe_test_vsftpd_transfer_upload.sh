@@ -28,7 +28,7 @@ function pre_test() {
     SSH_CMD "firewall-cmd --add-service=ftp --permanent;firewall-cmd --reload;systemctl restart vsftpd;
     setsebool -P ftpd_full_access=on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ftp 
     else 
         APT_INSTALL ftp 

@@ -21,13 +21,13 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "pcp-import-ganglia2pcp httpd ganglia ganglia-gmetad ganglia-gmond ganglia-web rrdtool" 
     else 
         APT_INSTALL "pcp-import-ganglia2pcp httpd ganglia ganglia-gmetad ganglia-gmond ganglia-web rrdtool" 
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "ganglia-gmond" 2 
     else 
         APT_INSTALL "ganglia-gmond" 2 

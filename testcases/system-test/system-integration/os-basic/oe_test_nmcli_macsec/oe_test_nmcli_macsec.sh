@@ -21,7 +21,7 @@ source ../common/net_lib.sh
 function pre_test() {
     LOG_INFO "start to pre the test env"
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "NetworkManager-wifi" 
     else 
         APT_INSTALL "NetworkManager-wifi" 

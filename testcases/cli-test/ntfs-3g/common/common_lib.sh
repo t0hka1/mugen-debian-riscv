@@ -25,7 +25,7 @@ function get_disk() {
     disk1=${disk_list[0]}
     disk2=${disk_list[1]}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ntfs-3g 
     else 
         APT_INSTALL ntfs-3g 

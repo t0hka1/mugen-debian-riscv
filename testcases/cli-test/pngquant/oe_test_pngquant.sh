@@ -26,7 +26,7 @@ function pre_test()
     wget -P ./ https://pngquant.org/Ducati_side_shadow.png && mv Ducati_side_shadow.png test.png
     cp test.png test-copy.png
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "pngquant libimagequant" 
     else 
         APT_INSTALL "pngquant libimagequant" 

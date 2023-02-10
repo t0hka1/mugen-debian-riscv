@@ -30,7 +30,7 @@ function pre_test() {
     SSH_CMD "systemctl stop firewalld; systemctl restart smb || systemctl start smb;systemctl enable smb;
     setsebool -P samba_export_all_ro on;setsebool -P samba_export_all_rw on" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL cifs-utils 
     else 
         APT_INSTALL cifs-utils 

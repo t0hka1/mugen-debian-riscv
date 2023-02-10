@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mysql-server 
     else 
         APT_INSTALL mysql-server 

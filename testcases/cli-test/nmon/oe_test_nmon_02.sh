@@ -21,7 +21,7 @@ source "./common/common.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb" 
     else 
         APT_INSTALL "nmon gcc ncurses-devel nfs-utils rpmdevtools rpmlint openeuler-lsb" 

@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL xfsdump 
     else 
         APT_INSTALL xfsdump 

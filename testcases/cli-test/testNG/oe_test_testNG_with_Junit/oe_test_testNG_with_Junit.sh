@@ -23,7 +23,7 @@ function pre_test() {
 
     pre_env
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "junit hamcrest" 
     else 
         APT_INSTALL "junit hamcrest" 

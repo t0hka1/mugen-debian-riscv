@@ -21,14 +21,14 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_junit5() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL junit5 
     else 
         APT_INSTALL junit5 
     fi
     java_version=$(rpm -qa 'java*' | grep 'java-.*-openjdk' | head -1 | awk -F - '{print $2}')
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL java-"${java_version}"-devel 
     else 
         APT_INSTALL java-"${java_version}"-devel 
@@ -37,7 +37,7 @@ function pre_junit5() {
 
 function pre_maven() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL maven 
     else 
         APT_INSTALL maven 

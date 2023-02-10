@@ -23,7 +23,7 @@ function pre_test() {
     echo "1" >/proc/sys/net/ipv4/ip_forward
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "ipvsadm httpd net-tools" 
     else 
         APT_INSTALL "ipvsadm httpd net-tools" 

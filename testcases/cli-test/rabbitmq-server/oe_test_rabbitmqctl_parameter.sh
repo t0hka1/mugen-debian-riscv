@@ -25,7 +25,7 @@ function pre_test() {
     user_mq="test"
     passwd_mq="test"
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL rabbitmq-server 
     else 
         APT_INSTALL rabbitmq-server 

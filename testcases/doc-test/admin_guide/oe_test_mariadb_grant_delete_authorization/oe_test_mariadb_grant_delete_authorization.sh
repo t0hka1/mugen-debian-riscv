@@ -33,7 +33,7 @@ function pre_test() {
     chown -R mysql:mysql /data
     cd - || exit
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mariadb-server 
     else 
         APT_INSTALL mariadb-server 

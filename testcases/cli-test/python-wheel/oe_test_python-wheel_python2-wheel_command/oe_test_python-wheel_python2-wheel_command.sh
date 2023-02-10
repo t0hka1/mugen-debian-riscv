@@ -31,7 +31,7 @@ function pre_test() {
         python2 setup2.py bdist_egg
     )
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "python2-wheel python2-pyxdg python2-keyring" 
     else 
         APT_INSTALL "python2-wheel python2-pyxdg python2-keyring" 

@@ -21,10 +21,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "nc httpd" 
     else 
-        APT_INSTALL "nc httpd" 
+        APT_INSTALL "netcat apache2" 
     fi
     LOG_INFO "End to prepare the test environment."
 }

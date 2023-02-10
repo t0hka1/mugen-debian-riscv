@@ -24,7 +24,7 @@ function pre_test() {
     which firewalld && systemctl stop firewalld
     getenforce | grep Enforcing && setenforce 0
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "keepalived vconfig net-tools" 
     else 
         APT_INSTALL "keepalived vconfig net-tools" 

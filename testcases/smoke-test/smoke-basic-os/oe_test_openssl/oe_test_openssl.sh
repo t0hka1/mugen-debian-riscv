@@ -29,7 +29,7 @@ function config_params() {
 function pre_test() {
     LOG_INFO "Start environment preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL openssl 
     else 
         APT_INSTALL openssl 

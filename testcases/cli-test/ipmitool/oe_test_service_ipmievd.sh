@@ -27,7 +27,7 @@ function pre_test() {
     modprobe ipmi_si 
     modprobe ipmi_msghandler
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ipmitool 
     else 
         APT_INSTALL ipmitool 

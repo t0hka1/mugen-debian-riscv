@@ -18,7 +18,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ansible 
     else 
         APT_INSTALL ansible 

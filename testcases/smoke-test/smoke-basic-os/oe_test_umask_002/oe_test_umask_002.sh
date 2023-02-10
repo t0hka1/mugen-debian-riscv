@@ -24,7 +24,7 @@ function pre_test() {
     cur_lang=$(echo $LANG)
     export LANG=zh_CN.UTF-8    
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "expect" 
     else 
         APT_INSTALL "expect" 

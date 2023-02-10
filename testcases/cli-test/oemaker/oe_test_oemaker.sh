@@ -33,7 +33,7 @@ function pre_test() {
     repo_address=$(grep -i 'everything' /etc/yum.repos.d/*.repo | grep -v name | grep 'baseurl' | awk -F '=' '{print $NF}')
     if yum list | grep oemaker; then
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL oemaker 
     else 
         APT_INSTALL oemaker 

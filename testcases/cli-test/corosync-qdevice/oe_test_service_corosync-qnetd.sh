@@ -24,7 +24,7 @@ function pre_test() {
     service=corosync-qnetd.service
     ha_pre
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "corosync-qdevice corosync-qnetd" 
     else 
         APT_INSTALL "corosync-qdevice corosync-qnetd" 

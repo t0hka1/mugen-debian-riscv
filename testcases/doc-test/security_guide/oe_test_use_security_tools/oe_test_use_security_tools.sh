@@ -26,7 +26,7 @@ function pre_test() {
     echo 'key key2' >/tmp/M_test
     touch /tmp/rm_test
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL httpd 
     else 
         APT_INSTALL httpd 

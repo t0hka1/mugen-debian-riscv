@@ -23,7 +23,7 @@ function pre_test() {
 
     test -f ${YUM_PATH}/pkgship_yum.repo && rm -f ${YUM_PATH}/pkgship_yum.repo
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "pkgship bc" 
     else 
         APT_INSTALL "pkgship bc" 

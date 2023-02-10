@@ -27,7 +27,7 @@ function pre_test() {
         flag=true
     fi   
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL PackageKit 
     else 
         APT_INSTALL PackageKit 
@@ -48,7 +48,7 @@ function post_test() {
     APT_REMOVE
     if [ ${flag} = 'true' ]; then
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL cyrus-sasl 
     else 
         APT_INSTALL cyrus-sasl 

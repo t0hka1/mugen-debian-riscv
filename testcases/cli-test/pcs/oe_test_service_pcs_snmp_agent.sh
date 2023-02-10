@@ -24,7 +24,7 @@ function pre_test() {
     service=pcs_snmp_agent.service
     ha_pre
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL pcs-snmp 
     else 
         APT_INSTALL pcs-snmp 

@@ -25,7 +25,7 @@ function pre_test() {
     hostname OE-TESTD
     echo "${NODE1_IPV4} TESTAD.LOCAL" >>/etc/hosts
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "samba-dc python3-samba-dc krb5-server" 
     else 
         APT_INSTALL "samba-dc python3-samba-dc krb5-server" 

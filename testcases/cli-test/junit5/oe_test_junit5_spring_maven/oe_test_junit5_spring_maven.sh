@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_junit5
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "springframework springframework-test" 
     else 
         APT_INSTALL "springframework springframework-test" 

@@ -32,7 +32,7 @@ function pre_test() {
     cp /etc/vsftpd/user_list /etc/vsftpd/user_list.bak;sed -i /root/d /etc/vsftpd/user_list;echo \\\"#root\\\" >> /etc/vsftpd/user_list;
     systemctl restart vsftpd;" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ftp 
     else 
         APT_INSTALL ftp 

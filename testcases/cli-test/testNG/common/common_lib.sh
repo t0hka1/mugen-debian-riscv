@@ -22,14 +22,14 @@ function pre_env() {
     if ! java -version; then
         java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander" 
     else 
         APT_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel testng beust-jcommander" 
     fi
     else
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "testng beust-jcommander" 
     else 
         APT_INSTALL "testng beust-jcommander" 

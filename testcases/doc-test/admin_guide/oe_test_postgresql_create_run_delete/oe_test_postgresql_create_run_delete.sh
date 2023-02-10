@@ -33,7 +33,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 
         APT_INSTALL postgresql-server 

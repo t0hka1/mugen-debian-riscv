@@ -42,7 +42,7 @@ function run_test() {
     LOG_INFO "Start executing testcase."
     rm -rf /var/lib/mysql/*
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mariadb-server 
     else 
         APT_INSTALL mariadb-server 

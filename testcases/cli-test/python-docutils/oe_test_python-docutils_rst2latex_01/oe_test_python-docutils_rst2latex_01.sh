@@ -21,7 +21,7 @@ function pre_test() {
     cp -r ../common/testfile_tex.rst ./testfile.rst
     touch subfig.sty
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "python-docutils" 
     else 
         APT_INSTALL "python-docutils" 

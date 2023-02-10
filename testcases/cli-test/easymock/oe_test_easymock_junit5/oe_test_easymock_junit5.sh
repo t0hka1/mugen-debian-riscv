@@ -20,14 +20,14 @@ source "../common/common_easymock.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "easymock junit5 maven" 
     else 
         APT_INSTALL "easymock junit5 maven" 
     fi
     java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL java-${java_version}-devel 
     else 
         APT_INSTALL java-${java_version}-devel 

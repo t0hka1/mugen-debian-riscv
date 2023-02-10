@@ -24,7 +24,7 @@ function pre_test() {
     default_selinux_status=$(getenforce)
     setenforce 1
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "setroubleshoot-server" 
     else 
         APT_INSTALL "setroubleshoot-server" 

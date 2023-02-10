@@ -27,7 +27,7 @@ function pre_test() {
         flag=true
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL obs-server 
     else 
         APT_INSTALL obs-server 

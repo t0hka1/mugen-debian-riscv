@@ -20,13 +20,13 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_env() {
 
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "iperf3" 
     else 
         APT_INSTALL "iperf3" 
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "iperf3" 2 
     else 
         APT_INSTALL "iperf3" 2 

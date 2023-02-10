@@ -26,7 +26,7 @@ function deploy_env() {
         systemctl restart tgtd; 
         systemctl stop firewalld;"
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper" 
     else 
         APT_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper" 

@@ -18,7 +18,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "podman podman-docker" 
     else 
         APT_INSTALL "podman podman-docker" 

@@ -25,7 +25,7 @@ function pre_test() {
         exit
     else
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mcelog 
     else 
         APT_INSTALL mcelog 

@@ -26,7 +26,7 @@ function pre_test() {
         return 0
     else
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL sgx-aesm-service 
     else 
         APT_INSTALL sgx-aesm-service 

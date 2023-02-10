@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "ipvsadm httpd" 
     else 
         APT_INSTALL "ipvsadm httpd" 

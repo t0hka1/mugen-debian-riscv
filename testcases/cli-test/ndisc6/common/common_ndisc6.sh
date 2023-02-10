@@ -18,7 +18,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "ndisc6 xinetd time" 
     else 
         APT_INSTALL "ndisc6 xinetd time" 
@@ -32,7 +32,7 @@ function deploy_env() {
     sed -i '6s/yes/no/g' /etc/xinetd.d/echo-stream
     systemctl restart xinetd
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL xinetd 2 
     else 
         APT_INSTALL xinetd 2 

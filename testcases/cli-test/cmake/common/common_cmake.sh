@@ -21,7 +21,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "cmake gcc-c++ ninja-build make" 
     else 
         APT_INSTALL "cmake gcc-c++ ninja-build make" 

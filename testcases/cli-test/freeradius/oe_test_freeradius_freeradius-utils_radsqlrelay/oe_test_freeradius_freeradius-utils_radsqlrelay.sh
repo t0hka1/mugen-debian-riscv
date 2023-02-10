@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "freeradius freeradius-utils perl-DBD-MySQL mysql5 mysql5-server freeradius-mysql" 
     else 
         APT_INSTALL "freeradius freeradius-utils perl-DBD-MySQL mysql5 mysql5-server freeradius-mysql" 

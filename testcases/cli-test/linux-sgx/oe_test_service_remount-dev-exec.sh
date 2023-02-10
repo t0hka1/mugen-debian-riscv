@@ -26,7 +26,7 @@ function pre_test() {
         return 0
     else
         uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL libsgx-enclave-common 
     else 
         APT_INSTALL libsgx-enclave-common 

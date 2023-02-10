@@ -21,7 +21,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment!"
     rm -rf /var/lib/redis/dump.rdb
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL redis 
     else 
         APT_INSTALL redis 

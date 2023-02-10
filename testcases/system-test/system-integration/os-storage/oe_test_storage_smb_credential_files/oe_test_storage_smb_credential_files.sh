@@ -29,7 +29,7 @@ function pre_test() {
 	setsebool samba_export_all_ro on;setsebool samba_export_all_rw on;chmod 755 /home/testsamba" \
         ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL cifs-utils 
     else 
         APT_INSTALL cifs-utils 

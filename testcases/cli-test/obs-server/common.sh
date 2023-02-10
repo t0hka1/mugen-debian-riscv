@@ -26,7 +26,7 @@ function env_pre() {
         flag=true
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "mariadb-server obs-api obs-server" 
     else 
         APT_INSTALL "mariadb-server obs-api obs-server" 

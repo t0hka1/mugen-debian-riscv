@@ -35,7 +35,7 @@ function conf_common() {
 
 function kubernetes_install() {
   uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "docker conntrack-tools socat kubernetes*" 1 
     else 
         APT_INSTALL "docker conntrack-tools socat kubernetes*" 1 
@@ -49,14 +49,14 @@ function certificate_prepare() {
     exit 1
   }
   which tar || uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL tar 1 
     else 
         APT_INSTALL tar 1 
     fi
   tar -zxvf ${pkg_path} -C ${cfssl_path} --strip-components=1
   which golang || uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL golang 1 
     else 
         APT_INSTALL golang 1 
@@ -231,7 +231,7 @@ function certificate_prepare() {
 
 function etcd_install() {
   uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL etcd 
     else 
         APT_INSTALL etcd 

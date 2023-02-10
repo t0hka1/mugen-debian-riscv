@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function deploy_env() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "nfs-utils net-tools" 2 
     else 
         APT_INSTALL "nfs-utils net-tools" 2 
@@ -34,7 +34,7 @@ function deploy_env() {
         showmount -e localhost | grep '/shared'
         "
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "autofs nfs-utils" 
     else 
         APT_INSTALL "autofs nfs-utils" 

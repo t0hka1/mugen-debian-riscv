@@ -26,7 +26,7 @@ function pre_test() {
     check_free_disk
     mkdir -p /home/sdbpoint/
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "multipath-tools" 
     else 
         APT_INSTALL "multipath-tools" 

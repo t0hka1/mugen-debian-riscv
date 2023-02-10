@@ -20,7 +20,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function deploy_env {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "pcp pcp-export-pcp2json pcp-system-tools" 
     else 
         APT_INSTALL "pcp pcp-export-pcp2json pcp-system-tools" 

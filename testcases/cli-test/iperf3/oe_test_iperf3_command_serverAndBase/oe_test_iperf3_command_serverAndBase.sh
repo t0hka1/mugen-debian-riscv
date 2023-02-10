@@ -21,13 +21,13 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "iperf3 net-tools" 
     else 
         APT_INSTALL "iperf3 net-tools" 
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "iperf3" 2 
     else 
         APT_INSTALL "iperf3" 2 

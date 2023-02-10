@@ -23,7 +23,7 @@ function pre_test() {
     OLD_LANG=$LANG
     export LANG=en_US.UTF-8
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL ocaml 
     else 
         APT_INSTALL ocaml 

@@ -23,7 +23,7 @@ function pre_test() {
     USER_NAME='test_user'
     useradd $USER_NAME
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "cronie" 
     else 
         APT_INSTALL "cronie" 

@@ -23,7 +23,7 @@ origin_file="/etc/os-release"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL lzop 
     else 
         APT_INSTALL lzop 

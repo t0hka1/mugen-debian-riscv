@@ -29,7 +29,7 @@ function ha_pre() {
         flag=true
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "corosync pacemaker pcs" 
     else 
         APT_INSTALL "corosync pacemaker pcs" 

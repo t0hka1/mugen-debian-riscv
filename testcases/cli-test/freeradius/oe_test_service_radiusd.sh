@@ -22,7 +22,7 @@ source "../common/common_lib.sh"
 function run_test() {
     LOG_INFO "Start testing..."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL freeradius 
     else 
         APT_INSTALL freeradius 

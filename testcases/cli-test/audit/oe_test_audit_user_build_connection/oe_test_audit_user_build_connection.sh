@@ -26,7 +26,7 @@ function pre_test()
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL gcc 
     else 
         APT_INSTALL gcc 

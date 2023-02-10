@@ -24,7 +24,7 @@ function galera_pre() {
     systemctl disable firewalld
     setenforce 0
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "galera openssl" 
     else 
         APT_INSTALL "galera openssl" 

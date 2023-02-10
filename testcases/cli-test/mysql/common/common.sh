@@ -37,7 +37,7 @@ function mysql_pre() {
     chown -R mysql:mysql /data
     cd - || exit 1
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL mysql 
     else 
         APT_INSTALL mysql 

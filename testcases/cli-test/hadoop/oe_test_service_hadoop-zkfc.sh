@@ -30,7 +30,7 @@ function pre_test() {
     name_host=HadoopX
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host}
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "hadoop-hdfs hadoop-mapreduce hadoop-yarn java-1.8.0-openjdk apache-zookeeper" 
     else 
         APT_INSTALL "hadoop-hdfs hadoop-mapreduce hadoop-yarn java-1.8.0-openjdk apache-zookeeper" 

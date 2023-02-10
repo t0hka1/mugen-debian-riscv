@@ -165,7 +165,7 @@ function CHECK_YUM() {
 
 function INSTALL_ENV() {
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc" 
     else 
         APT_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc" 

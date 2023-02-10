@@ -20,13 +20,13 @@ source ./common/open-iscsi_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "open-iscsi net-tools" 
     else 
         APT_INSTALL "open-iscsi net-tools" 
     fi
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL "targetcli net-tools" 2 
     else 
         APT_INSTALL "targetcli net-tools" 2 

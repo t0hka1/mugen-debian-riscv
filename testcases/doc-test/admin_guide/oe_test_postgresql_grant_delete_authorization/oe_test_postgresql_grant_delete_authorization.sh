@@ -29,7 +29,7 @@ function pre_test() {
     test -d /tmp/data || mkdir -p /tmp/data
     chown -R postgres:postgres /tmp/data/
     uname -r | grep 'oe\|an' 
-    if [$? -eq 0]; then  
+    if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 
         APT_INSTALL postgresql-server 
