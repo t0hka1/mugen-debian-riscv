@@ -38,7 +38,6 @@ function run_test() {
     send "\n"
     expect eof
 EOF
-    sleep 10
     grep -i "No password supplied" -A 3 testlog
     CHECK_RESULT $?
     LOG_INFO "End to run test."
