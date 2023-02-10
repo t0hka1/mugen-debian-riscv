@@ -26,7 +26,8 @@ function pre_test() {
     else 
         APT_INSTALL "chrony ntpstat ntp" 
     fi
-    systemctl start ntpd
+    systemctl unmask ntp
+    systemctl start ntp
     systemctl start chronyd
     LOG_INFO "End to prepare the test environment."
 }
@@ -39,7 +40,7 @@ function run_test() {
     cp /etc/ntp.conf /etc/ntp.conf_bak
     echo "server 127.127.1.0 iburst prefer minpoll 3 maxpoll 3" >> /etc/ntp.conf
     CHECK_RESULT $?
-    systemctl restart ntpd
+    systemctl restart ntp
     SLEEP_WAIT 3
     ntpstat | grep "polling server"
     CHECK_RESULT $?

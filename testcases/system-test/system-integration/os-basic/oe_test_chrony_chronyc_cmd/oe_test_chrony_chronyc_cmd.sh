@@ -24,7 +24,7 @@ function pre_test() {
     if [$? -eq 0]; then  
         DNF_INSTALL "chrony" 
     else 
-        APT_INSTALL "chrony" 
+        APT_INSTALL "chrony expect"     
     fi
     systemctl start chronyd
     LOG_INFO "End to prepare the test environment."
