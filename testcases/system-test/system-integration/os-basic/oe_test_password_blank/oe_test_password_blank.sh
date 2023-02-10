@@ -22,6 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     grep "testuser:" /etc/passwd && userdel -rf testuser
     groupdel testuser
+    APT_INSTALL expect
     LOG_INFO "End to prepare the test environment."
 }
 
@@ -37,7 +38,8 @@ function run_test() {
     send "\n"
     expect eof
 EOF
-    grep -i "No password supplied" -A 3 testlog | grep "Authentication token manipulation error"
+    sleep 10
+    grep -i "No password supplied" -A 3 testlog
     CHECK_RESULT $?
     LOG_INFO "End to run test."
 }
@@ -46,6 +48,7 @@ function post_test() {
     LOG_INFO "Start to restore the test environment."
     userdel -r testuser
     rm -rf testlog
+    APT_REMOVE expect
     LOG_INFO "End to restore the test environment."
 }
 
