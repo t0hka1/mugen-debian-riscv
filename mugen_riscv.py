@@ -183,7 +183,7 @@ class TestTarget():
                         os.system("sudo bash mugen.sh -f "+test_target+" -r "+testcase+" -x 2>&1 | tee -a exec.log")
                     else:
                         os.system("sudo bash mugen.sh -f "+test_target+" -r "+testcase+" 2>&1 | tee -a exec.log")
-                    if(os.system("ls results/"+test_target+"/failed/"+testcase+" &> /dev/null") == 0):
+                    if(os.path.exists("results/" + test_target + "/failed/" + testcase)):
                         failed_num += 1
                         temp_failed.append(testcase)
                         if test_target not in os.listdir('logs_failed/'):
@@ -192,7 +192,7 @@ class TestTarget():
                             os.system("mkdir logs_failed/"+test_target+"/"+testcase+"/")
                         logs = os.listdir('logs/'+test_target+"/"+testcase+"/")
                         os.system("cp logs/"+test_target+"/"+testcase+"/"+logs[len(logs)-1]+" logs_failed/"+test_target+"/"+testcase+"/")
-                    if(os.system("ls results/"+test_target+"/succeed/"+testcase+" &> /dev/null") == 0):
+                    if(os.path.exists("results/" + test_target + "/succeed/" + testcase)):
                         temp_succeed.append(testcase)
                         success_num += 1
                 target_res = {'suite': test_target,'failed': temp_failed,'succeed': temp_succeed}
