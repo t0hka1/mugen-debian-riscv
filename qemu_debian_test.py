@@ -266,7 +266,7 @@ class Dispatcher(Thread):
 
 class QemuVM(object):
     def __init__(self, vcpu,memory,workingDir,bkfile ,kernel,bios,id=1,port=12055,user='root',password='root',
-                  path='/root/GitRepo/mugen-ubuntu-riscv' , restore=True, runArgs=''):
+                  path='/root/GitRepo/mugen-debian-riscv' , restore=True, runArgs=''):
         print("vm init")
         self.id = id
         self.port , self.ip , self.user , self.password  = port , '127.0.0.1' , user , password
@@ -545,7 +545,7 @@ if __name__ == "__main__":
             else:
                 preImg = True
                 bkFile = img_base
-                mugenPath = "/root/GitRepo/mugen-ubuntu-riscv"
+                mugenPath = "/root/GitRepo/mugen-debian-riscv"
                 if configData.__contains__('listFile') and type(configData['listFile']) == str:
                     list_file = configData['listFile']
                     genList = False
@@ -613,7 +613,7 @@ if __name__ == "__main__":
             else:
                 preImg = True
                 bkFile = img_base
-                mugenPath = "/root/GitRepo/mugen-ubuntu-riscv"
+                mugenPath = "/root/GitRepo/mugen-debian-riscv"
                 if args.list_file != None:
                     list_file = args.list_file
                     genList = False
@@ -638,9 +638,9 @@ if __name__ == "__main__":
             print("I'm preVM now now now")
             print(ssh_exec(preVM,'apt update --fix-missing',timeout=200)[1])
             print(ssh_exec(preVM,'apt install git -y',timeout=120)[1])
-            print(ssh_exec(preVM,'cd /root \n mkdir GitRepo \n cd GitRepo \n git clone https://github.com/t0hka1/mugen-ubuntu-riscv.git',timeout=600)[1])
-            print(ssh_exec(preVM,'cd /root/GitRepo/mugen-ubuntu-riscv\n bash dep_install.sh',timeout=300)[1])
-            print(ssh_exec(preVM,'cd /root/GitRepo/mugen-ubuntu-riscv \n bash mugen.sh -c --port 22 --user root --password root --ip 127.0.0.1 2>&1',timeout=300)[1])
+            print(ssh_exec(preVM,'cd /root \n mkdir GitRepo \n cd GitRepo \n git clone https://github.com/t0hka1/mugen-debian-riscv.git',timeout=600)[1])
+            print(ssh_exec(preVM,'cd /root/GitRepo/mugen-debian-riscv\n bash dep_install.sh',timeout=300)[1])
+            print(ssh_exec(preVM,'cd /root/GitRepo/mugen-debian-riscv \n bash mugen.sh -c --port 22 --user root --password root --ip 127.0.0.1 2>&1',timeout=300)[1])
             sshd_config = ssh_exec(preVM, 'cat /etc/ssh/sshd_config' , timeout=100)[1]
             try:
                 ssh_exec(preVM , 'echo \'test ssh\' > /root/temp.txt')

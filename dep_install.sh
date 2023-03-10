@@ -26,6 +26,7 @@ usage() {
 
 common_dep(){
     yum install expect psmisc make iputils python3-six python3-paramiko lshw -y
+    apt install expect psmisc make python3-six python3-pip python3-paramiko lshw -y
 }
 
 anolis_dep(){
