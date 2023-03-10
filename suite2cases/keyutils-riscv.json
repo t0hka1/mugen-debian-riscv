@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/keyutils",
-    "cases": [
-        {
-            "name": "oe_test_keyutils-keyctl"
-        }
-    ]
-}

@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/initial-setup",
-    "cases": [
-        {
-            "name": "oe_test_service_initial-setup-reconfiguration"
-        }
-    ]
-}

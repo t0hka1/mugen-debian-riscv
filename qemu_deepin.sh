@@ -1,0 +1,1 @@
+sudo python3 qemu_ubuntu_test.py -w /home/t0hka/NewHome/intern_home/deepin/ -B none  -K fw_payload_oe_qemuvirt.elf   -D deepin.qcow2 -x 2 -c 8 -M 8 -g  -l lists/list_minimal

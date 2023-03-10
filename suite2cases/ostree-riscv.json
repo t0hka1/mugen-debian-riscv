@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/ostree",
-    "cases": [
-        {
-            "name": "oe_test_service_ostree-finalize-staged"
-        }
-    ]
-}

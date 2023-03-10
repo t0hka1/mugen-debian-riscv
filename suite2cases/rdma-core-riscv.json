@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/rdma-core",
-    "cases": [
-        {
-            "name": "oe_test_service_srp_daemon"
-        }
-    ]
-}

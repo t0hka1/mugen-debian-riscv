@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/cockpit",
-    "cases": [
-        {
-            "name": "oe_test_service_cockpit-motd"
-        }
-    ]
-}

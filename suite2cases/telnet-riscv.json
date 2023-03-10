@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/telnet",
-    "cases": [
-        {
-            "name": "oe_test_socket_telnet"
-        }
-    ]
-}

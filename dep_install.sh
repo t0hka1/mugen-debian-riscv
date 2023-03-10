@@ -26,7 +26,6 @@ usage() {
 
 common_dep(){
     yum install expect psmisc make iputils python3-six python3-paramiko lshw -y
-    apt install expect psmisc make python3-six python3-pip python3-paramiko lshw -y
 }
 
 anolis_dep(){
@@ -38,6 +37,9 @@ anolis_dep(){
     pip3 install paramiko -i https://pypi.tuna.tsinghua.edu.cn/simple
 }
 
+deepin_dep(){
+    apt install expect psmisc make python3-six python3-pip python3-paramiko lshw -y
+}
 
 ubuntukylin_dep(){
     apt install expect psmisc make python3-six python3-pip python3-paramiko lshw -y
@@ -99,7 +101,7 @@ main(){
         return 1
     fi
 
-    uname -r | grep 'oe'
+    cat /etc/os-release | grep -i 'openeuler'
     if [ $? -eq 0 ]; then
         common_dep
         if [ $? -ne 0 ]; then
@@ -107,7 +109,15 @@ main(){
         fi
     fi
 
-    uname -r | grep 'an'
+    cat /etc/os-release | grep -i 'deepin'
+    if [ $? -eq 0 ]; then
+        deepin_dep
+        if [ $? -ne 0 ]; then
+            return 1
+        fi
+    fi
+
+    cat /etc/os-release | grep -i 'anolis'
     if [ $? -eq 0 ]; then
         anolis_dep
         if [ $? -ne 0 ]; then
@@ -115,7 +125,7 @@ main(){
         fi
     fi
 
-    uname -r | grep 'gen'
+    cat /etc/os-release | grep -i 'ubuntukylin'
     if [ $? -eq 0 ]; then
         ubuntukylin_dep
         if [ $? -ne 0 ]; then

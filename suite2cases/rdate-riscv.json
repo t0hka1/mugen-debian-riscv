@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/rdate",
-    "cases": [
-        {
-            "name": "oe_test_rdate"
-        }
-    ]
-}

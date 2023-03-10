@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/hsqldb",
-    "cases": [
-        {
-            "name": "oe_test_service_hsqldb"
-        }
-    ]
-}

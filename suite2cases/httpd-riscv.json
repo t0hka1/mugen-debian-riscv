@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/httpd",
-    "cases": [
-        {
-            "name": "oe_test_service_httpd-init"
-        }
-    ]
-}

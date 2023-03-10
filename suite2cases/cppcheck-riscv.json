@@ -1,8 +1,0 @@
-{
-    "path": "$OET_PATH/testcases/cli-test/cppcheck",
-    "cases": [
-        {
-            "name": "oe_test_cppcheck-htmlreport"
-        }
-    ]
-}
