@@ -24,7 +24,7 @@ function pre_test() {
     vhost_name="myvhost"
     user_mq="test"
     passwd_mq="test"
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL rabbitmq-server 
     else 

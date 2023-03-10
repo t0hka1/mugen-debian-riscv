@@ -25,7 +25,7 @@ function deploy_env() {
         echo -e '<target iqn.2013-12.com.make:ws.httpd>\nbacking-store ${remote_disk}\n</target>' >>/etc/tgt/targets.conf; 
         systemctl restart tgtd; 
         systemctl stop firewalld;"
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "iscsi-initiator-utils multipath-tools device-mapper-event device-mapper" 
     else 

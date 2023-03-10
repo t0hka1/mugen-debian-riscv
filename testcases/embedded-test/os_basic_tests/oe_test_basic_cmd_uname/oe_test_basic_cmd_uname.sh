@@ -24,20 +24,20 @@ function run_test() {
     uname -s
     CHECK_RESULT $? 0 0 "uname -s display error"
 
-    uname -r
-    CHECK_RESULT $? 0 0 "uname -r display error"
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    CHECK_RESULT $? 0 0 "cat /etc/os-release | grep -i 'openeuler\|anolis'
 
     uname -m
     CHECK_RESULT $? 0 0 "uname -m display error"
 
-    uname -a | grep $(uname -r)
+    uname -a | grep $(cat /etc/os-release | grep -i 'openeuler\|anolis'
     CHECK_RESULT $? 0 0 "uname -a display error"
 
     uname -n | grep $(hostname)
     CHECK_RESULT $? 0 0 "uname -n display error"
 
-    uname -r | grep -E "^[1-9]+\\.[0-9]+\\.[0-9]+"
-    CHECK_RESULT $? 0 0 "check uname -r display error"
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    CHECK_RESULT $? 0 0 "check cat /etc/os-release | grep -i 'openeuler\|anolis'
 
     uname --help 2>&1 | grep "Usage"
     CHECK_RESULT $? 0 0 "uname --help display error"

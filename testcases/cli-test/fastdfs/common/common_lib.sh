@@ -18,7 +18,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function Pre_Test() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "fastdfs* libfdfsclient net-tools" 
     else 

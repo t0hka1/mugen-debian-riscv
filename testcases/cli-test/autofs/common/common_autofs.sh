@@ -19,7 +19,7 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function deploy_env() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "nfs-utils net-tools" 2 
     else 
@@ -33,7 +33,7 @@ function deploy_env() {
         netstat -antulp | grep ':2049';
         showmount -e localhost | grep '/shared'
         "
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "autofs nfs-utils" 
     else 

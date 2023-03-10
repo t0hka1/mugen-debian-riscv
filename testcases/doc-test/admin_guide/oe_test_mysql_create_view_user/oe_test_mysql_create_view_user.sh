@@ -24,7 +24,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
 	pkgs=`yum list | grep mysql.*-server | awk -F ' ' '{print $1}'`
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ${pkgs} 
     else 

@@ -20,7 +20,7 @@ source ../common/storage_disk_lib.sh
 function pre_test() {
     LOG_INFO "Start environment preparation."
     check_free_disk
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL xfsdump 
     else 

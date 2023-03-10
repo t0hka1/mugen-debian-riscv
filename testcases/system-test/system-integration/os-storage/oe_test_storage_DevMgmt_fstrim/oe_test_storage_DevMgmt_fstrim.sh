@@ -25,7 +25,7 @@ function pre_test() {
     export LANG=en_US.utf-8
     check_free_disk
     mkdir -p /home/sdbpoint/
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "multipath-tools" 
     else 

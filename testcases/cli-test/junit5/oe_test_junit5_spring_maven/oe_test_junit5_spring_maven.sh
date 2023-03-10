@@ -22,7 +22,7 @@ source "../common/lib.sh"
 function pre_test() {
     LOG_INFO "Start environment preparation."
     pre_junit5
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "springframework springframework-test" 
     else 

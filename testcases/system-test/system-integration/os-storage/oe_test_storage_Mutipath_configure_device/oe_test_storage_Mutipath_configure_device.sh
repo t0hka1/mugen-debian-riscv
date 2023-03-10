@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     local_lang=$LANG
     export LANG=en_US.utf-8
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL multipath-tools 
     else 

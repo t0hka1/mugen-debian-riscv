@@ -25,7 +25,7 @@ function pre_test()
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL gcc 
     else 

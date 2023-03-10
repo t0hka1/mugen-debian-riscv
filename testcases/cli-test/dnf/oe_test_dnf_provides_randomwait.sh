@@ -22,7 +22,7 @@ source "common/common_dnf.sh"
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     deploy_env
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL time 
     else 

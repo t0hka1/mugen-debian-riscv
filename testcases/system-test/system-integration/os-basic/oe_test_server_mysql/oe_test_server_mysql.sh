@@ -24,7 +24,7 @@ function pre_test() {
     dnf list | grep mysql-server
     if [ $? -eq 0 ]; then
         rm -rf /var/lib/mysql/*
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL mysql-server 
     else 

@@ -27,7 +27,7 @@ function pre_test() {
     echo ${NODE1_PASSWORD} | passwd --stdin postgres
     test -d /tmp/data || mkdir -p  /tmp/data
     chown -R postgres:postgres /tmp/data/
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 

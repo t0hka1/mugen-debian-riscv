@@ -21,7 +21,7 @@ function pre_test() {
     cp -r ../common/testfile_tex.rst ./testfile.rst
     cp -r ../common/template.tex ./
     touch subfig.sty
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "python-docutils" 
     else 

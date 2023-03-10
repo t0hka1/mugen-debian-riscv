@@ -20,7 +20,7 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "tpm-tools trousers cmake make gcc-c++ gmp-devel" 
     else 

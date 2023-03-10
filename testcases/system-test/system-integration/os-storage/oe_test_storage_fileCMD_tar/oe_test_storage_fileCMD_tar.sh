@@ -24,7 +24,7 @@ function pre_test() {
         cd "$(dirname $0)" || exit 1
         pwd
     )
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL tar 
     else 

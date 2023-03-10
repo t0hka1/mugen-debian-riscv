@@ -29,7 +29,7 @@ function pre_test() {
     SSH_CMD "systemctl start smb;systemctl enable smb;systemctl disable firewalld; systemctl stop firewalld;
 	setsebool -P samba_export_all_ro on;setsebool -P samba_export_all_rw on;chmod 755 /home/testsamba" \
         ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL cifs-utils 
     else 

@@ -22,7 +22,7 @@ origin_file="/etc/os-release"
 
 function pre_test() {
     LOG_INFO "Start environment preparation."
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL lzop 
     else 

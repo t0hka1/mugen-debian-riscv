@@ -30,7 +30,7 @@ function pre_test() {
     rm -rf /tmp/data/*
     chown -R postgres:postgres /tmp/data/
 
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 

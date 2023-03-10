@@ -32,7 +32,7 @@ function pre_test() {
     os_version=$(grep '^VERSION_ID=' /etc/os-release | awk -F '=' '{print $NF}' | tr -d '"')
     repo_address=$(grep -i 'everything' /etc/yum.repos.d/*.repo | grep -v name | grep 'baseurl' | awk -F '=' '{print $NF}')
     if yum list | grep oemaker; then
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL oemaker 
     else 

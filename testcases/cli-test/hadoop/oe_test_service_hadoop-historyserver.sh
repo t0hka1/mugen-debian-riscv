@@ -29,7 +29,7 @@ function pre_test() {
     host_name=$(hostname)
     name_host=HadoopX
     hostname | grep -i ${name_host} || hostnamectl set-hostname ${name_host}2
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "hadoop-hdfs hadoop-mapreduce hadoop-yarn  java-1.8.0-openjdk apache-zookeeper" 
     else 

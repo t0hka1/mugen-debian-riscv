@@ -21,7 +21,7 @@ source "../common/common_lib.sh"
 
 function run_test() {
     LOG_INFO "Start testing..."
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL freeradius 
     else 

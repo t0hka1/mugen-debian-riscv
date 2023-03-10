@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
 
     test -f ${YUM_PATH}/pkgship_yum.repo && rm -f ${YUM_PATH}/pkgship_yum.repo
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "pkgship bc" 
     else 

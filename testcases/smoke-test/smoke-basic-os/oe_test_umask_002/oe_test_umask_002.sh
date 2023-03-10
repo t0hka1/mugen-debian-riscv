@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     cur_lang=$(echo $LANG)
     export LANG=zh_CN.UTF-8    
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "expect" 
     else 

@@ -34,7 +34,7 @@ function conf_common() {
 }
 
 function kubernetes_install() {
-  uname -r | grep 'oe\|an' 
+  cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "docker conntrack-tools socat kubernetes*" 1 
     else 
@@ -48,14 +48,14 @@ function certificate_prepare() {
     LOG_INFO "Download failed!"
     exit 1
   }
-  which tar || uname -r | grep 'oe\|an' 
+  which tar || cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL tar 1 
     else 
         APT_INSTALL tar 1 
     fi
   tar -zxvf ${pkg_path} -C ${cfssl_path} --strip-components=1
-  which golang || uname -r | grep 'oe\|an' 
+  which golang || cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL golang 1 
     else 
@@ -230,7 +230,7 @@ function certificate_prepare() {
 }
 
 function etcd_install() {
-  uname -r | grep 'oe\|an' 
+  cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL etcd 
     else 

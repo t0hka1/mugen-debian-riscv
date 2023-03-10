@@ -25,7 +25,7 @@ function pre_test()
     mkdir output_test
     wget -P ./ https://pngquant.org/Ducati_side_shadow.png && mv Ducati_side_shadow.png test.png
     cp test.png test-copy.png
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "pngquant libimagequant" 
     else 

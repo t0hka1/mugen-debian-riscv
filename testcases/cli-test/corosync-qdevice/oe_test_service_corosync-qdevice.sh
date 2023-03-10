@@ -23,7 +23,7 @@ function pre_test() {
     LOG_INFO "Start environmental preparation."
     service=corosync-qdevice.service
     ha_pre
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "corosync-qdevice corosync-qnetd" 
     else 

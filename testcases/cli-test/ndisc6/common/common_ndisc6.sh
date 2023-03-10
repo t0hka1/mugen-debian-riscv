@@ -17,7 +17,7 @@
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function deploy_env() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "ndisc6 xinetd time" 
     else 
@@ -31,7 +31,7 @@ function deploy_env() {
     sed -i 's/name/#&/' /etc/resolv.conf
     sed -i '6s/yes/no/g' /etc/xinetd.d/echo-stream
     systemctl restart xinetd
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL xinetd 2 
     else 

@@ -41,7 +41,7 @@ function pre_test() {
 function run_test() {
     LOG_INFO "Start executing testcase."
     rm -rf /var/lib/mysql/*
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL mariadb-server 
     else 

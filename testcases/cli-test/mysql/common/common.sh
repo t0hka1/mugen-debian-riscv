@@ -36,7 +36,7 @@ function mysql_pre() {
     touch {/data/mysql/log/mysql.log,/data/mysql/run/mysqld.pid}
     chown -R mysql:mysql /data
     cd - || exit 1
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL mysql 
     else 

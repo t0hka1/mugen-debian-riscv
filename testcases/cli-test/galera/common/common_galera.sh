@@ -23,7 +23,7 @@ function galera_pre() {
     systemctl stop firewalld
     systemctl disable firewalld
     setenforce 0
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "galera openssl" 
     else 

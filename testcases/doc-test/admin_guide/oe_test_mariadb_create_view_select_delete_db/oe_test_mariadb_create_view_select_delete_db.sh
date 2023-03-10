@@ -32,7 +32,7 @@ function pre_test() {
     mkdir data tmp run log
     chown -R mysql:mysql /data
     cd - || exit
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL mariadb-server 
     else 

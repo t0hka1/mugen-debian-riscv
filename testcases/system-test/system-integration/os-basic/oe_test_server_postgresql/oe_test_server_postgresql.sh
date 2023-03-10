@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start environment preparation."
     userdel -r postgres
     APT_REMOVE postgresql-server
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 

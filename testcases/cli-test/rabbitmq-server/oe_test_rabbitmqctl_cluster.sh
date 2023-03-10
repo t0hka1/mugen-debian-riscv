@@ -26,7 +26,7 @@ function pre_test() {
     name_host=rabbitmq
     name_host_1=rabbitmq1
     name_host_2=rabbitmq2
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL rabbitmq-server 
     else 

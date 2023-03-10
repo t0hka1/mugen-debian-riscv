@@ -25,7 +25,7 @@ function pre_test() {
         LOG_INFO "The environment does not support testing"
         exit 0
     else
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL mcelog 
     else 

@@ -23,13 +23,13 @@ function run_test() {
     uname -s
     CHECK_RESULT $? 0 0 "uname -s display error"
 
-    uname -r
-    CHECK_RESULT $? 0 0 "uname -r display error"
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    CHECK_RESULT $? 0 0 "cat /etc/os-release | grep -i 'openeuler\|anolis'
 
     uname -m
     CHECK_RESULT $? 0 0 "uname -m display error"
 
-    uname -a | grep $(uname -r)
+    uname -a | grep $(cat /etc/os-release | grep -i 'openeuler\|anolis'
     CHECK_RESULT $? 0 0 "uname -a display error"
 
     uname --help

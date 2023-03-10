@@ -21,7 +21,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test() {
     LOG_INFO "Start to prepare the database config."
 
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dovecot 
     else 
@@ -39,9 +39,9 @@ function run_test() {
     CHECK_RESULT $? 0 0 "Check dovecot version failed."
     dovecot --help
     CHECK_RESULT $? 0 0 "Check dovecot help failed."
-    dovecot -n | grep $(uname -r)
+    dovecot -n | grep $(cat /etc/os-release | grep -i 'openeuler\|anolis'
     CHECK_RESULT $? 0 0 "Check dovecot non default config failed."
-    doveconf -n | grep $(uname -r)
+    doveconf -n | grep $(cat /etc/os-release | grep -i 'openeuler\|anolis'
     CHECK_RESULT $? 0 0 "Check doveconf non default config failed."
     dovecot -a | grep -q "service"
     CHECK_RESULT $? 0 0 "Check dovecot all config failed."

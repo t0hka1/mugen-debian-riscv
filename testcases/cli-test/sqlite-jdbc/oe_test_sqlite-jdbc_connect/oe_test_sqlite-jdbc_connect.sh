@@ -22,14 +22,14 @@ function pre_test() {
 
     if ! java -version; then
         java_version=$(dnf list | grep "java-1.8.*-openjdk" | awk -F '-' '{print $2}' | sed -n '1p')
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc" 
     else 
         APT_INSTALL "java-${java_version}-openjdk java-${java_version}-openjdk-devel sqlite-jdbc" 
     fi
     else
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "sqlite-jdbc" 
     else 

@@ -26,7 +26,7 @@ function pre_test() {
     modprobe ipmi_devintf
     modprobe ipmi_si 
     modprobe ipmi_msghandler
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ipmitool 
     else 

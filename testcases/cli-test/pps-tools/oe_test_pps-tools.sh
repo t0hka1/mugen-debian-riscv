@@ -37,7 +37,7 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "pps-tools kernel-source" 
     else 
@@ -57,7 +57,7 @@ function pre_test() {
 obj-m+=pps-ktimer2.o
 
 all:
-	make -C /lib/modules/$(shell uname -r)/build M=`pwd` modules' >Makefile
+	make -C /lib/modules/$(shell cat /etc/os-release | grep -i 'openeuler\|anolis'
     make
     insmod pps-ktimer1.ko
     insmod pps-ktimer2.ko 

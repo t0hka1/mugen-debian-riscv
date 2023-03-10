@@ -25,7 +25,7 @@ function env_pre() {
         setenforce 0
         flag=true
     fi
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "mariadb-server obs-api obs-server" 
     else 

@@ -26,7 +26,7 @@ function run_test() {
     CHECK_RESULT $?
     uname -n | grep $(hostname)
     CHECK_RESULT $?
-    uname -r | grep -E "^[1-9]+\\.[0-9]+\\.[0-9]+"
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     CHECK_RESULT $?
     uname --help | grep "Usage"
     CHECK_RESULT $?

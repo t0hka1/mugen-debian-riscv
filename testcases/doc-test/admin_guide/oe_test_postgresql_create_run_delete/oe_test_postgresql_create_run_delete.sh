@@ -32,7 +32,7 @@ function pre_test() {
 
 function run_test() {
     LOG_INFO "Start executing testcase."
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL postgresql-server 
     else 

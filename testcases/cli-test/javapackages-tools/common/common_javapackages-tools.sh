@@ -21,14 +21,14 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function deploy_env() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL junit 
     else 
         APT_INSTALL junit 
     fi
     java_version=$(rpm -qa java* | grep java-.*-openjdk | awk -F '-' '{print $2}')
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j" 
     else 

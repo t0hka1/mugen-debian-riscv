@@ -26,7 +26,7 @@ function pre_test() {
         rpm -e --nodeps cyrus-sasl
         flag=true
     fi   
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL PackageKit 
     else 
@@ -47,7 +47,7 @@ function post_test() {
     systemctl stop packagekit.service
     APT_REMOVE
     if [ ${flag} = 'true' ]; then
-        uname -r | grep 'oe\|an' 
+        cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL cyrus-sasl 
     else 

@@ -164,7 +164,7 @@ function CHECK_YUM() {
 }
 
 function INSTALL_ENV() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "pkgship-2.1.0-8.oe1 wget net-tools diffutils bc" 
     else 

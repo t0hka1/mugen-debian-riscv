@@ -25,7 +25,7 @@ function pre_test() {
     check_algorithm='Scheduler or persistence engine nt found'
     check_mode="-j:unknown option"
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ipvsadm 
     else 

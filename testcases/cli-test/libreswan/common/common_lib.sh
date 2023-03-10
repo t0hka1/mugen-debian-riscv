@@ -18,13 +18,13 @@
 source ${OET_PATH}/libs/locallibs/common_lib.sh
 
 function SET_CONF() {
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL libreswan 
     else 
         APT_INSTALL libreswan 
     fi
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL libreswan 2 
     else 

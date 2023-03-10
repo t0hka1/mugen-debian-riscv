@@ -24,7 +24,7 @@ function get_disk() {
     disk_list=($disks)
     disk1=${disk_list[0]}
     disk2=${disk_list[1]}
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ntfs-3g 
     else 

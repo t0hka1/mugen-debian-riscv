@@ -22,7 +22,7 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     echo "1" >/proc/sys/net/ipv4/ip_forward
     VIP=$(echo ${NODE1_IPV4} | cut -d '.' -f 1-3).100
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "ipvsadm httpd net-tools" 
     else 

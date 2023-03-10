@@ -21,7 +21,7 @@ source "$OET_PATH/libs/locallibs/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL keepalived 
     else 
@@ -71,7 +71,7 @@ function pre_test() {
     ip addr add 2001:db8:4::10/64 dev ${node3_net_card3}
     ip addr add 2001:db8::2/128 dev lo
     ip -6 route add default nexthop via 2001:db8:3::1 nexthop via 2001:db8:4::1" "${NODE3_IPV4}" "${NODE3_PASSWORD}" "${NODE3_USER}"
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "keepalived tcpdump" 
     else 

@@ -30,7 +30,7 @@ function pre_test() {
         cd "${testpath}" || exit 1
         python3 setup.py bdist_egg
     )
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "python3-wheel" 
     else 

@@ -39,7 +39,7 @@ function pre_test() {
     cp /etc/vsftpd/ftpusers /etc/vsftpd/ftpusers.bak;sed -i /root/d /etc/vsftpd/ftpusers;echo \\\"#root\\\" >> /etc/vsftpd/ftpusers;
     cp /etc/vsftpd/user_list /etc/vsftpd/user_list.bak;sed -i /root/d /etc/vsftpd/user_list;echo \\\"#root\\\" >> /etc/vsftpd/user_list;
     systemctl restart vsftpd" ${NODE2_IPV4} ${NODE2_PASSWORD} ${NODE2_USER}
-    uname -r | grep 'oe\|an' 
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ftp 
     else 
