@@ -1,9 +1,3 @@
-"""
-迁移一般要修改的文件：
-1.dep_install.sh
-2.
-"""
-
 import os
 import argparse
 import re
@@ -45,6 +39,7 @@ def replace_content(directory, pattern, replacement):
                 f.write(new_content)
 
             print("已替换文件: ", file_path)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Delete files with specified names and replace content in files in a directory')

@@ -123,6 +123,7 @@ function generate_result_file() {
     fi
 
     local result_path="$OET_PATH/results/$suite/$result"
+    LOG_INFO result_path
     mkdir -p "$result_path"
     touch "$result_path"/"$case"
 }
@@ -154,6 +155,7 @@ function exec_case() {
     }
 
     generate_result_file "$test_suite" "$case_name" "$ret_code"
+    sleep 10
 }
 
 function run_test_case() {
