@@ -123,7 +123,6 @@ function generate_result_file() {
     fi
 
     local result_path="$OET_PATH/results/$suite/$result"
-    LOG_INFO result_path
     mkdir -p "$result_path"
     touch "$result_path"/"$case"
 }
