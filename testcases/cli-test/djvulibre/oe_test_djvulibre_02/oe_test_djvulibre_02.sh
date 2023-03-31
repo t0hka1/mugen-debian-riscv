@@ -24,7 +24,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "djvulibre ImageMagick" 
     else 
-        APT_INSTALL "djvulibre ImageMagick" 
+        APT_INSTALL "djvulibre-bin imagemagick" 
     fi
     cp ../common/test* ./
     LOG_INFO "End to prepare the test environment."

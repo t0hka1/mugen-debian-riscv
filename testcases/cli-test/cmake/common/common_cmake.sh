@@ -24,7 +24,7 @@ function deploy_env() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "cmake gcc-c++ ninja-build make" 
     else 
-        APT_INSTALL "cmake gcc-c++ ninja-build make" 
+        APT_INSTALL "cmake g++ ninja-build make" 
     fi
     mkdir build && cd build
 }

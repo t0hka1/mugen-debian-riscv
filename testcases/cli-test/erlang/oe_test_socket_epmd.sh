@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL erlang-erts 
     else 
-        APT_INSTALL erlang-erts 
+        APT_INSTALL erlang
     fi
     LOG_INFO "End of environmental preparation!"
 }

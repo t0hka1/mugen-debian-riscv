@@ -25,7 +25,7 @@ function pre_test(){
     if [ $? -eq 0 ]; then  
         DNF_INSTALL audit-help 
     else 
-        APT_INSTALL audit-help 
+        APT_INSTALL auditd
     fi
     LOG_INFO "End to prepare the environment"
 }

@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dovecot 
     else 
-        APT_INSTALL dovecot 
+        APT_INSTALL dovecot-core  
     fi
     useradd testuser
     printf 'testuser\ntestuser\n' | passwd testuser

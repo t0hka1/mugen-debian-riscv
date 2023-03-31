@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL bind 
     else 
-        APT_INSTALL bind 
+        APT_INSTALL bind9 
     fi
     systemctl start named-setup-rndc.service
     LOG_INFO "End of environmental preparation!"

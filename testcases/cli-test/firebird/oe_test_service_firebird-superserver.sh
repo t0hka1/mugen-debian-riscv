@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL firebird 
     else 
-        APT_INSTALL firebird 
+        APT_INSTALL firebird-dev 
     fi
     LOG_INFO "End of environmental preparation!"
 }

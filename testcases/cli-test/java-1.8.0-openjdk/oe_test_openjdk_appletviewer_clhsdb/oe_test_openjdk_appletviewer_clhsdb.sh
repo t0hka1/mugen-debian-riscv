@@ -24,7 +24,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL java-1.8.0-openjdk* 
     else 
-        APT_INSTALL java-1.8.0-openjdk* 
+        APT_INSTALL openjdk-11-jdk  
     fi
     cp ../common/Hello.java .
     LOG_INFO "End to prepare the test environment."

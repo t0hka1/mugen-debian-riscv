@@ -20,7 +20,10 @@ source ../common/comlib.sh
 
 function pre_test() {
     LOG_INFO "Start to prepare the test environment."
-
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "${AUDIT_PATH}"
     service auditd restart
     date_add=$(date -d "+1 year" +'%m/%d/%Y %H:%M:%S')

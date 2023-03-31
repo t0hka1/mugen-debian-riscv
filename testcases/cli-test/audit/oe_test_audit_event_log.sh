@@ -20,6 +20,10 @@
 source "$OET_PATH/libs/locallibs/common_lib.sh"
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     rm -rf /var/log/audit/audit.log*
     auditctl -D
     service auditd restart

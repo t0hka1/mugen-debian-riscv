@@ -31,7 +31,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL bind-utils 
     else 
-        APT_INSTALL bind-utils 
+        APT_INSTALL bind9 
     fi
     cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  

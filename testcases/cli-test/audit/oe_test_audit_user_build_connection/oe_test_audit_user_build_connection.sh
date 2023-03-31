@@ -22,6 +22,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     path=$(find / -name af_unix.conf)
     sed -i 's/active = no/active = yes/g' "${path}"
     service auditd restart

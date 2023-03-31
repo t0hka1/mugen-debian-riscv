@@ -18,6 +18,23 @@
 # #############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
+
+function pre_test() {
+    LOG_INFO "Start environmental preparation."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
+    LOG_INFO "End of environmental preparation!"
+}
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
+
 function run_test() {
     LOG_INFO "Start executing testcase."
     service auditd start

@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL bind-chroot 
     else 
-        APT_INSTALL bind-chroot 
+        APT_INSTALL bind9
     fi
     LOG_INFO "End of environmental preparation!"
 }

@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL bind-chroot 
     else 
-        APT_INSTALL bind-chroot 
+        APT_INSTALL bind9 
     fi
     service=named-chroot.service
     log_time=$(date '+%Y-%m-%d %T')

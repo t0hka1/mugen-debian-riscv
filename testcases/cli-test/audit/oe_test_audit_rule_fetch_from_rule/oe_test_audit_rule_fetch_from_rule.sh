@@ -22,6 +22,10 @@ source ${OET_PATH}/libs/locallibs/common_lib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     echo "-w /etc/passwd -p wa -k passwd_changes" >>/opt/test.rules
     LOG_INFO "End to prepare the test environment."
 }

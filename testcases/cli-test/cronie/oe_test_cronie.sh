@@ -26,7 +26,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "cronie" 
     else 
-        APT_INSTALL "cronie" 
+        APT_INSTALL "cron" 
     fi
     echo "echo \"Hello World: \$(date)\" >> $(pwd)/rst.txt" > ./test.sh
     chmod 777 ./test.sh

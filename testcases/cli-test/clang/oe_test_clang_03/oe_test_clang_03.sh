@@ -22,7 +22,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "clang clang-tools-extra" 
     else 
-        APT_INSTALL "clang clang-tools-extra" 
+        APT_INSTALL "clang clang-tools" 
     fi
     cp -r ../common ./tmp
     cd ./tmp

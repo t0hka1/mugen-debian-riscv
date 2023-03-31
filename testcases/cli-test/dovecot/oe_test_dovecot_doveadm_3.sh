@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dovecot 
     else 
-        APT_INSTALL dovecot 
+        APT_INSTALL dovecot-core an z 
     fi
     systemctl restart dovecot
     touch a.sh

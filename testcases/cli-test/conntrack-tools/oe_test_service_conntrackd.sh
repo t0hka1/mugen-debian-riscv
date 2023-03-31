@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL conntrack-tools 
     else 
-        APT_INSTALL conntrack-tools 
+        APT_INSTALL conntrack conntrackd nfct 
     fi
     sed -i "s\Interface eth2\Interface ${NODE1_NIC}\g" /etc/conntrackd/conntrackd.conf
     sed -i "s\IPv4_interface 192.168.100.100\IPv4_interface ${NODE1_IPV4}\g"  /etc/conntrackd/conntrackd.conf

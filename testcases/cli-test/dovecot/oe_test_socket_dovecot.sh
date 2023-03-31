@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dovecot 
     else 
-        APT_INSTALL dovecot 
+        APT_INSTALL dovecot-core  
     fi
     LOG_INFO "End of environmental preparation!"
 }

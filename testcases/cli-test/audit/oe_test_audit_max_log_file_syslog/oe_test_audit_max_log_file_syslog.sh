@@ -22,6 +22,10 @@ source ../common/comlib.sh
 function pre_test()
 {
     LOG_INFO "Start to prepare the test environment."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     ls /var/log/audit/audit.log && rm -rf /var/log/audit/audit.log
     sed -i 's/max_log_file = 8/max_log_file = 1/g' "/etc/audit/auditd.conf"
     sed -i 's/max_log_file_action = ROTATE/max_log_file_action = SYSLOG/g' "/etc/audit/auditd.conf"

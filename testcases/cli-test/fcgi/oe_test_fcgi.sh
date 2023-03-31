@@ -35,7 +35,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "fcgi libtool tar" 
     else 
-        APT_INSTALL "fcgi libtool tar" 
+        APT_INSTALL "libfcgi libtool tar" 
     fi
     pre_fcgi
     LOG_INFO "End to prepare the test environment."

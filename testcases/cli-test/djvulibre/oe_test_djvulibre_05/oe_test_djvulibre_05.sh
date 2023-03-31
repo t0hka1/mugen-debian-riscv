@@ -24,7 +24,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL djvulibre 
     else 
-        APT_INSTALL djvulibre 
+        APT_INSTALL djvulibre-bin  
     fi
     cp ../common/test.pdf ./
     expect <<-END

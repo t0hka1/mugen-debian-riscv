@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL derby 
     else 
-        APT_INSTALL derby 
+        APT_INSTALL derby-tools 
     fi
     LOG_INFO "End of environmental preparation!"
 }

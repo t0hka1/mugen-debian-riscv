@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL krb5-server 
     else 
-        APT_INSTALL krb5-server 
+        APT_INSTALL krb5-kdc krb5-admin-server
     fi
     host_name=$(hostname)
     sed -i "s\kdc = nfs-server.example.com\kdc = nfs.server.com\g" /etc/krb5.conf

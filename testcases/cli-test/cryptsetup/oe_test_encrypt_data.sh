@@ -30,7 +30,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL cryptsetup-reencrypt 
     else 
-        APT_INSTALL cryptsetup-reencrypt 
+        APT_INSTALL cryptsetup
     fi
     echo -e "n\n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
     test -d /mnt/test_encrypted && rm -rf /mnt/test_encrypted

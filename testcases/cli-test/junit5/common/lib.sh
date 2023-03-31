@@ -24,14 +24,7 @@ function pre_junit5() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL junit5 
     else 
-        APT_INSTALL junit5 
-    fi
-    java_version=$(rpm -qa 'java*' | grep 'java-.*-openjdk' | head -1 | awk -F - '{print $2}')
-    cat /etc/os-release | grep -i 'openeuler\|anolis'
-    if [ $? -eq 0 ]; then  
-        DNF_INSTALL java-"${java_version}"-devel 
-    else 
-        APT_INSTALL java-"${java_version}"-devel 
+        APT_INSTALL junit5 openjdk-11-jdk  openjdk-11-jre
     fi
 }
 

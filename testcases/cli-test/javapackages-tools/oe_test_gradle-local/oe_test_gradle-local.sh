@@ -14,7 +14,7 @@
 # @Contact   :   lchutian@163.com
 # @Date      :   2020/10/26
 # @License   :   Mulan PSL v2
-# @Desc      :   verify the uasge of gradle-local command
+# @Desc      :   verify the uasge of gradle command
 # ############################################
 
 source "$OET_PATH/libs/locallibs/common_lib.sh"
@@ -23,51 +23,51 @@ function pre_test() {
     LOG_INFO "Start to prepare the test environment."
     cat /etc/os-release | grep -i 'openeuler\|anolis'
     if [ $? -eq 0 ]; then  
-        DNF_INSTALL gradle-local 
+        DNF_INSTALL gradle 
     else 
-        APT_INSTALL gradle-local 
+        APT_INSTALL gradle
     fi
     LOG_INFO "Finish preparing the test environment."
 }
 
 function run_test() {
     LOG_INFO "Start to run test."
-    gradle-local --help | grep "-"
+    gradle --help | grep "-"
     CHECK_RESULT $?
-    gradle-local -v | grep -i "Gradle"
+    gradle -v | grep -i "Gradle"
     CHECK_RESULT $?
-    gradle-local
+    gradle
     CHECK_RESULT $?
-    gradle-local extend | grep -E "BUILD SUCCESSFUL|extend"
+    gradle extend | grep -E "BUILD SUCCESSFUL|extend"
     CHECK_RESULT $?
-    gradle-local base | grep -E "BUILD SUCCESSFUL|base"
+    gradle base | grep -E "BUILD SUCCESSFUL|base"
     CHECK_RESULT $?
-    gradle-local base dolast | grep -E "base|dolast|BUILD SUCCESSFUL"
+    gradle base dolast | grep -E "base|dolast|BUILD SUCCESSFUL"
     CHECK_RESULT $?
-    gradle-local base dolast -x dolast | grep "dolast"
+    gradle base dolast -x dolast | grep "dolast"
     CHECK_RESULT $? 1
-    gradle-local base --rerun-tasks
+    gradle base --rerun-tasks
     CHECK_RESULT $?
-    gradle-local base --continue
+    gradle base --continue
     CHECK_RESULT $?
-    gradle-local -q base | grep "I am base!"
+    gradle -q base | grep "I am base!"
     CHECK_RESULT $?
-    gradle-local -w base
+    gradle -w base
     CHECK_RESULT $?
-    gradle-local -i base | grep -E "Starting Build|All projects evaluated|Tasks to be executed: \[task ':base'\]"
+    gradle -i base | grep -E "Starting Build|All projects evaluated|Tasks to be executed: \[task ':base'\]"
     CHECK_RESULT $?
-    gradle-local base --console plain
+    gradle base --console plain
     CHECK_RESULT $?
-    gradle-local base --console rich
+    gradle base --console rich
     CHECK_RESULT $?
-    gradle-local base --status | grep -E "PID|STATUS|INFO|$(gradle-local -v | grep "Gradle" | awk '{print $2}')"
+    gradle base --status | grep -E "PID|STATUS|INFO|$(gradle -v | grep "Gradle" | awk '{print $2}')"
     CHECK_RESULT $?
     expect <<EOF
-        spawn gradle-local base --scan
+        spawn gradle base --scan
         expect "" {send "yes\r"}
         expect eof
 EOF
-    gradle-local base extend dolast --parallel
+    gradle base extend dolast --parallel
     CHECK_RESULT $?
     LOG_INFO "End of the test."
 }

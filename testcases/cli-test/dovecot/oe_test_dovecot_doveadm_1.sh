@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dovecot 
     else 
-        APT_INSTALL dovecot 
+        APT_INSTALL dovecot-core  
     fi
     cp /etc/dovecot/conf.d/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf.bak
     sed -i '/ssl_key = <\/etc\/pki\/dovecot\/private\/dovecot.pem/d' /etc/dovecot/conf.d/10-ssl.conf

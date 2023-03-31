@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL glusterfs 
     else 
-        APT_INSTALL glusterfs 
+        APT_INSTALL glusterfs-cli
     fi
     LOG_INFO "End of environmental preparation!"
 }

@@ -21,6 +21,10 @@ source "../common/common_lib.sh"
 
 function pre_test() {
     LOG_INFO "Start environmental preparation."
+    cat /etc/os-release | grep -i 'openeuler\|anolis'
+    if [ $? -ne 0 ]; then  
+        APT_INSTALL auditd
+    fi
     service=auditd
     log_time=$(date '+%Y-%m-%d %T')
     LOG_INFO "End of environmental preparation!"

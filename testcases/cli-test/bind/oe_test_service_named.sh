@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL bind 
     else 
-        APT_INSTALL bind 
+        APT_INSTALL bind9
     fi
     service=named.service
     log_time=$(date '+%Y-%m-%d %T')

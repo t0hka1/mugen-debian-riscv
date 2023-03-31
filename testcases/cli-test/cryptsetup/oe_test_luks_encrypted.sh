@@ -31,7 +31,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2" 
     else 
-        APT_INSTALL "tang clevis clevis-dracut cryptsetup-reencrypt clevis-udisks2" 
+        APT_INSTALL "tang clevis clevis-dracut cryptsetup clevis-udisks2" 
     fi
     echo -e "n\n\np\n\n\n+100M\nw" | fdisk "${TEST_DISK}"
     test -d /mnt/test_encrypted && rm -rf /mnt/test_encrypted

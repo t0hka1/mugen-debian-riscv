@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL jetty 
     else 
-        APT_INSTALL jetty 
+        APT_INSTALL jetty9 
     fi
     LOG_INFO "End of environmental preparation!"
 }

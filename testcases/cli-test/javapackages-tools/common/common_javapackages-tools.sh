@@ -25,15 +25,9 @@ function deploy_env() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL junit 
     else 
-        APT_INSTALL junit 
+        APT_INSTALL junit openjdk-11-jdk  openjdk-11-jre
     fi
-    java_version=$(rpm -qa java* | grep java-.*-openjdk | awk -F '-' '{print $2}')
-    cat /etc/os-release | grep -i 'openeuler\|anolis'
-    if [ $? -eq 0 ]; then  
-        DNF_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j" 
-    else 
-        APT_INSTALL "javapackages-tools java-${java_version}-devel xmvn-resolve objectweb-asm3 beust-jcommander log4j" 
-    fi
+
 }
 
 function clear_env() {

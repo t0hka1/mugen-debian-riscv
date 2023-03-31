@@ -22,7 +22,7 @@ function deploy_env() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "easymock junit" 
     else 
-        APT_INSTALL "easymock junit" 
+        APT_INSTALL "libeasymock-java junit" 
     fi
     java_version=$(rpm -qa java* | grep "java-.*-openjdk" | awk -F '-' '{print $2}')
     cat /etc/os-release | grep -i 'openeuler\|anolis'

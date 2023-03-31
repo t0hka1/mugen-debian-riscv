@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL dbxtool 
     else 
-        APT_INSTALL dbxtool 
+        APT_INSTALL fwupd 
     fi
     LOG_INFO "End of environmental preparation!"
 }

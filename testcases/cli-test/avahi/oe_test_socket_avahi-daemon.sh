@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL avahi 
     else 
-        APT_INSTALL avahi 
+        APT_INSTALL avahi-daemon 
     fi
     LOG_INFO "End of environmental preparation!"
 }

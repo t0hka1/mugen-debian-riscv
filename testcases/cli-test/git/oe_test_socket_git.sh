@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL git-daemon 
     else 
-        APT_INSTALL git-daemon 
+        APT_INSTALL git-daemon-run 
     fi
     LOG_INFO "End of environmental preparation!"
 }

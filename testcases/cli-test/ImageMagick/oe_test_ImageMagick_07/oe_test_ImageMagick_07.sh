@@ -22,7 +22,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL ImageMagick 
     else 
-        APT_INSTALL ImageMagick 
+        APT_INSTALL imagemagick 
     fi
     cp -r ../common ./tmp
     cd ./tmp

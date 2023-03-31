@@ -25,7 +25,7 @@ function pre_test() {
     if [ $? -eq 0 ]; then  
         DNF_INSTALL "galera mariadb-server-galera mariadb" 
     else 
-        APT_INSTALL "galera mariadb-server-galera mariadb" 
+        APT_INSTALL "galera mariadb-server-galera mariadb-server" 
     fi
     systemctl start mariadb
     mysqladmin -u root password 123456
